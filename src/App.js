@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Select from 'react-select';
 
 function App() {
+  const [input, setInput] = useState('');
+  const [submit, setIngredientSubmission] = useState('');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Recipe Generator</h1>
+      <br/>
+      <p>Enter ingredients here:</p>
+      <input type="search" id="test_input" onChange={(e) => setInput(e.target.value)}/>
+      <br/>
+      <p>You inputted: {input}</p>
+      <button onClick={() => setIngredientSubmission(input)}>Submit</button>
+      <p>Submitted: {submit}</p>
+      <br/>
+      <Select
+        defaultValue={[]}
+        isMulti
+        name="colors"
+        options={
+          [
+            {"value": "egg", "label": "Egg"},
+            {"value": "milk", "label": "Milk"}
+          ]
+        }
+        className="basic-multi-select"
+        classNamePrefix="select"
+      />
+
+
+
+
     </div>
   );
 }
