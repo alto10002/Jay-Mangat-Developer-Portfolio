@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import Select from 'react-select';
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
+// need to import each page that'll be connected to/shown as a link
+// Frontend/backend code for those pages should be in respective files not in app
+import HomePage from "./HomePage";
+import AboutPage from "./AboutPage";
+import Recipes from "./RecipePage";
 
 function App() {
   const [input, setInput] = useState('');
@@ -16,9 +23,21 @@ function App() {
 
   return (
     <div>
+      <Router>
+        <nav>
+          <Link to="/">Home</Link> |{" "}
+          <Link to="/about">About</Link> | {" "}
+          <Link to='/recipes'>Recipe Generator</Link>
+        </nav>
 
-      <h1>Recipe Generator</h1>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/recipes" element={<Recipes />} />
+        </Routes>
+      </Router>
       <br/>
+      <h1>Recipe Generator</h1>
       <p>Enter ingredients here:</p>
       {/* <input type="search" id="test_input" onChange={(e) => setInput(e.target.value)}/> */}
       {/* <br/> */}
