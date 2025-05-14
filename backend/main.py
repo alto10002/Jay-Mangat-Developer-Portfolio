@@ -4,15 +4,14 @@ from get_ingredients import get_ingredients
 
 app = FastAPI()
 
-# Allow React frontend to call this backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or restrict to http://localhost:3000
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 @app.get("/ingredients")
-def a():
+def fetch_ingredients():
     return get_ingredients("500")
