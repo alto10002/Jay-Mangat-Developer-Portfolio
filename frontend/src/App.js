@@ -3,13 +3,17 @@ import './App.css';
 import Select from 'react-select';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
-import axios from 'axios';
+// import axios from 'axios';
 
 // need to import each page that'll be connected to/shown as a link
 // Frontend/backend code for those pages should be in respective files not in app
-import HomePage from "./HomePage";
-import AboutPage from "./AboutPage";
-import Recipes from "./RecipePage";
+// import { HomePage, AboutPage, RecipePage } from "pages";
+
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import RecipePage from "./pages/RecipePage";
+
+
 
 function App() {
   // const [submit, selectedIngredients] = useState('');
@@ -49,7 +53,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/recipes" element={<RecipePage />} />
         </Routes>
       </Router>
       <br/>
@@ -63,7 +67,7 @@ function App() {
         className="basic-multi-select"
         classNamePrefix="select"
       />
-      <button onClick={() => setIngredientSubmission(input)}>Submit</button>
+      {/* <button onClick={() => setIngredientSubmission(input)}>Submit</button> */}
 
 
 
