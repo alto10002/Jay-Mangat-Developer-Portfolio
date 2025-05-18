@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from get_ingredients import get_ingredients
+from backend.app.services.get_ingredients import get_ingredients
 
 app = FastAPI()
 

@@ -3,16 +3,21 @@ import './App.css';
 import Select from 'react-select';
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+// import axios from 'axios';
 
 // need to import each page that'll be connected to/shown as a link
 // Frontend/backend code for those pages should be in respective files not in app
-import HomePage from "./HomePage";
-import AboutPage from "./AboutPage";
-import Recipes from "./RecipePage";
+// import { HomePage, AboutPage, RecipePage } from "pages";
+
+import HomePage from "./pages/HomePage";
+import AboutPage from "./pages/AboutPage";
+import RecipePage from "./pages/RecipePage";
+
+
 
 function App() {
-  const [input, setInput] = useState('');
-  const [submit, setIngredientSubmission] = useState('');
+  // const [submit, selectedIngredients] = useState('');
+  const [selectedItems, setSelectedItems] = useState([]);
   const [ingre_dropdown, setIngreDropdown] = useState('');
 
   useEffect(() => {
@@ -48,18 +53,12 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/recipes" element={<RecipePage />} />
         </Routes>
       </Router>
       <br/>
       <h1>Recipe Generator</h1>
       <p>Enter ingredients here:</p>
-      {/* <input type="search" id="test_input" onChange={(e) => setInput(e.target.value)}/> */}
-      {/* <br/> */}
-      {/* <p>You inputted: {input}</p> */}
-      {/* <button onClick={() => setIngredientSubmission(input)}>Submit</button> */}
-      {/* <p>Submitted: {submit}</p> */}
-      {/* <br/> */}
       <Select
         defaultValue={[]}
         isMulti
@@ -68,7 +67,7 @@ function App() {
         className="basic-multi-select"
         classNamePrefix="select"
       />
-      <button onClick={() => setIngredientSubmission(input)}>Submit</button>
+      {/* <button onClick={() => setIngredientSubmission(input)}>Submit</button> */}
 
 
 
