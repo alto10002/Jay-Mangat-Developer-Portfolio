@@ -7,6 +7,6 @@ def get_ingredients(number):
     
     with open(path, newline='') as csvfile:
         reader = csv.reader(csvfile)
-        return [{"value": row[1], "label": row[1].title()} for row in reader]
+        return [{"value":row[1], "label": row[1].title()} for row in reader]
     
 # print(get_ingredients("1000"))
