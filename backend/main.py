@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.services.get_ingredients import get_ingredients
 from backend.app.services.generate import generate
+from backend.app.services.quick_ingredient_count_update import ingredient_count
 from pydantic import BaseModel
 from typing import List
 
@@ -24,5 +25,8 @@ class IngredientsRequest(BaseModel):
 
 @app.post("/generate_recipes")
 def fetch_recipes(data: IngredientsRequest):
-    result = generate(data.user_ingredients)
-    return result
+    return generate(data.user_ingredients)
+
+@app.post("/quick_ingredient_count_update")
+def fetch_recipes(data: IngredientsRequest):
+    return ingredient_count(data.user_ingredients)

@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-// import "./App.css";
 import Select from "react-select";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
-import { Button, CardHeader, CardMedia } from "@mui/material";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import { Button, CardHeader, Card, CardContent } from "@mui/material";
+import { Grid } from "@mui/material";
+import RecipeCard from "../components/RecipeCard";
 
 function Recipes() {
   //javascript logic
   const [selected, setSelectedOptions] = useState([]);
   const [ingredient_dropdown, setIngreDropdown] = useState([]);
   const [foundRecipes, setFoundRecipes] = useState([]);
+  const [smallRecipeCount, setSmallRecipeCount] = useState([]);
   const [firstRecipe, setFirstRecipe] = useState([]);
+  const [secondRecipe, setSecondRecipe] = useState([]);
+  const [thirdRecipe, setThirdRecipe] = useState([]);
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -36,57 +36,74 @@ function Recipes() {
     const found_recipes = await response.json();
     setFoundRecipes(found_recipes.length);
     setFirstRecipe(found_recipes[0]);
+    setSecondRecipe(found_recipes[1]);
+    setThirdRecipe(found_recipes[2]);
   };
 
-  const tot_ingredients = ingredient_dropdown.length;
+  const searchSmallDataset = async (selected) => {
+    const response = await fetch("http://localhost:8000/quick_ingredient_count_update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_ingredients: selected.map((opt) => opt.value),
+      }),
+    });
 
-  const tot_recipes_card = (
-    <CardContent>
-      <h1>Total number of ingredients: {tot_ingredients}</h1>
-    </CardContent>
-  );
+    const s = await response.json();
+    setSmallRecipeCount(s);
+  };
 
   const num_recipes_card = (
     <CardContent>
-      <h1>Number of recipes for these ingredients: {foundRecipes}</h1>
+      <p>Number of available recipes: {smallRecipeCount}</p>
     </CardContent>
   );
 
-  const recipe1 = (
-    <Card>
-      <CardHeader title={firstRecipe.name} />
-      <CardContent>
-        <p>Name: {firstRecipe.name}</p>
-        <p>Minutes: {firstRecipe.minutes}</p>
-        <p>Ingredients: {firstRecipe.ingredients}</p>
-        <p>Number of ingredients: {firstRecipe.n_ingredients}</p>
-        <p>Cooking instructions: {firstRecipe.steps}</p>
-      </CardContent>
-    </Card>
-  );
+  const handleIngredientChange = (selected) => {
+    setSelectedOptions(selected);
+    searchSmallDataset(selected);
+  };
 
   return (
     //rendered to DOM
     <div>
-      <h1>Recipe Generator</h1>
-      <p>Enter ingredients here:</p>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <h1>Recipe Generator</h1>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <p>Enter ingredients here:</p>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Select
+            defaultValue={[]}
+            isMulti
+            name="ingredients"
+            options={ingredient_dropdown}
+            onChange={(selected) => handleIngredientChange(selected)}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={submitIngredients}>
+            Submit Ingredients
+          </Button>
+        </Grid>
+        <Grid item>
+          <Card variant="outlined">{num_recipes_card}</Card>
+        </Grid>
+      </Grid>
 
-      <Select
-        defaultValue={[]}
-        isMulti
-        name="ingredients"
-        options={ingredient_dropdown}
-        onChange={(selected) => setSelectedOptions(selected)}
-        className="basic-multi-select"
-        classNamePrefix="select"
-      />
-
-      <Button variant="contained" onClick={submitIngredients}>
-        Submit Ingredients
-      </Button>
-      <Card variant="outlined">{tot_recipes_card}</Card>
-      <Card variant="outlined">{num_recipes_card}</Card>
-      <Card variant="outlined">{recipe1}</Card>
+      <Grid container>
+        <RecipeCard recipe={firstRecipe} />
+        <RecipeCard recipe={secondRecipe} />
+        <RecipeCard recipe={thirdRecipe} />
+      </Grid>
     </div>
   );
 }
