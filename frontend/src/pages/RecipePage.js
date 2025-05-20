@@ -9,7 +9,7 @@ function Recipes() {
   const [selected, setSelectedOptions] = useState([]);
   const [ingredient_dropdown, setIngreDropdown] = useState([]);
   const [foundRecipes, setFoundRecipes] = useState([]);
-  const [smallRecipeCount, setSmallRecipeCount] = useState([]);
+  const [smallRecipeCount, setSmallRecipeCount] = useState(231637);
   const [firstRecipe, setFirstRecipe] = useState([]);
   const [secondRecipe, setSecondRecipe] = useState([]);
   const [thirdRecipe, setThirdRecipe] = useState([]);
@@ -99,11 +99,17 @@ function Recipes() {
         </Grid>
       </Grid>
 
-      <Grid container>
-        <RecipeCard recipe={firstRecipe} />
-        <RecipeCard recipe={secondRecipe} />
-        <RecipeCard recipe={thirdRecipe} />
-      </Grid>
+<Grid container spacing={4}>
+  <Grid item xs={12} md={6} sx={{ pl: 6 }}> {/* left padding */}
+    <RecipeCard recipe={firstRecipe} />
+  </Grid>
+  <Grid item xs={12} md={6}>
+    <RecipeCard recipe={secondRecipe} />
+  </Grid>
+  <Grid item xs={12} md={6}> {/* right padding */}
+    <RecipeCard recipe={thirdRecipe} />
+  </Grid>
+</Grid>
     </div>
   );
 }
