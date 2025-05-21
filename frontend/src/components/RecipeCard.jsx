@@ -1,9 +1,8 @@
-import { Card, CardHeader, CardContent, CardMedia, IconButton } from "@mui/material";
+import { Card, Box, CardContent, CardMedia, IconButton, CardActions } from "@mui/material";
 import { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
-// import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { CgChevronDoubleDown, CgChevronDoubleUp } from "react-icons/cg";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 const RecipeCard = ({ recipe }) => {
   const [expanded, setExpanded] = useState(false);
@@ -11,15 +10,24 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <Card sx={{ width: 475, wordWrap: "break-word" }}>
-      <CardMedia component="img" height="200" image="recipe.png" />
-      <CardContent>
-        <Typography variant="h5">{recipe.name}</Typography>
-        <p>Prep time: {recipe.minutes}</p>
-        <p>Total required ingredients: {recipe.n_ingredients}</p>
+      <CardMedia component="img" height="200" image={recipe.image_url} />
 
-        <IconButton onClick={handleExpandClick} aria-label="expand card">
-          {expanded ? <CgChevronDoubleUp size={24} /> : <CgChevronDoubleDown size={24} />}
-        </IconButton>
+      <CardContent>
+        <Box display="flex" alignItems="center">
+          <Typography variant="h5" sx={{ flexGrow: 1 }}>
+            {recipe.name}
+          </Typography>
+          <IconButton href={recipe.page_url} target="_blank" rel="noopener noreferrer" size="small">
+            <FaExternalLinkAlt />
+          </IconButton>
+        </Box>
+
+        {/* Clickable area below the title */}
+        <div onClick={handleExpandClick} style={{ cursor: "pointer", userSelect: "none" }}>
+          <p>Prep time: {recipe.minutes} minutes</p>
+          <p>Total required ingredients: {recipe.n_ingredients}</p>
+          <p style={{ fontWeight: 500, textAlign: "center" }}>{expanded ? "Hide details ▲" : "Show details ▼"}</p>
+        </div>
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Typography variant="subtitle1">Ingredients:</Typography>
