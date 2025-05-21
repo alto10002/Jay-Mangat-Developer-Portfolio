@@ -15,10 +15,10 @@ const RecipeCard = ({ recipe }) => {
           component="img"
           image={recipe.image_url}
           sx={{
-            height: expanded ? 500 : 250,
-            transition: "height 0.3s ease",
+            maxHeight: expanded ? 500 : 250,
+            height: "auto",
             width: "100%",
-            // objectFit: "cover",
+            transition: "max-height 0.3s ease",
           }}
         />
 
