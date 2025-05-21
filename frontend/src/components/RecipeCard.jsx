@@ -10,9 +10,17 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <Card sx={{ width: 475, wordWrap: "break-word" }}>
-      {/* Clickable area below the title */}
       <div onClick={handleExpandClick} style={{ cursor: "pointer", userSelect: "none" }}>
-        <CardMedia component="img" height="200" image={recipe.image_url} />
+        <CardMedia
+          component="img"
+          image={recipe.image_url}
+          sx={{
+            height: expanded ? 500 : 250,
+            transition: "height 0.3s ease",
+            width: "100%",
+            // objectFit: "cover",
+          }}
+        />
 
         <CardContent>
           <Box display="flex" alignItems="center">
