@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import { Button, CardHeader, Card, CardContent } from "@mui/material";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
+import AnimatedCount from "../components/AnimatedCount";
 import RecipeCard from "../components/RecipeCard";
+import Fade from "@mui/material/Fade";
 
 function Recipes() {
   //javascript logic
@@ -13,6 +15,8 @@ function Recipes() {
   const [firstRecipe, setFirstRecipe] = useState([]);
   const [secondRecipe, setSecondRecipe] = useState([]);
   const [thirdRecipe, setThirdRecipe] = useState([]);
+  const [hasGenerated, setHasGenerated] = useState(false);
+  const [fadeTrigger, setFadeTrigger] = useState(false);
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -38,6 +42,10 @@ function Recipes() {
     setFirstRecipe(found_recipes[0]);
     setSecondRecipe(found_recipes[1]);
     setThirdRecipe(found_recipes[2]);
+
+    setHasGenerated(true);
+    setFadeTrigger(true);
+    setTimeout(() => setFadeTrigger(true), 50);
   };
 
   const searchSmallDataset = async (selected) => {
@@ -55,12 +63,6 @@ function Recipes() {
     setSmallRecipeCount(s);
   };
 
-  const num_recipes_card = (
-    <CardContent>
-      <p>Number of available recipes: {smallRecipeCount}</p>
-    </CardContent>
-  );
-
   const handleIngredientChange = (selected) => {
     setSelectedOptions(selected);
     searchSmallDataset(selected);
@@ -69,47 +71,50 @@ function Recipes() {
   return (
     //rendered to DOM
     <div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
-          <h1>Recipe Generator</h1>
+      <Grid container direction="column">
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          <h1 style={{ color:'#E9A135', textAlign: "center", fontSize: "3rem", marginTop: "0rem", marginBottom: "0rem" }}>
+            Recipe Generator
+          </h1>
+          <h4 style={{ textAlign: "center", marginTop: "0rem" }}>
+            Turn your pantry into a plate by creating a custom recipe from your own ingredients.
+          </h4>
         </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
-          <p>Enter ingredients here:</p>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Select
-            defaultValue={[]}
-            isMulti
-            name="ingredients"
-            options={ingredient_dropdown}
-            onChange={(selected) => handleIngredientChange(selected)}
-            className="basic-multi-select"
-            classNamePrefix="select"
-          />
+        <Grid container justifyContent="center" spacing={2}>
+          <Grid item xs={12} sm={8} md={6}>
+            <Select
+              defaultValue={[]}
+              isMulti
+              name="ingredients"
+              options={ingredient_dropdown}
+              onChange={(selected) => handleIngredientChange(selected)}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={submitIngredients}>
+              Generate
+            </Button>
+          </Grid>
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={submitIngredients}>
-            Submit Ingredients
-          </Button>
+          <AnimatedCount count={smallRecipeCount} />
         </Grid>
-        <Grid item>
-          <Card variant="outlined">{num_recipes_card}</Card>
-        </Grid>
+        <Fade in={fadeTrigger} timeout={500}>
+          <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
+            <Grid item>
+              <RecipeCard recipe={firstRecipe} />
+            </Grid>
+            <Grid item>
+              <RecipeCard recipe={secondRecipe} />
+            </Grid>
+            <Grid item>
+              <RecipeCard recipe={thirdRecipe} />
+            </Grid>
+          </Grid>
+        </Fade>
       </Grid>
-
-<Grid container spacing={4}>
-  <Grid item xs={12} md={6} sx={{ pl: 6 }}> {/* left padding */}
-    <RecipeCard recipe={firstRecipe} />
-  </Grid>
-  <Grid item xs={12} md={6}>
-    <RecipeCard recipe={secondRecipe} />
-  </Grid>
-  <Grid item xs={12} md={6}> {/* right padding */}
-    <RecipeCard recipe={thirdRecipe} />
-  </Grid>
-</Grid>
     </div>
   );
 }

@@ -14,7 +14,7 @@ function App() {
           <Link to="/">Home</Link> | <Link to="/about">About</Link> |{" "}
           <Link to="/recipes">Recipe Generator</Link>
           <a
-            href="https://github.com/alto10002"
+            href="https://www.linkedin.com/in/jay-mangat/"
             target="_blank"
             rel="noopener noreferrer"
             className="icon-link"
@@ -22,7 +22,7 @@ function App() {
             <AiFillLinkedin color="#ffc401" />
           </a>
           <a
-            href="https://www.linkedin.com/in/jay-mangat/"
+            href="https://github.com/alto10002"
             target="_blank"
             rel="noopener noreferrer"
             className="icon-link"
