@@ -73,7 +73,7 @@ function Recipes() {
     <div>
       <Grid container direction="column">
         <Grid item xs={12} sm={12} md={12} lg={12}>
-          <h1 style={{ color:'#E9A135', textAlign: "center", fontSize: "3rem", marginTop: "0rem", marginBottom: "0rem" }}>
+          <h1 style={{ textAlign: "center", fontSize: "3rem", marginTop: "0rem", marginBottom: "0rem" }}>
             Recipe Generator
           </h1>
           <h4 style={{ textAlign: "center", marginTop: "0rem" }}>

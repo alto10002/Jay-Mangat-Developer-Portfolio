@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+import Box from '@mui/material/Box';
 
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -8,7 +9,7 @@ import RecipePage from "./pages/RecipePage";
 
 function App() {
   return (
-    <div>
+    <Box sx={{ bgcolor:"background.main" }}>
       <Router>
         <nav className="navbar">
           <Link to="/">Home</Link> | <Link to="/about">About</Link> |{" "}
@@ -37,7 +38,7 @@ function App() {
           <Route path="/recipes" element={<RecipePage />} />
         </Routes>
       </Router>
-    </div>
+    </Box>
   );
 }
 

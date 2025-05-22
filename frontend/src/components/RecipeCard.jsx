@@ -9,8 +9,8 @@ const RecipeCard = ({ recipe }) => {
   const handleExpandClick = () => setExpanded((prev) => !prev);
 
   return (
-    <Card sx={{ width: 475, wordWrap: "break-word" }}>
-      <div onClick={handleExpandClick} style={{ cursor: "pointer", userSelect: "none" }}>
+    <Card sx={{ width: 475, wordWrap: "break-word", bgcolor: "primary.main" }}>
+      <Box onClick={handleExpandClick} style={{ cursor: "pointer", userSelect: "none" }}>
         <CardMedia
           component="img"
           image={recipe.image_url}
@@ -24,7 +24,7 @@ const RecipeCard = ({ recipe }) => {
 
         <CardContent>
           <Box display="flex" alignItems="center">
-            <Typography variant="h5" sx={{ flexGrow: 1 }}>
+            <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: "bold" }}>
               {recipe.name}
             </Typography>
             <IconButton href={recipe.page_url} target="_blank" rel="noopener noreferrer" size="small">
@@ -32,14 +32,18 @@ const RecipeCard = ({ recipe }) => {
             </IconButton>
           </Box>
 
-          <p>Prep time: {recipe.minutes} minutes</p>
-          <p>Total required ingredients: {recipe.n_ingredients}</p>
+          <p>
+            <span style={{ fontWeight: "bold" }}>⌛Prep time:</span> {recipe.minutes} minutes
+          </p>
+          <p>
+            <span style={{ fontWeight: "bold" }}>🔢Total required ingredients:</span> {recipe.n_ingredients} minutes
+          </p>
           <p style={{ fontWeight: 500, textAlign: "center" }}>
             {expanded ? "Hide ingredients and instructions ▲" : "Show ingredients and instructions ▼"}
           </p>
 
           <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <Typography variant="subtitle1">Ingredients:</Typography>
+          <p style={{ fontWeight: "bold" }}>🥣Ingredients:</p>
             {Array.isArray(recipe.ingredients) && (
               <ul>
                 {recipe.ingredients.map((item, idx) => (
@@ -48,7 +52,7 @@ const RecipeCard = ({ recipe }) => {
               </ul>
             )}
 
-            <Typography variant="subtitle1">Cooking instructions:</Typography>
+            <p style={{ fontWeight: "bold" }}>📋Cooking instructions:</p>
             {Array.isArray(recipe.steps) && (
               <ol>
                 {recipe.steps.map((step, idx) => (
@@ -58,7 +62,7 @@ const RecipeCard = ({ recipe }) => {
             )}
           </Collapse>
         </CardContent>
-      </div>
+      </Box>
     </Card>
   );
 };
