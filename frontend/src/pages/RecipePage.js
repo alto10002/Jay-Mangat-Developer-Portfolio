@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import Select from "react-select";
-import { Button, CardHeader, Card, CardContent } from "@mui/material";
-import { Grid, Typography } from "@mui/material";
 import AnimatedCount from "../components/AnimatedCount";
 import RecipeCard from "../components/RecipeCard";
-import Fade from "@mui/material/Fade";
+import { Grid, Typography, Button, Box, Fade } from "@mui/material";
 
 function Recipes() {
   //javascript logic
@@ -69,17 +67,18 @@ function Recipes() {
   };
 
   return (
-    //rendered to DOM
-    <div>
+    <Box>
       <Grid container direction="column">
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <h1 style={{ textAlign: "center", fontSize: "3rem", marginTop: "0rem", marginBottom: "0rem" }}>
+        <Grid item xs={12}>
+          <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
             Recipe Generator
-          </h1>
-          <h4 style={{ textAlign: "center", marginTop: "0rem" }}>
+          </Typography>
+
+          <Typography variant="h6" align="center" sx={{ mt: 0 }}>
             Turn your pantry into a plate by creating a custom recipe from your own ingredients.
-          </h4>
+          </Typography>
         </Grid>
+
         <Grid container justifyContent="center" spacing={2}>
           <Grid item xs={12} sm={8} md={6}>
             <Select
@@ -90,6 +89,14 @@ function Recipes() {
               onChange={(selected) => handleIngredientChange(selected)}
               className="basic-multi-select"
               classNamePrefix="select"
+              sx={{
+                color: "text.primary", // text color
+                bgcolor: "background.primary", // background color
+                borderRadius: 1,
+                "& .MuiSelect-icon": {
+                  color: "primary.main", // dropdown arrow color
+                },
+              }}
             />
           </Grid>
           <Grid item>
@@ -98,9 +105,11 @@ function Recipes() {
             </Button>
           </Grid>
         </Grid>
+
         <Grid item>
           <AnimatedCount count={smallRecipeCount} />
         </Grid>
+
         <Fade in={fadeTrigger} timeout={500}>
           <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
             <Grid item>
@@ -115,7 +124,7 @@ function Recipes() {
           </Grid>
         </Fade>
       </Grid>
-    </div>
+    </Box>
   );
 }
 
