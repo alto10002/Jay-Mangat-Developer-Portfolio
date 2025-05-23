@@ -1,11 +1,15 @@
 import { motion, animate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { Grid, Typography, Button, Box, Fade } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+
 
 function AnimatedCount({ count }) {
   const [animatedValue, setAnimatedValue] = useState(count);
-  const [color, setColor] = useState("black");
   const [yOffset, setYOffset] = useState(0);
   const prevCount = useRef(count);
+  const theme = useTheme();
+  const [color, setColor] = useState(theme.palette.text.primary);
 
   useEffect(() => {
     // Set animation direction
@@ -21,7 +25,7 @@ function AnimatedCount({ count }) {
 
     // Reset visual effects after animation
     const timeout = setTimeout(() => {
-      setColor("black");
+      setColor(theme.palette.text.accent);
       setYOffset(0);
     }, 500);
 
@@ -34,7 +38,7 @@ function AnimatedCount({ count }) {
   }, [count]);
 
   return (
-    <p style={{ fontSize: "1.1rem", textAlign: "center" }}>
+    <Typography sx={{textAlign:'center'}}>
       Number of available recipes:{" "}
       <motion.span
         animate={{ color, y: yOffset }}
@@ -43,7 +47,7 @@ function AnimatedCount({ count }) {
       >
         {animatedValue}
       </motion.span>
-    </p>
+    </Typography>
   );
 }
 

@@ -3,6 +3,8 @@ import Select from "react-select";
 import AnimatedCount from "../components/AnimatedCount";
 import RecipeCard from "../components/RecipeCard";
 import { Grid, Typography, Button, Box, Fade } from "@mui/material";
+import { getReactSelectStyles } from "../themes/reactSelectStyles";
+import { useTheme } from "@mui/material/styles";  
 
 function Recipes() {
   //javascript logic
@@ -15,6 +17,8 @@ function Recipes() {
   const [thirdRecipe, setThirdRecipe] = useState([]);
   const [hasGenerated, setHasGenerated] = useState(false);
   const [fadeTrigger, setFadeTrigger] = useState(false);
+  const theme = useTheme();
+  const customStyles = getReactSelectStyles(theme);
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -80,7 +84,7 @@ function Recipes() {
         </Grid>
 
         <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={12} sm={8} md={6}>
+          <Grid>
             <Select
               defaultValue={[]}
               isMulti
@@ -89,14 +93,7 @@ function Recipes() {
               onChange={(selected) => handleIngredientChange(selected)}
               className="basic-multi-select"
               classNamePrefix="select"
-              sx={{
-                color: "text.primary", // text color
-                bgcolor: "background.primary", // background color
-                borderRadius: 1,
-                "& .MuiSelect-icon": {
-                  color: "primary.main", // dropdown arrow color
-                },
-              }}
+              styles={ customStyles }
             />
           </Grid>
           <Grid item>
