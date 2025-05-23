@@ -8,6 +8,8 @@ import { useTheme } from "@mui/material/styles";
 import { IconButton, Tooltip } from "@mui/material";
 import { Brightness4, Brightness7, Palette } from "@mui/icons-material";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+import { FaHome } from "react-icons/fa";
+import { Link as RouterLink } from 'react-router-dom';
 
 function RecipePage({ mode, setMode }) {
   //javascript logic
@@ -97,9 +99,25 @@ function RecipePage({ mode, setMode }) {
             alignItems: "center",
           }}
         >
-          <img src="/loading.gif" height='100' />
+          <img src="/loading.gif" height="100" />
         </Box>
       )}
+      <Box
+        sx={{
+          position: "fixed",
+          top: 16,
+          left: 16,
+          display: "flex",
+          gap: 1.5,
+          zIndex: 1300,
+        }}
+      >
+        <Tooltip title="Home">
+          <IconButton component={RouterLink} to="/" sx={{ color: theme.palette.accent.main }}>
+            <FaHome size={24} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Box
         sx={{
           position: "fixed",
