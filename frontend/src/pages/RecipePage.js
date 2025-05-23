@@ -4,9 +4,12 @@ import AnimatedCount from "../components/AnimatedCount";
 import RecipeCard from "../components/RecipeCard";
 import { Grid, Typography, Button, Box, Fade } from "@mui/material";
 import { getReactSelectStyles } from "../themes/reactSelectStyles";
-import { useTheme } from "@mui/material/styles";  
+import { useTheme } from "@mui/material/styles";
+import { IconButton, Tooltip } from "@mui/material";
+import { Brightness4, Brightness7, Palette } from "@mui/icons-material";
+import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 
-function Recipes() {
+function RecipePage({ mode, setMode }) {
   //javascript logic
   const [selected, setSelectedOptions] = useState([]);
   const [ingredient_dropdown, setIngreDropdown] = useState([]);
@@ -70,8 +73,52 @@ function Recipes() {
     searchSmallDataset(selected);
   };
 
+  const toggleTheme = () => {
+    setMode((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
     <Box>
+      <Box
+        sx={{
+          position: "fixed",
+          top: 16,
+          right: 16,
+          display: "flex",
+          gap: 1.5,
+          zIndex: 1300,
+        }}
+      >
+        <Tooltip title="Dark Mode">
+          <IconButton onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))} sx={{ color: theme.palette.accent.main }}>
+            {mode === "light" ? <Brightness4 /> : <Brightness7 />}
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="LinkedIn">
+          <IconButton
+            component="a"
+            href="https://www.linkedin.com/in/jay-mangat/"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.accent.main }}
+          >
+            <AiFillLinkedin size={24} />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip title="GitHub">
+          <IconButton
+            component="a"
+            href="https://github.com/alto10002"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.accent.main }}
+          >
+            <AiFillGithub size={24} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Grid container direction="column">
         <Grid item xs={12}>
           <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
@@ -93,7 +140,7 @@ function Recipes() {
               onChange={(selected) => handleIngredientChange(selected)}
               className="basic-multi-select"
               classNamePrefix="select"
-              styles={ customStyles }
+              styles={customStyles}
             />
           </Grid>
           <Grid item>
@@ -125,4 +172,4 @@ function Recipes() {
   );
 }
 
-export default Recipes;
+export default RecipePage;

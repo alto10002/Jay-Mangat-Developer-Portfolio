@@ -1,21 +1,23 @@
-import { createTheme } from "@mui/material/styles";
-
-const theme = createTheme({
+// src/theme.js
+export const getDesignTokens = (mode) => ({
   palette: {
+    mode,
     background: {
-      main: '#f9fbfd',
+      default: mode === 'light' ? '#e1e1e1' : '#06080b',
+      paper: mode === 'light' ? '#ffffff' : '#0e0e0e',
     },
     primary: {
-      main: "#929292",
+      main:  mode === 'light' ? '#2db8d1' : '#929292', 
     },
     secondary: {
-      main: "#732979",
+      main:  mode === 'light' ? '#06080b' : '#732979',
     },
     accent: {
-      main: "#dcac00",
+      main: mode === 'light' ? '#2db8d1' : '#dcac00'
     },
     text: {
-      primary: "#06080b",
+      primary: mode === 'light' ? '#06080b' : '#f0f0f0',
+      secondary: mode === 'light' ? '#333' : '#aaa',
     },
   },
   typography: {
@@ -28,5 +30,3 @@ const theme = createTheme({
     h6: { fontFamily: "'Rubik', sans-serif" },
   },
 });
-
-export default theme;
