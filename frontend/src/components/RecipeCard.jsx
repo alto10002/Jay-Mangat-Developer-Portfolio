@@ -7,7 +7,7 @@ const RecipeCard = ({ recipe }) => {
   const handleExpandClick = () => setExpanded((prev) => !prev);
 
   return (
-    <Card sx={{ width: 475, wordWrap: "break-word", bgcolor: "background.main" }}>
+    <Card sx={{ width: 475, wordWrap: "break-word", bgcolor: "primary.main" }}>
       <Box onClick={handleExpandClick} sx={{ cursor: "pointer", userSelect: "none" }}>
         <CardMedia
           component="img"
