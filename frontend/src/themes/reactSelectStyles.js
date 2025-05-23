@@ -7,14 +7,11 @@ export const getReactSelectStyles = (theme) => ({
   control: (provided) => ({
     ...provided,
     backgroundColor: theme.palette.primary.main,
-    // borderColor: theme.palette.divider,
-    // borderRadius: theme.shape.borderRadius,
-    // padding: "2px 4px",
     width: "100%",
   }),
   menu: (provided) => ({
     ...provided,
-    backgroundColor: theme.palette.background.main,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.primary,
   }),
   option: (provided, { isFocused, isSelected }) => ({
