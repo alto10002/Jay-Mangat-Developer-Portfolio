@@ -31,17 +31,23 @@ function AnimatedCount({ count }) {
       controls.stop();
       clearTimeout(timeout);
     };
-  }, [count]); 
+  }, [count]);
 
   useEffect(() => {
     setColor(theme.palette.text.primary);
   }, [theme.palette.text.primary]);
 
-
   return (
     <Typography sx={{ textAlign: "center" }}>
       Number of available recipes:{" "}
-      <motion.span animate={{ color, y: yOffset }} transition={{ duration: 1 }} style={{ display: "inline-block" }}>
+      <motion.span
+        animate={{ y: yOffset }} // only animate movement
+        transition={{ duration: 1 }}
+        style={{
+          display: "inline-block",
+          color: color, // directly bind current color (instant)
+        }}
+      >
         {animatedValue}
       </motion.span>
     </Typography>

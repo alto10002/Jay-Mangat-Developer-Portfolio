@@ -22,6 +22,7 @@ function RecipePage({ mode, setMode }) {
   const [fadeTrigger, setFadeTrigger] = useState(false);
   const theme = useTheme();
   const customStyles = getReactSelectStyles(theme);
+  const [recipeLoading, setRecipeLoading] = useState(false);
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -32,6 +33,7 @@ function RecipePage({ mode, setMode }) {
   }, []);
 
   const submitIngredients = async () => {
+    setRecipeLoading(true);
     const response = await fetch("http://localhost:8000/generate_recipes", {
       method: "POST",
       headers: {
@@ -48,9 +50,10 @@ function RecipePage({ mode, setMode }) {
     setSecondRecipe(found_recipes[1]);
     setThirdRecipe(found_recipes[2]);
 
-    setHasGenerated(true);
+    // setHasGenerated(true);
     setFadeTrigger(true);
     setTimeout(() => setFadeTrigger(true), 50);
+    setRecipeLoading(false);
   };
 
   const searchSmallDataset = async (selected) => {
@@ -79,6 +82,24 @@ function RecipePage({ mode, setMode }) {
 
   return (
     <Box>
+      {recipeLoading && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            bgcolor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 2000,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img src="/loading.gif" height='100' />
+        </Box>
+      )}
       <Box
         sx={{
           position: "fixed",
@@ -90,7 +111,10 @@ function RecipePage({ mode, setMode }) {
         }}
       >
         <Tooltip title="Dark Mode">
-          <IconButton onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))} sx={{ color: theme.palette.accent.main }}>
+          <IconButton
+            onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))}
+            sx={{ color: theme.palette.accent.main }}
+          >
             {mode === "light" ? <Brightness4 /> : <Brightness7 />}
           </IconButton>
         </Tooltip>
