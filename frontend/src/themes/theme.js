@@ -13,7 +13,7 @@ export const getDesignTokens = (mode) => ({
       main:  mode === 'light' ? '#06080b' : '#732979',
     },
     accent: {
-      main: mode === 'light' ? '#2db8d1' : '#dcac00'
+      main: mode === 'light' ? '#b372fd' : '#dcac00'
     },
     text: {
       primary: mode === 'light' ? '#06080b' : '#f0f0f0',

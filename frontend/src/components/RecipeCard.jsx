@@ -47,7 +47,7 @@ const RecipeCard = ({ recipe }) => {
             <Box component="span" sx={{ fontWeight: "bold" }}>
               🔢Total required ingredients:
             </Box>{" "}
-            {recipe.n_ingredients} minutes
+            {recipe.n_ingredients}
           </Typography>
 
           <Typography sx={{ fontWeight: 500, textAlign: "center" }}>

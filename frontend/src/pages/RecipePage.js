@@ -9,7 +9,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { Brightness4, Brightness7, Palette } from "@mui/icons-material";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from "react-router-dom";
 
 function RecipePage({ mode, setMode }) {
   //javascript logic
@@ -52,10 +52,10 @@ function RecipePage({ mode, setMode }) {
     setSecondRecipe(found_recipes[1]);
     setThirdRecipe(found_recipes[2]);
 
-    // setHasGenerated(true);
     setFadeTrigger(true);
     setTimeout(() => setFadeTrigger(true), 50);
     setRecipeLoading(false);
+    setHasGenerated(true);
   };
 
   const searchSmallDataset = async (selected) => {
@@ -210,6 +210,30 @@ function RecipePage({ mode, setMode }) {
           </Grid>
         </Fade>
       </Grid>
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 25,
+          right: 800,
+          display: "flex",
+          gap: 1.5,
+        }}
+      >
+        <Button
+          variant="contained"
+          onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))}
+          sx={{
+            color: theme.palette.accent.main,
+            borderRadius: "999px", // makes it pill-shaped
+            paddingX: 3, // horizontal padding
+            paddingY: 1, // vertical padding
+            textTransform: "none", // optional: keeps text normal case
+          }}
+        >
+          Load More
+          {mode === "light" ? <Brightness4 /> : <Brightness7 />}
+        </Button>
+      </Box>
     </Box>
   );
 }
