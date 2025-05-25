@@ -213,15 +213,18 @@ function RecipePage({ mode, setMode }) {
       <Box
         sx={{
           position: "fixed",
-          bottom: 25,
-          right: 800,
+          justifyContent: "center", // center horizontally
+          alignItems: "center",
+          minHeight: '120vh',
           display: "flex",
           gap: 1.5,
         }}
       >
         <Button
           variant="contained"
-          onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))}
+          onClick={() => {
+            // Your actual load more logic here!
+          }}
           sx={{
             color: theme.palette.accent.main,
             borderRadius: "999px", // makes it pill-shaped
@@ -231,7 +234,6 @@ function RecipePage({ mode, setMode }) {
           }}
         >
           Load More
-          {mode === "light" ? <Brightness4 /> : <Brightness7 />}
         </Button>
       </Box>
     </Box>
