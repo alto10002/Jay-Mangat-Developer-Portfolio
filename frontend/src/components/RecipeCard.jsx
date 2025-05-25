@@ -1,7 +1,5 @@
-import { Card, Box, CardContent, CardMedia, IconButton, CardActions } from "@mui/material";
 import { useState, useEffect } from "react";
-import Typography from "@mui/material/Typography";
-import Collapse from "@mui/material/Collapse";
+import { Box, Card, CardContent, CardMedia, Collapse, IconButton, List, ListItem, Typography } from "@mui/material";
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 const RecipeCard = ({ recipe }) => {
@@ -9,46 +7,77 @@ const RecipeCard = ({ recipe }) => {
   const handleExpandClick = () => setExpanded((prev) => !prev);
 
   return (
-    <Card sx={{ width: 475, wordWrap: "break-word" }}>
-      <CardMedia component="img" height="200" image={recipe.image_url} />
+    <Card sx={{ width: 475, wordWrap: "break-word", bgcolor: "primary.main" }}>
+      <Box onClick={handleExpandClick} sx={{ cursor: "pointer", userSelect: "none" }}>
+        <CardMedia
+          component="img"
+          image={recipe.image_url}
+          sx={{
+            maxHeight: expanded ? 500 : 250,
+            height: "auto",
+            width: "100%",
+            transition: "max-height 0.3s ease",
+          }}
+        />
 
-      <CardContent>
-        <Box display="flex" alignItems="center">
-          <Typography variant="h5" sx={{ flexGrow: 1 }}>
-            {recipe.name}
+        <CardContent>
+          <Box display="flex" alignItems="center">
+            <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: "bold" }}>
+              {recipe.name}
+            </Typography>
+            <IconButton
+              href={recipe.page_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              size="small"
+              sx={{ color: "accent.main" }}
+            >
+              <FaExternalLinkAlt />
+            </IconButton>
+          </Box>
+
+          <Typography>
+            <Box component="span" sx={{ fontWeight: "bold" }}>
+              ⌛Prep time:
+            </Box>{" "}
+            {recipe.minutes} minutes
           </Typography>
-          <IconButton href={recipe.page_url} target="_blank" rel="noopener noreferrer" size="small">
-            <FaExternalLinkAlt />
-          </IconButton>
-        </Box>
 
-        {/* Clickable area below the title */}
-        <div onClick={handleExpandClick} style={{ cursor: "pointer", userSelect: "none" }}>
-          <p>Prep time: {recipe.minutes} minutes</p>
-          <p>Total required ingredients: {recipe.n_ingredients}</p>
-          <p style={{ fontWeight: 500, textAlign: "center" }}>{expanded ? "Hide details ▲" : "Show details ▼"}</p>
-        </div>
+          <Typography>
+            <Box component="span" sx={{ fontWeight: "bold" }}>
+              🔢Total required ingredients:
+            </Box>{" "}
+            {recipe.n_ingredients}
+          </Typography>
 
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <Typography variant="subtitle1">Ingredients:</Typography>
-          {Array.isArray(recipe.ingredients) && (
-            <ul>
-              {recipe.ingredients.map((item, idx) => (
-                <li key={idx}>{item}</li>
-              ))}
-            </ul>
-          )}
+          <Typography sx={{ fontWeight: 500, textAlign: "center" }}>
+            {expanded ? "Hide ingredients and instructions ▲" : "Show ingredients and instructions ▼"}
+          </Typography>
 
-          <Typography variant="subtitle1">Cooking instructions:</Typography>
-          {Array.isArray(recipe.steps) && (
-            <ol>
-              {recipe.steps.map((step, idx) => (
-                <li key={idx}>{step}</li>
-              ))}
-            </ol>
-          )}
-        </Collapse>
-      </CardContent>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <Typography sx={{ fontWeight: "bold" }}>🥣Ingredients:</Typography>
+            {Array.isArray(recipe.ingredients) && (
+              <List dense sx={{ listStyleType: "disc", listStylePosition: "inside", pl: 0.3 }}>
+                {recipe.ingredients.map((item, idx) => (
+                  <ListItem key={idx} sx={{ display: "list-item" }}>
+                    {item}
+                  </ListItem>
+                ))}
+              </List>
+            )}
+            <Typography sx={{ fontWeight: "bold" }}>📋Cooking instructions:</Typography>
+            {Array.isArray(recipe.steps) && (
+              <List component="ol" sx={{ listStyleType: "decimal", pl: 4 }}>
+                {recipe.steps.map((step, idx) => (
+                  <ListItem key={idx} sx={{ display: "list-item" }}>
+                    {step}
+                  </ListItem>
+                ))}
+              </List>
+            )}
+          </Collapse>
+        </CardContent>
+      </Box>
     </Card>
   );
 };

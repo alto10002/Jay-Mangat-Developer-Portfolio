@@ -1,27 +1,27 @@
 import { motion, animate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { Grid, Typography, Button, Box, Fade } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 function AnimatedCount({ count }) {
   const [animatedValue, setAnimatedValue] = useState(count);
-  const [color, setColor] = useState("black");
   const [yOffset, setYOffset] = useState(0);
   const prevCount = useRef(count);
+  const theme = useTheme();
+  const [color, setColor] = useState(theme.palette.text.primary);
 
   useEffect(() => {
-    // Set animation direction
     const isIncreasing = count > prevCount.current;
     setColor(isIncreasing ? "green" : "red");
     setYOffset(isIncreasing ? -5 : 5);
 
-    // Smoothly animate value using framer's animate() utility
     const controls = animate(prevCount.current, count, {
       duration: 0.5,
       onUpdate: (val) => setAnimatedValue(Math.round(val)),
     });
 
-    // Reset visual effects after animation
     const timeout = setTimeout(() => {
-      setColor("black");
+      setColor(theme.palette.text.primary);
       setYOffset(0);
     }, 500);
 
@@ -33,19 +33,25 @@ function AnimatedCount({ count }) {
     };
   }, [count]);
 
+  useEffect(() => {
+    setColor(theme.palette.text.primary);
+  }, [theme.palette.text.primary]);
+
   return (
-    <p style={{ fontSize: "1.1rem", textAlign: "center" }}>
+    <Typography sx={{ textAlign: "center" }}>
       Number of available recipes:{" "}
       <motion.span
-        animate={{ color, y: yOffset }}
+        animate={{ y: yOffset }} // only animate movement
         transition={{ duration: 1 }}
-        style={{ display: "inline-block" }}
+        style={{
+          display: "inline-block",
+          color: color, // directly bind current color (instant)
+        }}
       >
         {animatedValue}
       </motion.span>
-    </p>
+    </Typography>
   );
 }
-
 
 export default AnimatedCount;
