@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi import Body
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.services.get_ingredients import get_ingredients
 from backend.app.services.generate import generate
@@ -24,8 +25,8 @@ class IngredientsRequest(BaseModel):
     user_ingredients: List[str]
 
 @app.post("/generate_recipes")
-def fetch_recipes(data: IngredientsRequest):
-    return generate(data.user_ingredients)
+def fetch_recipes(recipe_IDs: List[int] = Body(...)):
+    return generate(recipe_IDs)
 
 @app.post("/quick_ingredient_count_update")
 def fetch_recipes(data: IngredientsRequest):

@@ -7,26 +7,25 @@ import os
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
-def generate(chosen_ingredients):
-    path = Path(__file__).resolve().parents[2] / "data" / "cleaned_recipes.csv"
-    df = pd.read_csv(path)
-    df = df.replace([np.inf, -np.inf, np.nan], None)
 
-    df1 = df[
-        df["ingredients"].apply(
-            lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
-        )
-    ]
+def generate(recipe_IDs):
+    path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
+    df = pd.read_csv(path)
+    # df = df.replace([np.inf, -np.inf, np.nan], None)
+
+    # Old code that checks between all ingredients
+    # df1 = df[
+    #     df["ingredients"].apply(
+    #         lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
+    #     )
+    # ]
+    # recipe_IDs = int(recipe_IDs)
+    # print(type(recipe_IDs))
+    recipe_IDs = set(recipe_IDs)
+    # print(df.head())
+    df1 = df[df["id"].isin(recipe_IDs)]
 
     chosen_recipes = df1.sample(3)
-
-    # Capitalization so it looks better on cards
-    chosen_recipes["ingredients"] = chosen_recipes["ingredients"].apply(
-        lambda s: [i.capitalize() for i in eval(s)]
-    )
-    chosen_recipes["steps"] = chosen_recipes["steps"].apply(
-        lambda s: [step.capitalize() for step in eval(s)]
-    )
 
     # Adding image/page URLs to dictionary to pull them out in RecipeCard
     chosen_recipes[["image_url", "page_url"]] = chosen_recipes["name"].apply(
@@ -51,16 +50,15 @@ def google_searches(recipe_name):
 
     response = requests.get(url)
     data = response.json()
-    # print("Google API raw response:", data)
-    # print("Current working directory:", os.getcwd())
-    # print(".env exists:", os.path.exists(".env"))
 
     image_url = data["items"][0]["link"]
     page_url = data["items"][0]["image"]["contextLink"]
 
     return image_url, page_url
 
-# Test
-# recipes = generate(["mango"])
+
+# # Test
+# recipes = generate([137739, 112140, 8559, 83873])
 # print(recipes)
 # print(recipes[0])
+# print(type(137739))

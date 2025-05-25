@@ -34,30 +34,6 @@ function RecipePage({ mode, setMode }) {
       .catch((err) => console.error("Error fetching ingredients:", err));
   }, []);
 
-  const submitIngredients = async () => {
-    setRecipeLoading(true);
-    const response = await fetch("http://localhost:8000/generate_recipes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_ingredients: selected.map((opt) => opt.value),
-      }),
-    });
-
-    const found_recipes = await response.json();
-    setFoundRecipes(found_recipes.length);
-    setFirstRecipe(found_recipes[0]);
-    setSecondRecipe(found_recipes[1]);
-    setThirdRecipe(found_recipes[2]);
-
-    setFadeTrigger(true);
-    setTimeout(() => setFadeTrigger(true), 50);
-    setRecipeLoading(false);
-    setHasGenerated(true);
-  };
-
   const searchSmallDataset = async (selected) => {
     const response = await fetch("http://localhost:8000/quick_ingredient_count_update", {
       method: "POST",
@@ -69,14 +45,38 @@ function RecipePage({ mode, setMode }) {
       }),
     });
 
-    const s = await response.json();
-    setSmallRecipeCount(s);
+    const recipe_ids = await response.json();
+    setSmallRecipeCount(recipe_ids.length);
+    setSelectedOptions(recipe_ids);
   };
 
-  const handleIngredientChange = (selected) => {
-    setSelectedOptions(selected);
-    searchSmallDataset(selected);
+  const submitIngredients = async () => {
+    setRecipeLoading(true);
+    const response = await fetch("http://localhost:8000/generate_recipes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selected),
+    }).catch((err) => console.error("Error generating recipes:", err));
+
+    const found_recipes = await response.json();
+    console.log(found_recipes);
+    setFoundRecipes(found_recipes.length);
+    setFirstRecipe(found_recipes[0]);
+    setSecondRecipe(found_recipes[1]);
+    setThirdRecipe(found_recipes[2]);
+
+    setFadeTrigger(true);
+    setTimeout(() => setFadeTrigger(true), 50);
+    setRecipeLoading(false);
+    setHasGenerated(true);
   };
+
+  // const handleIngredientChange = (selected) => {
+  //   setSelectedOptions(selected);
+  //   searchSmallDataset(selected);
+  // };
 
   const toggleTheme = () => {
     setMode((prev) => (prev === "light" ? "dark" : "light"));
@@ -162,7 +162,7 @@ function RecipePage({ mode, setMode }) {
         </Tooltip>
       </Box>
       <Grid container direction="column">
-        <Grid item xs={12}>
+        <Grid>
           <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
             Recipe Generator
           </Typography>
@@ -179,32 +179,32 @@ function RecipePage({ mode, setMode }) {
               isMulti
               name="ingredients"
               options={ingredient_dropdown}
-              onChange={(selected) => handleIngredientChange(selected)}
+              onChange={(selected) => searchSmallDataset(selected)}
               className="basic-multi-select"
               classNamePrefix="select"
               styles={customStyles}
             />
           </Grid>
-          <Grid item>
+          <Grid>
             <Button variant="contained" onClick={submitIngredients}>
               Generate
             </Button>
           </Grid>
         </Grid>
 
-        <Grid item>
+        <Grid>
           <AnimatedCount count={smallRecipeCount} />
         </Grid>
 
         <Fade in={fadeTrigger} timeout={500}>
           <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
-            <Grid item>
+            <Grid>
               <RecipeCard recipe={firstRecipe} />
             </Grid>
-            <Grid item>
+            <Grid>
               <RecipeCard recipe={secondRecipe} />
             </Grid>
-            <Grid item>
+            <Grid>
               <RecipeCard recipe={thirdRecipe} />
             </Grid>
           </Grid>
