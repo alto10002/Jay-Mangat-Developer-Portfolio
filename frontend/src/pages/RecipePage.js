@@ -149,30 +149,6 @@ function RecipePage({ mode, setMode }) {
             {mode === "light" ? <Brightness4 /> : <Brightness7 />}
           </IconButton>
         </Tooltip>
-
-        <Tooltip title="LinkedIn">
-          <IconButton
-            component="a"
-            href="https://www.linkedin.com/in/jay-mangat/"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: theme.palette.accent.main }}
-          >
-            <AiFillLinkedin size={24} />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="GitHub">
-          <IconButton
-            component="a"
-            href="https://github.com/alto10002"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: theme.palette.accent.main }}
-          >
-            <AiFillGithub size={24} />
-          </IconButton>
-        </Tooltip>
       </Box>
       <Grid container direction="column">
         <Grid>
@@ -240,6 +216,47 @@ function RecipePage({ mode, setMode }) {
           </Grid>
         </Fade>
       </Grid>
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 16, // Distance from the bottom of the screen
+          left: "50%", // Start from horizontal center
+          transform: "translateX(-50%)", // Shift it back by 50% of its width to center
+          // zIndex: 1300, // Optional: ensure it stays on top of other content
+          display: "flex", // Optional: use flex if you want content to be centered inside
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Tooltip title="LinkedIn">
+          <IconButton
+            component="a"
+            href="https://www.linkedin.com/in/jay-mangat/"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.accent.main }}
+          >
+            <Typography>LinkedIn</Typography>
+            <AiFillLinkedin size={24} />
+          </IconButton>
+        </Tooltip>
+
+        <Typography>|</Typography>
+
+        <Tooltip title="GitHub">
+          <IconButton
+            component="a"
+            href="https://github.com/alto10002"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.accent.main }}
+          >
+            <Typography>Github</Typography>
+            <AiFillGithub size={24} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       {/* <Box
         sx={{
           position: "fixed",
