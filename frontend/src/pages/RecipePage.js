@@ -51,6 +51,11 @@ function RecipePage({ mode, setMode }) {
   };
 
   const submitIngredients = async () => {
+    if (smallRecipeCount < 3) {
+      alert("Please select at least 3 ingredients to generate recipes.");
+      return;
+    }
+
     setRecipeLoading(true);
     const response = await fetch("http://localhost:8000/generate_recipes", {
       method: "POST",
