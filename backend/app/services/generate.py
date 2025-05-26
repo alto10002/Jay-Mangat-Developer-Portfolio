@@ -11,18 +11,7 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 def generate(recipe_IDs):
     path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
     df = pd.read_csv(path)
-    # df = df.replace([np.inf, -np.inf, np.nan], None)
-
-    # Old code that checks between all ingredients
-    # df1 = df[
-    #     df["ingredients"].apply(
-    #         lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
-    #     )
-    # ]
-    # recipe_IDs = int(recipe_IDs)
-    # print(type(recipe_IDs))
     recipe_IDs = set(recipe_IDs)
-    # print(df.head())
     df1 = df[df["id"].isin(recipe_IDs)]
 
     chosen_recipes = df1.sample(3)
