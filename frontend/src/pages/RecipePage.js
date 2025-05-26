@@ -210,7 +210,7 @@ function RecipePage({ mode, setMode }) {
           </Grid>
         </Fade>
       </Grid>
-      <Box
+      {/* <Box
         sx={{
           position: "fixed",
           justifyContent: "center", // center horizontally
@@ -235,7 +235,7 @@ function RecipePage({ mode, setMode }) {
         >
           Load More
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 }
