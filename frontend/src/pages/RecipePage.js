@@ -56,7 +56,7 @@ function RecipePage({ mode, setMode }) {
     searchSmallDataset(selected);
   };
 
- const submitIngredients = async () => {
+  const submitIngredients = async () => {
     if (smallRecipeCount < 3) {
       alert("Please select at least 3 ingredients to generate recipes.");
       return;
@@ -70,7 +70,9 @@ function RecipePage({ mode, setMode }) {
       const response = await fetch("http://localhost:8000/generate_recipes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(selected),
+        body: JSON.stringify({
+          user_ingredients: selected.map((opt) => opt.value),
+        }),
       }).catch((err) => console.error("Error generating recipes:", err));
 
       const found_recipes = await response.json();
