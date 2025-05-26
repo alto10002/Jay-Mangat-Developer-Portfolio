@@ -1,13 +1,26 @@
 import { useState, useEffect } from "react";
 import { Box, Card, CardContent, CardMedia, Collapse, IconButton, List, ListItem, Typography } from "@mui/material";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import { alpha } from "@mui/material/styles";
 
 const RecipeCard = ({ recipe }) => {
   const [expanded, setExpanded] = useState(false);
   const handleExpandClick = () => setExpanded((prev) => !prev);
 
   return (
-    <Card sx={{ width: 475, wordWrap: "break-word", bgcolor: "primary.main" }}>
+    <Card
+      sx={{
+        width: 475,
+        wordWrap: "break-word",
+        bgcolor: "background.main",
+        border: 2,
+        borderColor: "primary.main",
+        "&:hover": {
+          boxShadow: (theme) => `0 4px 30px ${alpha(theme.palette.primary.main, 0.5)}`,
+          transform: "translateY(-10px) scale(1.05)", //might remove scale, feels like too much
+        },
+      }}
+    >
       <Box onClick={handleExpandClick} sx={{ cursor: "pointer", userSelect: "none" }}>
         <CardMedia
           component="img"

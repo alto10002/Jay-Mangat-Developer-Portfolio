@@ -25,6 +25,8 @@ function RecipePage({ mode, setMode }) {
   const theme = useTheme();
   const customStyles = getReactSelectStyles(theme);
   const [recipeLoading, setRecipeLoading] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -33,30 +35,6 @@ function RecipePage({ mode, setMode }) {
       .then((data) => setIngreDropdown(data))
       .catch((err) => console.error("Error fetching ingredients:", err));
   }, []);
-
-  const submitIngredients = async () => {
-    setRecipeLoading(true);
-    const response = await fetch("http://localhost:8000/generate_recipes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_ingredients: selected.map((opt) => opt.value),
-      }),
-    });
-
-    const found_recipes = await response.json();
-    setFoundRecipes(found_recipes.length);
-    setFirstRecipe(found_recipes[0]);
-    setSecondRecipe(found_recipes[1]);
-    setThirdRecipe(found_recipes[2]);
-
-    setFadeTrigger(true);
-    setTimeout(() => setFadeTrigger(true), 50);
-    setRecipeLoading(false);
-    setHasGenerated(true);
-  };
 
   const searchSmallDataset = async (selected) => {
     const response = await fetch("http://localhost:8000/quick_ingredient_count_update", {
@@ -76,6 +54,47 @@ function RecipePage({ mode, setMode }) {
   const handleIngredientChange = (selected) => {
     setSelectedOptions(selected);
     searchSmallDataset(selected);
+  };
+
+  const submitIngredients = async () => {
+    if (smallRecipeCount < 3) {
+      alert("Please select at least 3 ingredients to generate recipes.");
+      return;
+    }
+
+    setRecipeLoading(true); // Show loading screen immediately
+    setFadeIn(false); // Reset fadeIn to hide new recipes
+    setFadeOut(false); // Reset fadeOut in case of previous runs
+
+    try {
+      const response = await fetch("http://localhost:8000/generate_recipes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_ingredients: selected.map((opt) => opt.value),
+        }),
+      }).catch((err) => console.error("Error generating recipes:", err));
+
+      const found_recipes = await response.json();
+
+      // After fetching, hide loading screen and fade out old recipes
+      setRecipeLoading(false);
+      setFadeOut(true);
+
+      // Wait for fade-out duration before updating and fading in new
+      setTimeout(() => {
+        setFirstRecipe(found_recipes[0]);
+        setSecondRecipe(found_recipes[1]);
+        setThirdRecipe(found_recipes[2]);
+        setFadeOut(false);
+        setFadeIn(true); // Fade in new recipes
+        setHasGenerated(true);
+      }, 500); // Match the fade-out duration
+    } catch (err) {
+      console.error("Error fetching recipes:", err);
+      setRecipeLoading(false);
+      alert("An error occurred while generating recipes.");
+    }
   };
 
   const toggleTheme = () => {
@@ -136,33 +155,9 @@ function RecipePage({ mode, setMode }) {
             {mode === "light" ? <Brightness4 /> : <Brightness7 />}
           </IconButton>
         </Tooltip>
-
-        <Tooltip title="LinkedIn">
-          <IconButton
-            component="a"
-            href="https://www.linkedin.com/in/jay-mangat/"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: theme.palette.accent.main }}
-          >
-            <AiFillLinkedin size={24} />
-          </IconButton>
-        </Tooltip>
-
-        <Tooltip title="GitHub">
-          <IconButton
-            component="a"
-            href="https://github.com/alto10002"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: theme.palette.accent.main }}
-          >
-            <AiFillGithub size={24} />
-          </IconButton>
-        </Tooltip>
       </Box>
       <Grid container direction="column">
-        <Grid item xs={12}>
+        <Grid>
           <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
             Recipe Generator
           </Typography>
@@ -174,54 +169,115 @@ function RecipePage({ mode, setMode }) {
 
         <Grid container justifyContent="center" spacing={2}>
           <Grid>
-            <Select
-              defaultValue={[]}
-              isMulti
-              name="ingredients"
-              options={ingredient_dropdown}
-              onChange={(selected) => handleIngredientChange(selected)}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              styles={customStyles}
-            />
+            <Box
+              sx={{
+                borderRadius: 1,
+                "&:hover": {
+                  boxShadow: (theme) => `0 0 15px ${theme.palette.primary.main}`,
+                },
+              }}
+            >
+              <Select
+                defaultValue={[]}
+                isMulti
+                name="ingredients"
+                options={ingredient_dropdown}
+                onChange={(selected) => searchSmallDataset(selected)}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                styles={customStyles}
+              />
+            </Box>
           </Grid>
-          <Grid item>
-            <Button variant="contained" onClick={submitIngredients}>
+
+          <Grid>
+            <Button
+              variant="contained"
+              onClick={submitIngredients}
+              sx={{
+                "&:hover": {
+                  boxShadow: (theme) => `0 0 15px ${theme.palette.primary.main}`,
+                },
+              }}
+            >
               Generate
             </Button>
           </Grid>
         </Grid>
 
-        <Grid item>
+        <Grid>
           <AnimatedCount count={smallRecipeCount} />
         </Grid>
-
-        <Fade in={fadeTrigger} timeout={500}>
+        <Fade in={!fadeOut && hasGenerated} timeout={500}>
           <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
-            <Grid item>
+            <Grid>
               <RecipeCard recipe={firstRecipe} />
             </Grid>
-            <Grid item>
+            <Grid>
               <RecipeCard recipe={secondRecipe} />
             </Grid>
-            <Grid item>
+            <Grid>
               <RecipeCard recipe={thirdRecipe} />
             </Grid>
           </Grid>
         </Fade>
       </Grid>
+
       <Box
         sx={{
           position: "fixed",
-          bottom: 25,
-          right: 800,
+          bottom: 16, // Distance from the bottom of the screen
+          left: "50%", // Start from horizontal center
+          transform: "translateX(-50%)", // Shift it back by 50% of its width to center
+          // zIndex: 1300, // Optional: ensure it stays on top of other content
+          display: "flex", // Optional: use flex if you want content to be centered inside
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Tooltip title="LinkedIn">
+          <IconButton
+            component="a"
+            href="https://www.linkedin.com/in/jay-mangat/"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.accent.main }}
+          >
+            <Typography>LinkedIn</Typography>
+            <AiFillLinkedin size={24} />
+          </IconButton>
+        </Tooltip>
+
+        <Typography>|</Typography>
+
+        <Tooltip title="GitHub">
+          <IconButton
+            component="a"
+            href="https://github.com/alto10002"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ color: theme.palette.accent.main }}
+          >
+            <Typography>Github</Typography>
+            <AiFillGithub size={24} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      {/* <Box
+        sx={{
+          position: "fixed",
+          justifyContent: "center", // center horizontally
+          alignItems: "center",
+          minHeight: '120vh',
           display: "flex",
           gap: 1.5,
         }}
       >
         <Button
           variant="contained"
-          onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))}
+          onClick={() => {
+            // Your actual load more logic here!
+          }}
           sx={{
             color: theme.palette.accent.main,
             borderRadius: "999px", // makes it pill-shaped
@@ -231,9 +287,8 @@ function RecipePage({ mode, setMode }) {
           }}
         >
           Load More
-          {mode === "light" ? <Brightness4 /> : <Brightness7 />}
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

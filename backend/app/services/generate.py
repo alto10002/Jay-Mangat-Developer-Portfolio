@@ -7,6 +7,7 @@ import os
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
+
 def generate(chosen_ingredients):
     path = Path(__file__).resolve().parents[2] / "data" / "cleaned_recipes.csv"
     df = pd.read_csv(path)
@@ -51,16 +52,15 @@ def google_searches(recipe_name):
 
     response = requests.get(url)
     data = response.json()
-    # print("Google API raw response:", data)
-    # print("Current working directory:", os.getcwd())
-    # print(".env exists:", os.path.exists(".env"))
 
     image_url = data["items"][0]["link"]
     page_url = data["items"][0]["image"]["contextLink"]
 
     return image_url, page_url
 
-# Test
-# recipes = generate(["mango"])
+
+# # Test
+# recipes = generate([137739, 112140, 8559, 83873])
 # print(recipes)
 # print(recipes[0])
+# print(type(137739))
