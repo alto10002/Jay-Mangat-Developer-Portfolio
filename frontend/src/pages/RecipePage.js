@@ -25,6 +25,8 @@ function RecipePage({ mode, setMode }) {
   const theme = useTheme();
   const customStyles = getReactSelectStyles(theme);
   const [recipeLoading, setRecipeLoading] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -56,32 +58,38 @@ function RecipePage({ mode, setMode }) {
       return;
     }
 
-    setRecipeLoading(true);
-    const response = await fetch("http://localhost:8000/generate_recipes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(selected),
-    }).catch((err) => console.error("Error generating recipes:", err));
+    setRecipeLoading(true); // Show loading screen immediately
+    setFadeIn(false); // Reset fadeIn to hide new recipes
+    setFadeOut(false); // Reset fadeOut in case of previous runs
 
-    const found_recipes = await response.json();
-    console.log(found_recipes);
-    setFoundRecipes(found_recipes.length);
-    setFirstRecipe(found_recipes[0]);
-    setSecondRecipe(found_recipes[1]);
-    setThirdRecipe(found_recipes[2]);
+    try {
+      const response = await fetch("http://localhost:8000/generate_recipes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selected),
+      }).catch((err) => console.error("Error generating recipes:", err));
 
-    setFadeTrigger(true);
-    setTimeout(() => setFadeTrigger(true), 50);
-    setRecipeLoading(false);
-    setHasGenerated(true);
+      const found_recipes = await response.json();
+
+      // After fetching, hide loading screen and fade out old recipes
+      setRecipeLoading(false);
+      setFadeOut(true);
+
+      // Wait for fade-out duration before updating and fading in new
+      setTimeout(() => {
+        setFirstRecipe(found_recipes[0]);
+        setSecondRecipe(found_recipes[1]);
+        setThirdRecipe(found_recipes[2]);
+        setFadeOut(false);
+        setFadeIn(true); // Fade in new recipes
+        setHasGenerated(true);
+      }, 500); // Match the fade-out duration
+    } catch (err) {
+      console.error("Error fetching recipes:", err);
+      setRecipeLoading(false);
+      alert("An error occurred while generating recipes.");
+    }
   };
-
-  // const handleIngredientChange = (selected) => {
-  //   setSelectedOptions(selected);
-  //   searchSmallDataset(selected);
-  // };
 
   const toggleTheme = () => {
     setMode((prev) => (prev === "light" ? "dark" : "light"));
@@ -200,8 +208,7 @@ function RecipePage({ mode, setMode }) {
         <Grid>
           <AnimatedCount count={smallRecipeCount} />
         </Grid>
-
-        <Fade in={fadeTrigger} timeout={500}>
+        <Fade in={!fadeOut && hasGenerated} timeout={500}>
           <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
             <Grid>
               <RecipeCard recipe={firstRecipe} />
