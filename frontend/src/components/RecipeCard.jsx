@@ -17,6 +17,7 @@ const RecipeCard = ({ recipe }) => {
         borderColor: "primary.main",
         "&:hover": {
           boxShadow: (theme) => `0 4px 30px ${alpha(theme.palette.primary.main, 0.5)}`,
+          transform: "translateY(-10px) scale(1.05)", //might remove scale, feels like too much
         },
       }}
     >
