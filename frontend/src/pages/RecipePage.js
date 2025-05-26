@@ -47,12 +47,16 @@ function RecipePage({ mode, setMode }) {
       }),
     });
 
-    const recipe_ids = await response.json();
-    setSmallRecipeCount(recipe_ids.length);
-    setSelectedOptions(recipe_ids);
+    const s = await response.json();
+    setSmallRecipeCount(s);
   };
 
-  const submitIngredients = async () => {
+  const handleIngredientChange = (selected) => {
+    setSelectedOptions(selected);
+    searchSmallDataset(selected);
+  };
+
+ const submitIngredients = async () => {
     if (smallRecipeCount < 3) {
       alert("Please select at least 3 ingredients to generate recipes.");
       return;

@@ -25,8 +25,8 @@ class IngredientsRequest(BaseModel):
     user_ingredients: List[str]
 
 @app.post("/generate_recipes")
-def fetch_recipes(recipe_IDs: List[int] = Body(...)):
-    return generate(recipe_IDs)
+def fetch_recipes(data: IngredientsRequest):
+    return generate(data.user_ingredients)
 
 @app.post("/quick_ingredient_count_update")
 def fetch_recipes(data: IngredientsRequest):
