@@ -187,19 +187,37 @@ function RecipePage({ mode, setMode }) {
 
         <Grid container justifyContent="center" spacing={2}>
           <Grid>
-            <Select
-              defaultValue={[]}
-              isMulti
-              name="ingredients"
-              options={ingredient_dropdown}
-              onChange={(selected) => searchSmallDataset(selected)}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              styles={customStyles}
-            />
+            <Box
+              sx={{
+                borderRadius: 1,
+                "&:hover": {
+                  boxShadow: (theme) => `0 0 15px ${theme.palette.primary.main}`,
+                },
+              }}
+            >
+              <Select
+                defaultValue={[]}
+                isMulti
+                name="ingredients"
+                options={ingredient_dropdown}
+                onChange={(selected) => searchSmallDataset(selected)}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                styles={customStyles}
+              />
+            </Box>
           </Grid>
+
           <Grid>
-            <Button variant="contained" onClick={submitIngredients}>
+            <Button
+              variant="contained"
+              onClick={submitIngredients}
+              sx={{
+                "&:hover": {
+                  boxShadow: (theme) => `0 0 15px ${theme.palette.primary.main}`,
+                },
+              }}
+            >
               Generate
             </Button>
           </Grid>
