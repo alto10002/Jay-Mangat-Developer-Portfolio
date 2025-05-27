@@ -10,6 +10,7 @@ import { Brightness4, Brightness7, Palette } from "@mui/icons-material";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
+import LiquidBackground from '../components/LiquidBackground';
 
 function RecipePage({ mode, setMode }) {
   //javascript logic
@@ -103,6 +104,7 @@ function RecipePage({ mode, setMode }) {
 
   return (
     <Box>
+      <LiquidBackground />
       {recipeLoading && (
         <Box
           sx={{
