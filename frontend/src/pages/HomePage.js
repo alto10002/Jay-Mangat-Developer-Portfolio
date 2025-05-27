@@ -1,5 +1,8 @@
-function HomePage() {
-  return <h1>This is the Home Page</h1>;
-}
+import React from 'react';
+import LiquidBackground from '../components/LiquidBackground';
+
+const HomePage = () => (
+  <LiquidBackground />
+);
 
 export default HomePage;
