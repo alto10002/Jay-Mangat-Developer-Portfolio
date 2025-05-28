@@ -1,0 +1,14 @@
+# Use Python as base
+FROM python:3.11-slim
+
+# Set working directory to /app
+WORKDIR /app
+
+# Copy only the backend code (adjust path as needed)
+COPY ./backend /app
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Run FastAPI app
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
