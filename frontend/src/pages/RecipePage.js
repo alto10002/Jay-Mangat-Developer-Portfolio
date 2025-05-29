@@ -200,7 +200,7 @@ function RecipePage({ mode, setMode }) {
                 },
               }}
             >
-              Generate
+              Bon Appétit!
             </Button>
           </Grid>
         </Grid>
