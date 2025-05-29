@@ -28,3 +28,4 @@ __pycache__
 *.ipnyb
 *.pyc
 *.env
+build/
