@@ -68,7 +68,7 @@ function HomePage() {
                 />
 
                 {/* Right Side: Text and Button */}
-                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 , color:'text.card'}}>
                   <CardContent>
                     <Typography gutterBottom variant="h4">
                       What's in your pantry?
@@ -107,7 +107,7 @@ function HomePage() {
                 />
 
                 {/* Right Side: Text and Button */}
-                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color:'text.card'}}>
                   <CardContent>
                     <Typography gutterBottom variant="h4">
                       Air Quality Index Dashboard
