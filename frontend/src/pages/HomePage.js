@@ -50,50 +50,6 @@ function HomePage() {
               Hi. I'm Jay and here's where I showcase some of my projects.
             </Typography>
           </FadeInSection>
-          {/* 
-          <div style={{ height: "100vh" }}></div>
-          <FadeInSection>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: "100vh",
-                textAlign: "center",
-              }}
-            >
-              <Typography variant="h2" gutterBottom>
-                Welcome to My Project!
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Check out my recipe generator project.
-              </Typography>
-              <Button variant="contained" color="primary" component={Link} to="/recipes">
-                View Recipes Project
-              </Button>
-            </Box>
-          </FadeInSection>
-          <div style={{ height: "100vh" }}></div>
-          <FadeInSection>
-            <Typography variant="h1" color="theme.palette.text.primary">
-              C
-            </Typography>
-          </FadeInSection>
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1 }}
-              style={{ textAlign: "center", marginTop: "50vh" }}
-            >
-              <h2>My Project: Recipe Generator</h2>
-              <p>Generate custom recipes from your ingredients!</p>
-              <Link to="/recipes">View Recipes Project</Link>
-            </motion.div>
-          </div>
-           */}
           <FadeInSection>
             <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
               <Card
@@ -115,17 +71,53 @@ function HomePage() {
                 <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
                   <CardContent>
                     <Typography gutterBottom variant="h4">
-                      Recipe Generator
+                      What's in your pantry?
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Searches a dataset of 200,000 recipes to find one that fits all your selected ingredients. Based on
-                      these recipes you will be able to see the cooking time, number of total ingredients required, and
-                      cooking instructions for each recipe. The generator also procedurally gets an image for each
-                      recipe and links to a site which hosts the recipe.
+                      Searches a dataset of over 200,000 recipes to find one that fits all your selected ingredients. Based
+                      on these recipes you will be able to see the cooking time, number of total ingredients required,
+                      and cooking instructions for each recipe. The generator also procedurally retrieves an image for each
+                      recipe and links to a site hosting the recipe.
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ mt: "auto", ml: 2 }}>
                     <Button variant="contained" component={Link} to="/recipes">
+                      View Project
+                    </Button>
+                  </CardActions>
+                </Box>
+              </Card>
+            </Box>
+          </FadeInSection>
+          <FadeInSection>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+              <Card
+                sx={{
+                  display: "flex",
+                  width: "75vw", // Span 75% of the viewport width
+                  maxHeight: 300, // Optional: control max height
+                }}
+              >
+                {/* Left Side: Image */}
+                <CardMedia
+                  component="img"
+                  sx={{ width: "40%", objectFit: "cover" }}
+                  image="/aqi_dashboard_thumbnail.png"
+                  alt="Dashboard Project"
+                />
+
+                {/* Right Side: Text and Button */}
+                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                  <CardContent>
+                    <Typography gutterBottom variant="h4">
+                      Air Quality Index Dashboard
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      A dashboard that displays the air quality index for various Indian cities. 
+                    </Typography>
+                  </CardContent>
+                  <CardActions sx={{ mt: "auto", ml: 2 }}>
+                    <Button variant="contained" component={Link} to="https://dsci-532-2025-23-aqi-dashboard.onrender.com/">
                       View Project
                     </Button>
                   </CardActions>
