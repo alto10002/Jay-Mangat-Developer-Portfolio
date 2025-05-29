@@ -65,8 +65,6 @@ function RecipePage({ mode, setMode }) {
     setFadeIn(false); // Reset fadeIn to hide new recipes
     setFadeOut(false); // Reset fadeOut in case of previous runs
 
-    console.log("Sending user_ingredients:", selected.map((opt) => opt.value));
-
     try {
       const response = await fetch(`${apiUrl}/generate_recipes`, {
         method: "POST",
@@ -84,7 +82,6 @@ function RecipePage({ mode, setMode }) {
 
       // Wait for fade-out duration before updating and fading in new
       setTimeout(() => {
-        console.log(found_recipes)
         setFirstRecipe(found_recipes[0]);
         setSecondRecipe(found_recipes[1]);
         setThirdRecipe(found_recipes[2]);
