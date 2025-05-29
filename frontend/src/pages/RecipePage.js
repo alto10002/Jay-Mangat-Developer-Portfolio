@@ -28,17 +28,19 @@ function RecipePage({ mode, setMode }) {
   const [recipeLoading, setRecipeLoading] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
   const [fadeIn, setFadeIn] = useState(false);
+  const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+
 
   // Get list of ingredients from csv data file
   useEffect(() => {
-    fetch("http://localhost:8000/ingredients")
+    fetch(`${apiUrl}/ingredients`)
       .then((res) => res.json())
       .then((data) => setIngreDropdown(data))
       .catch((err) => console.error("Error fetching ingredients:", err));
   }, []);
 
   const searchSmallDataset = async (selected) => {
-    const response = await fetch("http://localhost:8000/quick_ingredient_count_update", {
+    const response = await fetch(`${apiUrl}/quick_ingredient_count_update`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +70,7 @@ function RecipePage({ mode, setMode }) {
     setFadeOut(false); // Reset fadeOut in case of previous runs
 
     try {
-      const response = await fetch("http://localhost:8000/generate_recipes", {
+      const response = await fetch(`${apiUrl}/generate_recipes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
