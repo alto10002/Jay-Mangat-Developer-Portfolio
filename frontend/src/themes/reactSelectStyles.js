@@ -1,4 +1,3 @@
-// theme/reactSelectStyles.js
 export const getReactSelectStyles = (theme) => ({
   container: (provided) => ({
     ...provided,
@@ -12,12 +11,18 @@ export const getReactSelectStyles = (theme) => ({
   menu: (provided) => ({
     ...provided,
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.text.primary,
+    color: theme.palette.text.card, // 🔥 updated to use text.card
   }),
   option: (provided, { isFocused, isSelected }) => ({
     ...provided,
-    backgroundColor: isSelected ? theme.palette.primary.main : isFocused ? theme.palette.action.hover : undefined,
-    color: isSelected ? theme.palette.primary.contrastText : theme.palette.text.primary,
+    backgroundColor: isSelected
+      ? theme.palette.primary.main
+      : isFocused
+      ? theme.palette.action.hover
+      : undefined,
+    color: isSelected
+      ? theme.palette.primary.contrastText
+      : theme.palette.text.card, // 🔥 updated to use text.card
   }),
   multiValue: (provided) => ({
     ...provided,
@@ -25,6 +30,6 @@ export const getReactSelectStyles = (theme) => ({
   }),
   multiValueLabel: (provided) => ({
     ...provided,
-    color: theme.palette.text.primary,
+    color: theme.palette.text.card, // 🔥 updated to use text.card
   }),
 });

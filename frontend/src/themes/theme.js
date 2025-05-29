@@ -3,21 +3,22 @@ export const getDesignTokens = (mode) => ({
   palette: {
     mode,
     background: {
-      default: mode === 'light' ? '#e1e1e1' : '#06080b',
+      default: mode === 'light' ? '#1b404b' : '#06080b',
       paper: mode === 'light' ? '#ffffff' : '#0e0e0e',
     },
     primary: {
-      main:  mode === 'light' ? '#2db8d1' : '#929292', 
+      main:  mode === 'light' ? '#d1e4e8' : '#929292', 
     },
     secondary: {
       main:  mode === 'light' ? '#06080b' : '#732979',
     },
     accent: {
-      main: mode === 'light' ? '#b372fd' : '#dcac00'
+      main: mode === 'light' ? '#d1e4e8' : '#dcac00'
     },
     text: {
-      primary: mode === 'light' ? '#06080b' : '#f0f0f0',
-      secondary: mode === 'light' ? '#333' : '#aaa',
+      primary: mode === 'light' ? '#f0f0f0' : '#f0f0f0',
+      // secondary: mode === 'light' ? '#333' : '#aaa',
+      card: mode === 'light' ? '#000000' : '#f0f0f0',
     },
   },
   typography: {
