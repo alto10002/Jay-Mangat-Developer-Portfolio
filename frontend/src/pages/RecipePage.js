@@ -40,6 +40,7 @@ function RecipePage({ mode, setMode }) {
   }, []);
 
   const searchSmallDataset = async (selected) => {
+    setSelectedOptions(selected);
     const response = await fetch(`${apiUrl}/quick_ingredient_count_update`, {
       method: "POST",
       headers: {
@@ -54,20 +55,17 @@ function RecipePage({ mode, setMode }) {
     setSmallRecipeCount(s);
   };
 
-  const handleIngredientChange = (selected) => {
-    setSelectedOptions(selected);
-    searchSmallDataset(selected);
-  };
-
   const submitIngredients = async () => {
     if (smallRecipeCount < 3) {
-      alert("Please select at least 3 ingredients to generate recipes.");
+      alert("Oops, no recipes found matching your ingredients.");
       return;
     }
 
     setRecipeLoading(true); // Show loading screen immediately
     setFadeIn(false); // Reset fadeIn to hide new recipes
     setFadeOut(false); // Reset fadeOut in case of previous runs
+
+    console.log("Sending user_ingredients:", selected.map((opt) => opt.value));
 
     try {
       const response = await fetch(`${apiUrl}/generate_recipes`, {
@@ -86,6 +84,7 @@ function RecipePage({ mode, setMode }) {
 
       // Wait for fade-out duration before updating and fading in new
       setTimeout(() => {
+        console.log(found_recipes)
         setFirstRecipe(found_recipes[0]);
         setSecondRecipe(found_recipes[1]);
         setThirdRecipe(found_recipes[2]);
@@ -163,7 +162,7 @@ function RecipePage({ mode, setMode }) {
       <Grid container direction="column">
         <Grid>
           <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
-            Recipe Generator
+            What's in your pantry?
           </Typography>
 
           <Typography variant="h6" align="center" sx={{ mt: 0 }}>
@@ -267,32 +266,6 @@ function RecipePage({ mode, setMode }) {
           </IconButton>
         </Tooltip>
       </Box>
-      {/* <Box
-        sx={{
-          position: "fixed",
-          justifyContent: "center", // center horizontally
-          alignItems: "center",
-          minHeight: '120vh',
-          display: "flex",
-          gap: 1.5,
-        }}
-      >
-        <Button
-          variant="contained"
-          onClick={() => {
-            // Your actual load more logic here!
-          }}
-          sx={{
-            color: theme.palette.accent.main,
-            borderRadius: "999px", // makes it pill-shaped
-            paddingX: 3, // horizontal padding
-            paddingY: 1, // vertical padding
-            textTransform: "none", // optional: keeps text normal case
-          }}
-        >
-          Load More
-        </Button>
-      </Box> */}
     </Box>
   );
 }
