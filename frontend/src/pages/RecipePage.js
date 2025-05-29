@@ -177,7 +177,7 @@ function RecipePage({ mode, setMode }) {
               sx={{
                 borderRadius: 1,
                 "&:hover": {
-                  boxShadow: (theme) => `0 0 15px ${theme.palette.primary.main}`,
+                  boxShadow: (theme) => `0 0 15px ${theme.palette.accent.main}`,
                 },
               }}
             >
@@ -200,7 +200,7 @@ function RecipePage({ mode, setMode }) {
               onClick={submitIngredients}
               sx={{
                 "&:hover": {
-                  boxShadow: (theme) => `0 0 15px ${theme.palette.primary.main}`,
+                  boxShadow: (theme) => `0 0 15px ${theme.palette.accent.main}`,
                 },
               }}
             >
