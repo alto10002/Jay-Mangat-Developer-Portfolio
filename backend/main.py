@@ -11,8 +11,7 @@ app = FastAPI()
 
 origins = [
     "https://jay-mangat.vercel.app",
-    "http://localhost:3000",
-    "https://react-recipes-u4yt.onrender.com"
+    "http://localhost:3000"
 ]
 
 app.add_middleware(

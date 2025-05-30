@@ -26,8 +26,8 @@ def generate(chosen_ingredients):
         file_content = response['Body'].read()
         df = pd.read_parquet(BytesIO(file_content))
     else:
-        path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
-        df = pd.read_csv(path)
+        path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.parquet"
+        df = pd.read_parquet(path)
     df = df.replace([np.inf, -np.inf, np.nan], None)
 
     df1 = df[
