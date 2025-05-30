@@ -11,23 +11,23 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 
 def generate(chosen_ingredients):
-    if os.getenv("USE_S3", "false").lower() == "true":
-        # Load from S3
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-            region_name=os.getenv("AWS_REGION")
-        )
-        bucket_name = "your-bucket-name"
-        file_key = "path/to/yourfile.parquet"
+    # if os.getenv("USE_S3", "false").lower() == "true":
+    #     # Load from S3
+    #     s3_client = boto3.client(
+    #         's3',
+    #         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    #         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+    #         region_name=os.getenv("AWS_REGION")
+    #     )
+    #     bucket_name = "your-bucket-name"
+    #     file_key = "path/to/yourfile.parquet"
 
-        response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-        file_content = response['Body'].read()
-        df = pd.read_parquet(BytesIO(file_content))
-    else:
-        path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.parquet"
-        df = pd.read_parquet(path)
+    #     response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+    #     file_content = response['Body'].read()
+    #     df = pd.read_parquet(BytesIO(file_content))
+    # else:
+    path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.parquet"
+    df = pd.read_parquet(path)
     df = df.replace([np.inf, -np.inf, np.nan], None)
 
     df1 = df[
