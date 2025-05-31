@@ -7,10 +7,11 @@ import os
 import io
 import boto3
 from datetime import datetime
+from memory_profiler import profile
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
-
+@profile
 def generate(chosen_ingredients):
     print(f'Getting dataset at {datetime.utcnow().isoformat()}')
     if os.getenv("USE_S3", "false").lower() == "true":
