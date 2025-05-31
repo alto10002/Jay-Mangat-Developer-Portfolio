@@ -30,3 +30,4 @@ __pycache__
 *.env
 build/
 AWS test.py
+memory usage testing.py
