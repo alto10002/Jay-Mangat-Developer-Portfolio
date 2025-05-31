@@ -11,11 +11,11 @@ from memory_profiler import profile
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
-@profile
+# @profile
 def generate(chosen_ingredients):
     print(f'Getting dataset at {datetime.utcnow().isoformat()}')
     if os.getenv("USE_S3", "false").lower() == "true":
-        print(f'Using S3 at {datetime.utcnow().isoformat()}')
+        print(f'Using S3 at \t {datetime.utcnow().isoformat()}')
         s3_client = boto3.client(
         's3',
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -27,40 +27,48 @@ def generate(chosen_ingredients):
         # file_key = 'smaller_recipes.csv'
 
         response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-        data = response['Body'].read()
-        df = pd.read_csv(io.BytesIO(data))
+        path = response['Body'].read()
+        df = pd.read_csv(io.BytesIO(path))
     else:
-        print(f'Using local data at {datetime.utcnow().isoformat()}')
+        print(f'Using local data at \t {datetime.utcnow().isoformat()}')
         path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
         # path = Path(__file__).resolve().parents[2] / "data" / "smaller_recipes.csv"
-        df = pd.read_csv(path)
+        df = pd.read_csv(path, usecols=['id','ingredients'])
     
-    print(f'Replacing nulls at {datetime.utcnow().isoformat()}')
+    print(f'Replacing nulls at \t {datetime.utcnow().isoformat()}')
     df = df.replace([np.inf, -np.inf, np.nan], None)
-    print(f'Beginning filtering at  {datetime.utcnow().isoformat()}')
+    print(f'Beginning filtering at \t {datetime.utcnow().isoformat()}')
     df1 = df[
         df["ingredients"].apply(
             lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
         )
     ]
-    print(f'Ending filtering at {datetime.utcnow().isoformat()}')
+    print(f'Ending filtering at \t {datetime.utcnow().isoformat()}')
     chosen_recipes = df1.sample(3)
+    
+    
+    chosen_ids = chosen_recipes['id'].tolist()
+    filtered_df = pd.concat(
+    chunk[chunk['id'].isin(chosen_ids)]
+    for chunk in pd.read_csv(path, chunksize=10000)
+    )
+
 
     # Capitalization so it looks better on cards
-    chosen_recipes["ingredients"] = chosen_recipes["ingredients"].apply(
+    filtered_df["ingredients"] = filtered_df["ingredients"].apply(
         lambda s: [i.capitalize() for i in eval(s)]
     )
-    chosen_recipes["steps"] = chosen_recipes["steps"].apply(
+    filtered_df["steps"] = filtered_df["steps"].apply(
         lambda s: [step.capitalize() for step in eval(s)]
     )
 
     # Adding image/page URLs to dictionary to pull them out in RecipeCard
-    chosen_recipes[["image_url", "page_url"]] = chosen_recipes["name"].apply(
+    filtered_df[["image_url", "page_url"]] = filtered_df["name"].apply(
         lambda name: pd.Series(google_searches(name))
     )
-    print(f'Returning records at {datetime.utcnow().isoformat()}')
+    print(f'Returning records at \t {datetime.utcnow().isoformat()}')
     # convert to dicts
-    return chosen_recipes.to_dict(orient="records")
+    return filtered_df.to_dict(orient="records")
 
 
 def google_searches(recipe_name):
