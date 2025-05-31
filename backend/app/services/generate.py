@@ -6,13 +6,15 @@ import requests
 import os
 import io
 import boto3
+from datetime import datetime
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 
 def generate(chosen_ingredients):
+    print(f'Getting dataset at {datetime.utcnow().isoformat()}')
     if os.getenv("USE_S3", "false").lower() == "true":
-        print('Using S3')
+        print(f'Using S3 at {datetime.utcnow().isoformat()}')
         s3_client = boto3.client(
         's3',
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -26,18 +28,19 @@ def generate(chosen_ingredients):
         data = response['Body'].read()
         df = pd.read_csv(io.BytesIO(data))
     else:
-        print('Using local data')
+        print(f'Using local data at {datetime.utcnow().isoformat()}')
         path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
         df = pd.read_csv(path)
     
+    print(f'Replacing nulls at {datetime.utcnow().isoformat()}')
     df = df.replace([np.inf, -np.inf, np.nan], None)
-
+    print(f'Beginning filtering at  {datetime.utcnow().isoformat()}')
     df1 = df[
         df["ingredients"].apply(
             lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
         )
     ]
-
+    print(f'Ending filtering at {datetime.utcnow().isoformat()}')
     chosen_recipes = df1.sample(3)
 
     # Capitalization so it looks better on cards
@@ -52,6 +55,7 @@ def generate(chosen_ingredients):
     chosen_recipes[["image_url", "page_url"]] = chosen_recipes["name"].apply(
         lambda name: pd.Series(google_searches(name))
     )
+    print(f'Returning records at {datetime.utcnow().isoformat()}')
     # convert to dicts
     return chosen_recipes.to_dict(orient="records")
 

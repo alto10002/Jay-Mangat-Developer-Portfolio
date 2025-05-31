@@ -56,6 +56,7 @@ function RecipePage({ mode, setMode }) {
   };
 
   const submitIngredients = async () => {
+    console.log('Beginning submit ingredients at: ' + new Date().toISOString());
     if (smallRecipeCount < 3) {
       alert("Oops, no recipes found matching your ingredients.");
       return;
@@ -94,6 +95,7 @@ function RecipePage({ mode, setMode }) {
       setRecipeLoading(false);
       alert("An error occurred while generating recipes.");
     }
+    console.log('Enging submit ingredients at: ' + new Date().toISOString());
   };
 
   const toggleTheme = () => {
