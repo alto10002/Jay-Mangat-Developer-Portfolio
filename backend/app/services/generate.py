@@ -24,6 +24,7 @@ def generate(chosen_ingredients):
         )
         bucket_name = 'react-recipes-data'
         file_key = 'new_cleaned_recipes.csv'
+        # file_key = 'smaller_recipes.csv'
 
         response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
         data = response['Body'].read()
@@ -31,6 +32,7 @@ def generate(chosen_ingredients):
     else:
         print(f'Using local data at {datetime.utcnow().isoformat()}')
         path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
+        # path = Path(__file__).resolve().parents[2] / "data" / "smaller_recipes.csv"
         df = pd.read_csv(path)
     
     print(f'Replacing nulls at {datetime.utcnow().isoformat()}')
