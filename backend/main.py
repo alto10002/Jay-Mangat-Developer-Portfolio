@@ -16,7 +16,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -29,9 +29,17 @@ def fetch_ingredients():
 class IngredientsRequest(BaseModel):
     user_ingredients: List[str]
 
+# @app.post("/generate_recipes")
+# def fetch_recipes(data: IngredientsRequest):
+#     return generate(data.user_ingredients)
+
 @app.post("/generate_recipes")
 def fetch_recipes(data: IngredientsRequest):
-    return generate(data.user_ingredients)
+    try:
+        return generate(data.user_ingredients)
+    except Exception as e:
+        print(f"Error in /generate_recipes: {e}")
+        raise
 
 @app.post("/quick_ingredient_count_update")
 def fetch_recipes(data: IngredientsRequest):
