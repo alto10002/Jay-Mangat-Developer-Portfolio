@@ -79,6 +79,10 @@ def google_searches(recipe_name):
 
     response = requests.get(url)
     data = response.json()
+    
+    print(f"Google API raw response: {data}")  # Log full response
+    if "items" not in data or not data["items"]:
+        return 'no image url', 'no page url'
 
     image_url = data["items"][0]["link"]
     page_url = data["items"][0]["image"]["contextLink"]
