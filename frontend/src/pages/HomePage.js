@@ -33,100 +33,118 @@ function HomePage() {
   const theme = useTheme();
   return (
     <>
-      <LiquidBackground /> {/* Background fixed behind everything */}
       <Box
         sx={{
-          position: "relative",
-          zIndex: 1, // Ensure content is above background
-          minHeight: "100vh", // Ensure content fills viewport
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          position: "fixed", // 🔥 Locks it to the viewport
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundImage: `url('homepage_background.jpg')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          zIndex: -1, // Keep it behind everything
         }}
-      >
-        <div style={{ height: "200vh", padding: "2rem" }}>
-          <FadeInSection>
-            <Typography variant="h1" color="theme.palette.text.primary">
-              Hi. I'm Jay and here's where I showcase some of my projects.
-            </Typography>
-          </FadeInSection>
-          <FadeInSection>
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-              <Card
-                sx={{
-                  display: "flex",
-                  width: "75vw", // Span 75% of the viewport width
-                  maxHeight: 300, // Optional: control max height
-                }}
-              >
-                {/* Left Side: Image */}
-                <CardMedia
-                  component="img"
-                  sx={{ width: "40%", objectFit: "cover" }}
-                  image="/recipes-thumbnail.png"
-                  alt="Recipe Project"
-                />
+      />
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 1, // Ensure content is above background
+            minHeight: "100vh", // Ensure content fills viewport
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            // minHeight: "100vh", // Ensure it covers the full viewport
+          }}
+        >
+          <div style={{ height: "200vh", padding: "2rem" }}>
+            <FadeInSection>
+              <Typography variant="h1" color="theme.palette.text.primary">
+                Hi. I'm Jay and here's where I showcase some of my projects.
+              </Typography>
+            </FadeInSection>
+            <FadeInSection>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+                <Card
+                  sx={{
+                    display: "flex",
+                    width: "75vw", // Span 75% of the viewport width
+                    maxHeight: 300, // Optional: control max height
+                  }}
+                >
+                  {/* Left Side: Image */}
+                  <CardMedia
+                    component="img"
+                    sx={{ width: "40%", objectFit: "cover" }}
+                    image="/recipes-thumbnail.png"
+                    alt="Recipe Project"
+                  />
 
-                {/* Right Side: Text and Button */}
-                <Box sx={{ display: "flex", flexDirection: "column", flex: 1 , color:'text.card'}}>
-                  <CardContent>
-                    <Typography gutterBottom variant="h4">
-                      What's in your pantry?
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      Searches a dataset of over 200,000 recipes to find one that fits all your selected ingredients. Based
-                      on these recipes you will be able to see the cooking time, number of total ingredients required,
-                      and cooking instructions for each recipe. The generator also procedurally retrieves an image for each
-                      recipe and links to a site hosting the recipe.
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ mt: "auto", ml: 2 }}>
-                    <Button variant="contained" component={Link} to="/recipes">
-                      View Project
-                    </Button>
-                  </CardActions>
-                </Box>
-              </Card>
-            </Box>
-          </FadeInSection>
-          <FadeInSection>
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-              <Card
-                sx={{
-                  display: "flex",
-                  width: "75vw", // Span 75% of the viewport width
-                  maxHeight: 300, // Optional: control max height
-                }}
-              >
-                {/* Left Side: Image */}
-                <CardMedia
-                  component="img"
-                  sx={{ width: "40%", objectFit: "cover" }}
-                  image="/aqi_dashboard_thumbnail.png"
-                  alt="Dashboard Project"
-                />
+                  {/* Right Side: Text and Button */}
+                  <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color: "text.card" }}>
+                    <CardContent>
+                      <Typography gutterBottom variant="h4">
+                        What's in your pantry?
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        Searches a dataset of over 200,000 recipes to find one that fits all your selected ingredients.
+                        Based on these recipes you will be able to see the cooking time, number of total ingredients
+                        required, and cooking instructions for each recipe. The generator also procedurally retrieves an
+                        image for each recipe and links to a site hosting the recipe.
+                      </Typography>
+                    </CardContent>
+                    <CardActions sx={{ mt: "auto", ml: 2 }}>
+                      <Button variant="contained" component={Link} to="/recipes">
+                        View Project
+                      </Button>
+                    </CardActions>
+                  </Box>
+                </Card>
+              </Box>
+            </FadeInSection>
+            <FadeInSection>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+                <Card
+                  sx={{
+                    display: "flex",
+                    width: "75vw", // Span 75% of the viewport width
+                    maxHeight: 300, // Optional: control max height
+                  }}
+                >
+                  {/* Left Side: Image */}
+                  <CardMedia
+                    component="img"
+                    sx={{ width: "40%", objectFit: "cover" }}
+                    image="/aqi_dashboard_thumbnail.png"
+                    alt="Dashboard Project"
+                  />
 
-                {/* Right Side: Text and Button */}
-                <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color:'text.card'}}>
-                  <CardContent>
-                    <Typography gutterBottom variant="h4">
-                      Air Quality Index Dashboard
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      A dashboard that displays the air quality index for various Indian cities. 
-                    </Typography>
-                  </CardContent>
-                  <CardActions sx={{ mt: "auto", ml: 2 }}>
-                    <Button variant="contained" component={Link} to="https://dsci-532-2025-23-aqi-dashboard.onrender.com/">
-                      View Project
-                    </Button>
-                  </CardActions>
-                </Box>
-              </Card>
-            </Box>
-          </FadeInSection>
-        </div>
-      </Box>
+                  {/* Right Side: Text and Button */}
+                  <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color: "text.card" }}>
+                    <CardContent>
+                      <Typography gutterBottom variant="h4">
+                        Air Quality Index Dashboard
+                      </Typography>
+                      <Typography variant="body1" color="text.secondary">
+                        A dashboard that displays the air quality index for various Indian cities.
+                      </Typography>
+                    </CardContent>
+                    <CardActions sx={{ mt: "auto", ml: 2 }}>
+                      <Button
+                        variant="contained"
+                        component={Link}
+                        to="https://dsci-532-2025-23-aqi-dashboard.onrender.com/"
+                      >
+                        View Project
+                      </Button>
+                    </CardActions>
+                  </Box>
+                </Card>
+              </Box>
+            </FadeInSection>
+          </div>
+        </Box>
     </>
   );
 }
