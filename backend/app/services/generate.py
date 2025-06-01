@@ -13,46 +13,40 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 # @profile
 def generate(chosen_ingredients):
-    print(f'Getting dataset at {datetime.utcnow().isoformat()}')
-    if os.getenv("USE_S3", "false").lower() == "true":
-        print(f'Using S3 at \t {datetime.utcnow().isoformat()}')
-        s3_client = boto3.client(
-        's3',
-        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-        region_name=os.getenv("AWS_REGION")
-        )
-        bucket_name = 'react-recipes-data'
-        file_key = 'new_cleaned_recipes.csv'
-        # file_key = 'smaller_recipes.csv'
-
-        response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-        path = response['Body'].read()
-        df = pd.read_csv(io.BytesIO(path))
-    else:
-        print(f'Using local data at \t {datetime.utcnow().isoformat()}')
-        path = Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
-        # path = Path(__file__).resolve().parents[2] / "data" / "smaller_recipes.csv"
-        df = pd.read_csv(path, usecols=['id','ingredients'])
+    def get_data_source():
+        if os.getenv("USE_S3", "false").lower() == "true":
+            print(f'Using S3 at \t {datetime.utcnow().isoformat()}')
+            s3_client = boto3.client(
+                's3',
+                aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+                aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+                region_name=os.getenv("AWS_REGION")
+            )
+            bucket_name = 'react-recipes-data'
+            file_key = 'new_cleaned_recipes.csv'
+            response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
+            return io.BytesIO(response['Body'].read())  # Unified return
+        else:
+            print(f'Using local data at \t {datetime.utcnow().isoformat()}')
+            return Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
+        
     
-    print(f'Replacing nulls at \t {datetime.utcnow().isoformat()}')
+    data_source = get_data_source()
+    df = pd.read_csv(data_source, usecols=['id', 'ingredients'])
     df = df.replace([np.inf, -np.inf, np.nan], None)
-    print(f'Beginning filtering at \t {datetime.utcnow().isoformat()}')
-    df1 = df[
-        df["ingredients"].apply(
-            lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
-        )
-    ]
-    print(f'Ending filtering at \t {datetime.utcnow().isoformat()}')
-    chosen_recipes = df1.sample(3)
-    
-    
-    chosen_ids = chosen_recipes['id'].tolist()
-    filtered_df = pd.concat(
-    chunk[chunk['id'].isin(chosen_ids)]
-    for chunk in pd.read_csv(path, chunksize=10000)
-    )
+    df1 = df[df["ingredients"].apply(lambda lst: all(ingredient in lst for ingredient in chosen_ingredients))]
 
+    chosen_recipes = df1.sample(3)    
+    chosen_ids = chosen_recipes['id'].tolist()
+
+    # Rewind S3 BytesIO if necessary
+    if isinstance(data_source, io.BytesIO):
+        data_source.seek(0)  # Rewind for second read
+
+    filtered_df = pd.concat(
+        chunk[chunk['id'].isin(chosen_ids)]
+        for chunk in pd.read_csv(data_source, chunksize=10000)
+    )
 
     # Capitalization so it looks better on cards
     filtered_df["ingredients"] = filtered_df["ingredients"].apply(
@@ -61,7 +55,6 @@ def generate(chosen_ingredients):
     filtered_df["steps"] = filtered_df["steps"].apply(
         lambda s: [step.capitalize() for step in eval(s)]
     )
-
     # Adding image/page URLs to dictionary to pull them out in RecipeCard
     filtered_df[["image_url", "page_url"]] = filtered_df["name"].apply(
         lambda name: pd.Series(google_searches(name))
@@ -93,5 +86,5 @@ def google_searches(recipe_name):
     return image_url, page_url
 
 # # Test
-# recipes = generate(['chicken','butter'])
-# print(recipes)
+recipes = generate(['chicken','butter'])
+print(recipes)
