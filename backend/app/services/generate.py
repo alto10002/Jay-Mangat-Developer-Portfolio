@@ -86,5 +86,5 @@ def google_searches(recipe_name):
     return image_url, page_url
 
 # # Test
-recipes = generate(['chicken','butter'])
-print(recipes)
+# recipes = generate(['chicken','butter'])
+# print(recipes)
