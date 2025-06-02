@@ -3,22 +3,27 @@ export const getDesignTokens = (mode) => ({
   palette: {
     mode,
     background: {
-      default: mode === 'light' ? '#1b404b' : '#06080b',
-      paper: mode === 'light' ? '#ffffff' : '#0e0e0e',
+      default: mode === "light" ? "#1b404b" : "#06080b",
+      paper: mode === "light" ? "#ffffff" : "#0e0e0e",
     },
     primary: {
-      main:  mode === 'light' ? '#d1e4e8' : '#929292', 
+      main: mode === "light" ? "#d1e4e8" : "#929292",
     },
     secondary: {
-      main:  mode === 'light' ? '#06080b' : '#732979',
+      main: mode === "light" ? "#06080b" : "#732979",
     },
     accent: {
-      main: mode === 'light' ? '#d1e4e8' : '#dcac00'
+      main: mode === "light" ? "#d1e4e8" : "#dcac00",
     },
     text: {
-      primary: mode === 'light' ? '#f0f0f0' : '#f0f0f0',
-      // secondary: mode === 'light' ? '#333' : '#aaa',
-      card: mode === 'light' ? '#000000' : '#f0f0f0',
+      primary: mode === "light" ? "#f0f0f0" : "#f0f0f0",
+      card: mode === "light" ? "#000000" : "#f0f0f0",
+    },
+    homepage: {
+      card: "#2a2f31",
+      text: "#f0f0f0",
+      button: "#c9264a",
+      button2: "#0213ad",
     },
   },
   typography: {
