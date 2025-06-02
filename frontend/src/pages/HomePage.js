@@ -10,6 +10,7 @@ import { FaAws, FaReact, FaHtml5, FaPython } from "react-icons/fa";
 import { SiRender, SiPlotly } from "react-icons/si";
 import { IoLogoVercel, IoLogoJavascript } from "react-icons/io5";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
+import HomePageButton from "../components/HomePageButton";
 
 const FadeInSection = ({ children, delay = 0 }) => {
   const controls = useAnimation();
@@ -118,22 +119,7 @@ function HomePage() {
                         </Typography>
                       </CardContent>
                       <CardActions sx={{ mt: "auto", ml: 2 }}>
-                        <Button
-                          variant="contained"
-                          component={Link}
-                          to="/recipes"
-                          target="_blank"
-                          sx={{
-                            backgroundColor: theme.palette.homepage.button, // ✅ Background color from theme
-                            color: theme.palette.homepage.text, // 🔥 Text color from theme
-                            "&:hover": {
-                              backgroundColor: theme.palette.homepage.button2, // Optional: hover background
-                              color: theme.palette.homepage.text, // Optional: hover text
-                            },
-                          }}
-                        >
-                          Try it out!
-                        </Button>
+                        <HomePageButton linkto="/recipes">Try it out!</HomePageButton>
                         <Button
                           variant="contained"
                           component={Link}
@@ -182,6 +168,7 @@ function HomePage() {
                         <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
                           <ChipBadge label="Dash" icon={SiPlotly} bgColor="#FF2C6D" textAndIconColor="#000000" />
                           <ChipBadge label="Python" icon={FaPython} bgColor="#3d98ff" textAndIconColor="#000000" />
+                          <ChipBadge label="Render" icon={SiRender} bgColor="#a600ff" textAndIconColor="#000000" />
                         </Box>
                         <Typography variant="body1" color="homepage.text">
                           A dashboard that displays the air quality index for various Indian cities.

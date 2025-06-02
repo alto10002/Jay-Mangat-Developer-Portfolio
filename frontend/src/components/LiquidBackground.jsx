@@ -6,9 +6,9 @@ const LiquidBackground = () => {
   const blobColor = theme.palette.primary.main;
 
   const blobs = useMemo(() => (
-    Array.from({ length: 10 }, (_, i) => ({
+    Array.from({ length: 5 }, (_, i) => ({
       id: i,
-      size: `${80 + Math.random() * 150}px`,
+      size: `${150 + Math.random() * 150}px`,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
       duration: `${5 + Math.random() * 15}s`,
