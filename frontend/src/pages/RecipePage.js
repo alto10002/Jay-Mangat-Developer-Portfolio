@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import AnimatedCount from "../components/AnimatedCount";
 import RecipeCard from "../components/RecipeCard";
@@ -6,23 +6,24 @@ import { Grid, Typography, Button, Box, Fade } from "@mui/material";
 import { getReactSelectStyles } from "../themes/reactSelectStyles";
 import { useTheme } from "@mui/material/styles";
 import { IconButton, Tooltip } from "@mui/material";
-import { Brightness4, Brightness7, Palette } from "@mui/icons-material";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import LiquidBackground from '../components/LiquidBackground';
+import FoodItems from '../components/FoodItems';
 
 function RecipePage({ mode, setMode }) {
   //javascript logic
   const [selected, setSelectedOptions] = useState([]);
   const [ingredient_dropdown, setIngreDropdown] = useState([]);
-  const [foundRecipes, setFoundRecipes] = useState([]);
+  // const [foundRecipes, setFoundRecipes] = useState([]);
   const [smallRecipeCount, setSmallRecipeCount] = useState(231637);
   const [firstRecipe, setFirstRecipe] = useState([]);
   const [secondRecipe, setSecondRecipe] = useState([]);
   const [thirdRecipe, setThirdRecipe] = useState([]);
   const [hasGenerated, setHasGenerated] = useState(false);
-  const [fadeTrigger, setFadeTrigger] = useState(false);
+  // const [fadeTrigger, setFadeTrigger] = useState(false);
   const theme = useTheme();
   const customStyles = getReactSelectStyles(theme);
   const [recipeLoading, setRecipeLoading] = useState(false);
@@ -105,6 +106,12 @@ function RecipePage({ mode, setMode }) {
   return (
     <Box>
       <LiquidBackground />
+      <FoodItems image='/pizza.png' altText='pizza'/>
+      <FoodItems image='/cake.png' altText='cake'/>
+      <FoodItems image='/burger.png' altText='burger'/>
+      <FoodItems image='/chicken.png' altText='chicken'/>
+      <FoodItems image='/hotdog.png' altText='hotdog'/>
+      <FoodItems image='/donut.png' altText='donut'/>
       {recipeLoading && (
         <Box
           sx={{
