@@ -1,16 +1,16 @@
 import ChipBadge from "../components/ChipBadge";
-import { Box, Card, CardMedia, CardContent, CardActions, Typography, Button, Chip, Avatar } from "@mui/material";
+import { Box, Card, CardMedia, CardContent, CardActions, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { FaAws, FaReact, FaHtml5, FaPython } from "react-icons/fa";
 import { SiRender, SiPlotly } from "react-icons/si";
 import { IoLogoVercel, IoLogoJavascript } from "react-icons/io5";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
 import HomePageButton from "../components/HomePageButton";
+import VideoModal from "../components/VideoModal";
 
 const FadeInSection = ({ children, delay = 0 }) => {
   const controls = useAnimation();
@@ -37,6 +37,9 @@ const FadeInSection = ({ children, delay = 0 }) => {
 
 function HomePage() {
   const theme = useTheme();
+  const [openModal1, setOpenModal1] = useState(false);
+  const [openModal2, setOpenModal2] = useState(false);
+
   return (
     <>
       <Box
@@ -122,19 +125,26 @@ function HomePage() {
                         <HomePageButton linkto="/recipes">Try it out!</HomePageButton>
                         <Button
                           variant="contained"
-                          component={Link}
-                          to="/"
+                          component="a"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setOpenModal1(true)}
                           sx={{
-                            backgroundColor: theme.palette.homepage.button, // ✅ Background color from theme
-                            color: theme.palette.homepage.text, // 🔥 Text color from theme
+                            backgroundColor: theme.palette.homepage.button,
+                            color: theme.palette.homepage.text,
                             "&:hover": {
-                              backgroundColor: theme.palette.homepage.button2, // Optional: hover background
-                              color: theme.palette.homepage.text, // Optional: hover text
+                              backgroundColor: theme.palette.homepage.button2,
+                              color: theme.palette.homepage.text,
                             },
                           }}
                         >
                           Watch a demo!
                         </Button>
+                        <VideoModal
+                          open={openModal1}
+                          handleClose={() => setOpenModal1(false)}
+                          videoSrc="/recipe_page_video.mp4"
+                        />
                       </CardActions>
                     </Box>
                   </Card>
@@ -171,40 +181,38 @@ function HomePage() {
                           <ChipBadge label="Render" icon={SiRender} bgColor="#a600ff" textAndIconColor="#000000" />
                         </Box>
                         <Typography variant="body1" color="homepage.text">
-                          A dashboard that displays the air quality index for various Indian cities.
+                          A dashboard that displays the air quality index for various Indian cities. Built using python
+                          and dash, it shows the AQI levels for 5 Indian cities and presents various other gas levels
+                          for those cities. All plotting elements are connected to the sidebar and cities can be
+                          selected via clicking on them in the sidebar map.
                         </Typography>
                       </CardContent>
                       <CardActions sx={{ mt: "auto", ml: 2 }}>
-                        <Button
-                          variant="contained"
-                          component={Link}
-                          to="https://dsci-532-2025-23-aqi-dashboard.onrender.com/"
-                          sx={{
-                            backgroundColor: theme.palette.homepage.button, // ✅ Background color from theme
-                            color: theme.palette.homepage.text, // 🔥 Text color from theme
-                            "&:hover": {
-                              backgroundColor: theme.palette.homepage.button2, // Optional: hover background
-                              color: theme.palette.homepage.text, // Optional: hover text
-                            },
-                          }}
-                        >
+                        <HomePageButton linkto="https://dsci-532-2025-23-aqi-dashboard.onrender.com/">
                           Try it out!
-                        </Button>
+                        </HomePageButton>
                         <Button
                           variant="contained"
-                          component={Link}
-                          to="/"
+                          component="a"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setOpenModal2(true)}
                           sx={{
-                            backgroundColor: theme.palette.homepage.button, // ✅ Background color from theme
-                            color: theme.palette.homepage.text, // 🔥 Text color from theme
+                            backgroundColor: theme.palette.homepage.button,
+                            color: theme.palette.homepage.text,
                             "&:hover": {
-                              backgroundColor: theme.palette.homepage.button2, // Optional: hover background
-                              color: theme.palette.homepage.text, // Optional: hover text
+                              backgroundColor: theme.palette.homepage.button2,
+                              color: theme.palette.homepage.text,
                             },
                           }}
                         >
                           Watch a demo!
                         </Button>
+                        <VideoModal
+                          open={openModal2}
+                          handleClose={() => setOpenModal2(false)}
+                          videoSrc="/aqi_dashboard_video.mp4"
+                        />
                       </CardActions>
                     </Box>
                   </Card>
