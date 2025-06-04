@@ -10,8 +10,9 @@ import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
-import LiquidBackground from '../components/LiquidBackground';
-import FoodItems from '../components/FoodItems';
+import LiquidBackground from "../components/LiquidBackground";
+import FoodItems from "../components/FoodItems";
+import WelcomeModal from "../components/WelcomeModal";
 
 function RecipePage({ mode, setMode }) {
   //javascript logic
@@ -28,9 +29,8 @@ function RecipePage({ mode, setMode }) {
   const customStyles = getReactSelectStyles(theme);
   const [recipeLoading, setRecipeLoading] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const [fadeIn, setFadeIn] = useState(false);
+  // const [fadeIn, setFadeIn] = useState(false);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
-
 
   // Get list of ingredients from csv data file
   useEffect(() => {
@@ -38,7 +38,7 @@ function RecipePage({ mode, setMode }) {
       .then((res) => res.json())
       .then((data) => setIngreDropdown(data))
       .catch((err) => console.error("Error fetching ingredients:", err));
-  }, []);
+  }, [apiUrl]);
 
   const searchSmallDataset = async (selected) => {
     setSelectedOptions(selected);
@@ -57,14 +57,14 @@ function RecipePage({ mode, setMode }) {
   };
 
   const submitIngredients = async () => {
-    console.log('Beginning submit ingredients at: ' + new Date().toISOString());
+    // console.log("Beginning submit ingredients at: " + new Date().toISOString());
     if (smallRecipeCount < 3) {
       alert("Oops, no recipes found matching your ingredients.");
       return;
     }
 
     setRecipeLoading(true); // Show loading screen immediately
-    setFadeIn(false); // Reset fadeIn to hide new recipes
+    // setFadeIn(false); // Reset fadeIn to hide new recipes
     setFadeOut(false); // Reset fadeOut in case of previous runs
 
     try {
@@ -88,7 +88,7 @@ function RecipePage({ mode, setMode }) {
         setSecondRecipe(found_recipes[1]);
         setThirdRecipe(found_recipes[2]);
         setFadeOut(false);
-        setFadeIn(true); // Fade in new recipes
+        // setFadeIn(true); // Fade in new recipes
         setHasGenerated(true);
       }, 500); // Match the fade-out duration
     } catch (err) {
@@ -96,22 +96,23 @@ function RecipePage({ mode, setMode }) {
       setRecipeLoading(false);
       alert("An error occurred while generating recipes.");
     }
-    console.log('Enging submit ingredients at: ' + new Date().toISOString());
+    // console.log("Enging submit ingredients at: " + new Date().toISOString());
   };
 
-  const toggleTheme = () => {
-    setMode((prev) => (prev === "light" ? "dark" : "light"));
-  };
+  // const toggleTheme = () => {
+  //   setMode((prev) => (prev === "light" ? "dark" : "light"));
+  // };
 
   return (
     <Box>
+      <WelcomeModal />
       <LiquidBackground />
-      <FoodItems image='/pizza.png' altText='pizza'/>
-      <FoodItems image='/cake.png' altText='cake'/>
-      <FoodItems image='/burger.png' altText='burger'/>
-      <FoodItems image='/chicken.png' altText='chicken'/>
-      <FoodItems image='/hotdog.png' altText='hotdog'/>
-      <FoodItems image='/donut.png' altText='donut'/>
+      <FoodItems image="/pizza.png" altText="pizza" />
+      <FoodItems image="/cake.png" altText="cake" />
+      <FoodItems image="/burger.png" altText="burger" />
+      <FoodItems image="/chicken.png" altText="chicken" />
+      <FoodItems image="/hotdog.png" altText="hotdog" />
+      <FoodItems image="/donut.png" altText="donut" />
       {recipeLoading && (
         <Box
           sx={{
@@ -127,7 +128,7 @@ function RecipePage({ mode, setMode }) {
             alignItems: "center",
           }}
         >
-          <img src="/loading.gif" height="100" />
+          <img src="/loading.gif" alt="loading" height="100" />
         </Box>
       )}
       <Box
