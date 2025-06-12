@@ -31,3 +31,4 @@ __pycache__
 build/
 AWS test.py
 memory usage testing.py
+test*
