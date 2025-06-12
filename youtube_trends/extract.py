@@ -1,5 +1,4 @@
 import requests
-import json
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -36,11 +35,11 @@ def fetch_trending_videos(region):
         )
 
     df = pd.DataFrame(rows)
-    df.to_csv("extract.csv", index=False)
+    # df.to_csv("extract.csv", index=False)
 
     # status_checker(response) # get request error checking
 
-    return
+    return df
 
 
 def status_checker(r):
@@ -49,22 +48,4 @@ def status_checker(r):
         print(r.text)
 
 
-fetch_trending_videos("US")
-
-# {
-#     "items": [
-#         {
-#             "snippet": {
-#                 "publishedAt": "2025-06-11T15:00:24Z",
-#                 "tags": ["Ryan", "Trahan"],
-#                 "categoryId": "24",
-#             },
-#             "contentDetails": {
-#                 "duration": "PT21M31S",
-#             },
-#             "statistics": {
-#                 "viewCount": "1202100",
-#             },
-#         }
-#     ],
-# }
+# fetch_trending_videos("US")

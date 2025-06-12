@@ -1,6 +1,7 @@
 import pandas as pd
 import isodate
 import ast
+import numpy as np
 
 
 def transform(dataframe):
@@ -41,13 +42,16 @@ def transform(dataframe):
         dataframe["publish_date"], errors="coerce"
     )
     dataframe["duration"] = dataframe["duration"].apply(isodate.parse_duration)
-    dataframe["tags"] = dataframe["tags"].apply(lambda s: list(ast.literal_eval(s)))
+    dataframe["duration"] = dataframe["duration"] / np.timedelta64(1, "s")
+    dataframe["tags"] = dataframe["tags"].apply(
+        lambda s: list(ast.literal_eval(s)) if isinstance(s, str) else s
+    )
     dataframe["tag_count"] = dataframe["tags"].apply(len)
     dataframe["categoryID"] = dataframe["categoryID"].apply(str)
     dataframe["category_name"] = dataframe["categoryID"].map(category_ids)
     return dataframe
 
 
-extract_df = pd.read_csv("extract.csv")
-transform_df = transform(extract_df)
-transform_df.to_csv("transform.csv", index=False)
+# extract_df = pd.read_csv("extract.csv")
+# transform_df = transform(extract_df)
+# transform_df.to_csv("transform.csv", index=False)
