@@ -26,6 +26,7 @@ def fetch_trending_videos(region):
     for item in data["items"]:
         rows.append(
             {
+                "video_id": item["id"],
                 "publish_date": item["snippet"]["publishedAt"],
                 "tags": item["snippet"].get("tags", []),
                 "categoryID": item["snippet"]["categoryId"],
