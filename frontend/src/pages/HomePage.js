@@ -39,6 +39,7 @@ function HomePage() {
   const theme = useTheme();
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
+  const [openModal3, setOpenModal3] = useState(false);
 
   return (
     <>
@@ -211,6 +212,69 @@ function HomePage() {
                         <VideoModal
                           open={openModal2}
                           handleClose={() => setOpenModal2(false)}
+                          videoSrc="/aqi_dashboard_video.mp4"
+                        />
+                      </CardActions>
+                    </Box>
+                  </Card>
+                </Box>
+              </FadeInSection>
+            </Glow>
+            <Glow>
+              <FadeInSection delay={10}>
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+                  <Card
+                    sx={{
+                      display: "flex",
+                      width: "75vw",
+                      minHeight: 200,
+                      backgroundColor: theme.palette.homepage.card,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      sx={{ width: "40%", objectFit: "cover" }}
+                      image="/youtube_trend_thumbnail.png"
+                      alt="Trend Project"
+                    />
+
+                    <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color: "homepage.card" }}>
+                      <CardContent>
+                        <Typography variant="h4" color="homepage.text">
+                          Youtube Trend Analyzer
+                        </Typography>
+                        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                          {/* <ChipBadge label="Dash" icon={SiPlotly} bgColor="#FF2C6D" textAndIconColor="#000000" />
+                          <ChipBadge label="Python" icon={FaPython} bgColor="#3d98ff" textAndIconColor="#000000" />
+                          <ChipBadge label="Render" icon={SiRender} bgColor="#a600ff" textAndIconColor="#000000" /> */}
+                        </Box>
+                        <Typography variant="body1" color="homepage.text">
+                          App that shows some stuff about trending videos on youtube
+                        </Typography>
+                      </CardContent>
+                      <CardActions sx={{ mt: "auto", ml: 2 }}>
+                        <HomePageButton linkto="\youtube_trends">Try it out!</HomePageButton>
+                        <Button
+                          variant="contained"
+                          component="a"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setOpenModal3(true)}
+                          sx={{
+                            backgroundColor: theme.palette.homepage.button,
+                            color: theme.palette.homepage.text,
+                            "&:hover": {
+                              backgroundColor: theme.palette.homepage.button2,
+                              color: theme.palette.homepage.text,
+                            },
+                          }}
+                        >
+                          Watch a demo!
+                        </Button>
+                        <VideoModal
+                          open={openModal3}
+                          handleClose={() => setOpenModal3(false)}
                           videoSrc="/aqi_dashboard_video.mp4"
                         />
                       </CardActions>

@@ -1,4 +1,3 @@
-// src/theme.js
 export const getDesignTokens = (mode) => ({
   palette: {
     mode,
@@ -24,6 +23,11 @@ export const getDesignTokens = (mode) => ({
       text: "#f0f0f0",
       button: "#c9264a",
       button2: "#0213ad",
+    },
+    youtubePage: {
+      youtubeRed: "#FF0000",
+      background: mode === "light" ? "#ebebeb" : "#2e2e2e",
+      sidebar: mode === "light" ? "#b5b5b5" : "#1c1c1c",
     },
   },
   typography: {
