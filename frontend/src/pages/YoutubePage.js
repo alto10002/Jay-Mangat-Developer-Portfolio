@@ -1,9 +1,7 @@
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import "../components/sheets/sidebar.css";
 import { Box, Card, CardMedia, CardContent, CardActions, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FaYoutube } from "react-icons/fa";
-// import { DateRangePicker } from "@mui/x-date-pickers/DateRangePicker";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -14,51 +12,96 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState } from "react";
 import dayjs from "dayjs";
 import Chip from "@mui/material/Chip";
+import Slider from "@mui/material/Slider";
+import { Glow, GlowCapture } from "@codaworks/react-glow";
 
 const categories = [
-  "Film & Animation",
-  "Autos & Vehicles",
-  "Music",
-  "Pets & Animals",
-  "Sports",
-  "Short Movies",
-  "Travel & Events",
-  "Gaming",
-  "Videoblogging",
-  "People & Blogs",
-  "Comedy", // appears twice. Might Cause issues down the line
-  "Entertainment",
-  "News & Politics",
-  "Howto & Style",
-  "Education",
-  "Science & Technology",
-  "Movies",
-  "Anime/Animation",
   "Action/Adventure",
+  "Anime/Animation",
+  "Autos & Vehicles",
   "Classics",
+  "Comedy", // appears twice. Might Cause issues down the line
   "Documentary",
   "Drama",
+  "Education",
+  "Entertainment",
   "Family",
+  "Film & Animation",
   "Foreign",
+  "Gaming",
   "Horror",
+  "Howto & Style",
+  "Movies",
+  "Music",
+  "News & Politics",
+  "People & Blogs",
+  "Pets & Animals",
+  "Science & Technology",
   "Sci-Fi/Fantasy",
-  "Thriller",
+  "Short Movies",
   "Shorts",
   "Shows",
+  "Sports",
+  "Thriller",
   "Trailers",
+  "Travel & Events",
+  "Videoblogging",
 ];
+
+const countries = ["Canada", "United States", "Mexico"];
 
 function YoutubePage() {
   const theme = useTheme();
   const [startDate, setStartDate] = useState(dayjs().subtract(7, "day"));
   const [endDate, setEndDate] = useState(dayjs());
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(categories);
+  const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
+  const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
+  const [selectedCountries, setSelectedCountries] = useState([]);
 
-  const handleToggle = (category) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
-    );
+  const marks = [
+    {
+      value: 0,
+      label: "0",
+    },
+    {
+      value: 1,
+    },
+    {
+      value: 2,
+    },
+    {
+      value: 3,
+    },
+    {
+      value: 4,
+    },
+    {
+      value: 5,
+    },
+    {
+      value: 6,
+    },
+    {
+      value: 7,
+    },
+    {
+      value: 8,
+    },
+    {
+      value: 9,
+    },
+    {
+      value: 10,
+      label: "10",
+    },
+  ];
+
+  const updateState = ([setState, item]) => {
+    setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x != item) : [...oldState, item]));
   };
+
+  const submitFilters = {};
 
   return (
     <Box display="flex">
@@ -68,6 +111,8 @@ function YoutubePage() {
           width: 1 / 5,
           minWidth: "400px",
           height: "100vh",
+          color: theme.palette.youtubePage.sidebarText,
+          overflowY: "auto",
         }}
       >
         <Box
@@ -82,7 +127,7 @@ function YoutubePage() {
         <Box>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Date Range</Typography>
+              <Typography sx={theme.typography.youtubePage_sidebar}>Date Range</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography>Start Date</Typography>
@@ -100,27 +145,68 @@ function YoutubePage() {
           </Accordion>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Category</Typography>
+              <Typography sx={theme.typography.youtubePage_sidebar}>Video Category</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Box display="flex" flexWrap="wrap" gap={1}>
-                {categories.map((category) => (
-                  <Chip
-                    key={category}
-                    label={category}
-                    clickable
-                    onClick={() => handleToggle(category)}
-                    color={selectedCategories.includes(category) ? "primary" : "default"}
-                    variant={selectedCategories.includes(category) ? "filled" : "outlined"}
-                  />
-                ))}
-              </Box>
+              <GlowCapture>
+                <Box display="flex" flexWrap="wrap" gap={1}>
+                  <div className="flex flex-wrap gap-2">
+                    <Button onClick={() => setSelectedCategories(categories)}>Select All</Button>
+                    <Button onClick={() => setSelectedCategories([])}>Deselect All</Button>
+                    <br />
+                    {categories.map((category) => (
+                      <Glow key={category} color="red">
+                        <Chip
+                          label={category}
+                          clickable
+                          onClick={() => updateState([setSelectedCategories, category])}
+                          color={selectedCategories.includes(category) ? "primary" : "default"}
+                          variant={selectedCategories.includes(category) ? "filled" : "outlined"}
+                          className="glow:shadow-lg glow:border glow:border-red-500 glow:bg-red-500 text-black rounded-full"
+                        />
+                      </Glow>
+                    ))}
+                  </div>
+                </Box>
+              </GlowCapture>
             </AccordionDetails>
           </Accordion>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Number of tags</Typography>
+              <Typography sx={theme.typography.youtubePage_sidebar}>Number of tags</Typography>
             </AccordionSummary>
+            <AccordionDetails>
+              <Slider
+                value={[selectedMinTagCount, selectedMaxTagCount]}
+                onChange={(_, sliderValues) => {
+                  setSelectedMinTagCount(sliderValues[0]);
+                  setSelectedMaxTagCount(sliderValues[1]);
+                }}
+                valueLabelDisplay="auto"
+                min={0}
+                max={10}
+                marks={marks}
+              />
+            </AccordionDetails>
+          </Accordion>
+          <Accordion defaultExpanded>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography sx={theme.typography.youtubePage_sidebar}>Country</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Box display="flex" flexWrap="wrap" gap={1}>
+                {countries.map((country) => (
+                  <Chip
+                    key={country}
+                    label={country}
+                    clickable
+                    onClick={() => updateState([setSelectedCountries, country])}
+                    color={selectedCountries.includes(country) ? "primary" : "default"}
+                    variant={selectedCountries.includes(country) ? "filled" : "outlined"}
+                  />
+                ))}
+              </Box>
+            </AccordionDetails>
           </Accordion>
         </Box>
       </Box>
@@ -133,7 +219,25 @@ function YoutubePage() {
           selected start date: {startDate.format("MMMM D, YYYY")}
           <br />
           selected end date: {endDate.format("MMMM D, YYYY")}
+          <br />
+          selected end date:{selectedCountries}
+          <br />
+          selected end date {selectedCategories}
+          <br />
+          selected end date:{selectedMaxTagCount}
+          <br />
+          selected end date:{selectedMinTagCount}
+          <br />
         </Typography>
+        <Box sx={{ width: "100px" }}>
+          <GlowCapture>
+            <Glow color="cyan">
+              <div className="glow:bg-cyan-500 glow:shadow-cyan-500/50 glow:text-white bg-gray-900 p-6 rounded-md transition-all duration-300">
+                Hover to glow ✨
+              </div>
+            </Glow>
+          </GlowCapture>
+        </Box>
       </Box>
     </Box>
   );
