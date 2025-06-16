@@ -47,8 +47,8 @@ def transform(dataframe):
         lambda s: list(ast.literal_eval(s)) if isinstance(s, str) else s
     )
     dataframe["tag_count"] = dataframe["tags"].apply(len)
-    dataframe["categoryID"] = dataframe["categoryID"].apply(str)
-    dataframe["category_name"] = dataframe["categoryID"].map(category_ids)
+    dataframe["categoryid"] = dataframe["categoryid"].apply(str)
+    dataframe["category_name"] = dataframe["categoryid"].map(category_ids)
     return dataframe
 
 

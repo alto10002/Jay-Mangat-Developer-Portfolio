@@ -29,9 +29,10 @@ def fetch_trending_videos(region):
                 "video_id": item["id"],
                 "publish_date": item["snippet"]["publishedAt"],
                 "tags": item["snippet"].get("tags", []),
-                "categoryID": item["snippet"]["categoryId"],
+                "categoryid": item["snippet"]["categoryId"],
                 "duration": item["contentDetails"]["duration"],
                 "views": int(item["statistics"]["viewCount"]),
+                "country": region,
             }
         )
 

@@ -1,5 +1,5 @@
 import "../components/sheets/sidebar.css";
-import { Box, Card, CardMedia, CardContent, CardActions, Typography, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FaYoutube } from "react-icons/fa";
 import Accordion from "@mui/material/Accordion";
@@ -48,7 +48,7 @@ const categories = [
   "Videoblogging",
 ];
 
-const countries = ["Canada", "United States", "Mexico"];
+const countries = ["Canada", "United States", "Mexico", "United Kingdom", "Russia"];
 
 function YoutubePage() {
   const theme = useTheme();
@@ -58,6 +58,7 @@ function YoutubePage() {
   const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
   const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
   const [selectedCountries, setSelectedCountries] = useState([]);
+  const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
   const marks = [
     {
@@ -98,10 +99,35 @@ function YoutubePage() {
   ];
 
   const updateState = ([setState, item]) => {
-    setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x != item) : [...oldState, item]));
+    setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x !== item) : [...oldState, item]));
   };
 
-  const submitFilters = {};
+  const submitFilters = async () => {
+    const filters = {
+      categories: selectedCategories,
+      countries: selectedCountries,
+      minTags: selectedMinTagCount,
+      maxTags: selectedMaxTagCount,
+      startDate: startDate?.format("YYYY-MM-DD"),
+      endDate: endDate?.format("YYYY-MM-DD"),
+    };
+
+    // console.log(filters);
+    // console.log(JSON.stringify(filters));
+
+    try {
+      const response = await fetch(`${apiUrl}/youtube_filter`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filters),
+      });
+      const filtered_data = await response.json();
+      console.log(filtered_data);
+    } catch (e) {
+      console.error("Error fetching filtered data: ", e);
+      // alert("Error fetching filtered data: ", e);
+    }
+  };
 
   return (
     <Box display="flex">
@@ -124,6 +150,7 @@ function YoutubePage() {
           <FaYoutube />
           Trend Analyzer
         </Box>
+        <Button onClick={() => submitFilters()}>Submit Filters</Button>
         <Box>
           <Accordion defaultExpanded>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
