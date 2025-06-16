@@ -1,0 +1,12 @@
+.sidebar {
+  width: 250px;
+  padding: 20px;
+  background-color: #044d00;
+  height: 100vh;
+}
+
+.sidebar_header {
+  width: 250px;
+  height: 10px;
+  background-color: #6b0000;
+}

@@ -1,4 +1,3 @@
-// src/theme.js
 export const getDesignTokens = (mode) => ({
   palette: {
     mode,
@@ -25,6 +24,12 @@ export const getDesignTokens = (mode) => ({
       button: "#c9264a",
       button2: "#0213ad",
     },
+    youtubePage: {
+      youtubeRed: "#FF0000",
+      background: mode === "light" ? "#ebebeb" : "#2e2e2e",
+      sidebar: mode === "light" ? "#b5b5b5" : "#1c1c1c",
+      sidebarText: mode === "light" ? "#000000" : "#f0f0f0",
+    },
   },
   typography: {
     fontFamily: "'Inter', sans-serif",
@@ -34,5 +39,11 @@ export const getDesignTokens = (mode) => ({
     h4: { fontFamily: "'Rubik', sans-serif" },
     h5: { fontFamily: "'Rubik', sans-serif" },
     h6: { fontFamily: "'Rubik', sans-serif" },
+    youtubePage_sidebar: {
+      color: mode === "light" ? "#000000" : "#f0f0f0",
+      fontSize: "1.5rem",
+      fontWeight: 1000,
+      fontFamily: "'Rubik', sans-serif",
+    },
   },
 });
