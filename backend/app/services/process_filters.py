@@ -7,6 +7,8 @@ COUNTRY_MAP = {
     "Canada": "CA",
     "United States": "US",
     "Mexico": "MX",
+    "United Kingdom": "GB",
+    "Russia": "RU",
 }
 CATEGORY_MAP = {
     "Action/Adventure": 30,
@@ -58,7 +60,7 @@ def process_filters(filters):
         SELECT *
         FROM videos
         WHERE categoryid = ANY(:categories)
-          AND publish_date BETWEEN :start AND :end
+          AND trending_date BETWEEN :start AND :end
           AND country = ANY(:countries)
     """
     )
@@ -75,7 +77,5 @@ def process_filters(filters):
         )
 
         rows = result.fetchall()
-        return [dict(row._mapping) for row in rows]  # convert rows to list of dicts
-    print(rows)
-    # Should return a list or dict. NEeds to be json to have to convert it
+        return [dict(row._mapping) for row in rows]
     return rows

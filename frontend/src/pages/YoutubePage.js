@@ -9,11 +9,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Chip from "@mui/material/Chip";
 import Slider from "@mui/material/Slider";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
+import ViewsOverTimeChart from "../components/YoutubePage/ViewsOverTime";
+import TopViewsByCategoryChart from "../components/YoutubePage/ViewsPerCategory";
+import UploadTimesChart from "../components/YoutubePage/UploadTimes";
+import ViewsPerRegionChart from "../components/YoutubePage/ViewsPerRegion";
 
 const categories = [
   "Action/Adventure",
@@ -48,16 +52,51 @@ const categories = [
   "Videoblogging",
 ];
 
+const categoryIds = {
+  1: "Film & Animation",
+  2: "Autos & Vehicles",
+  10: "Music",
+  15: "Pets & Animals",
+  17: "Sports",
+  18: "Short Movies",
+  19: "Travel & Events",
+  20: "Gaming",
+  21: "Videoblogging",
+  22: "People & Blogs",
+  23: "Comedy",
+  24: "Entertainment",
+  25: "News & Politics",
+  26: "Howto & Style",
+  27: "Education",
+  28: "Science & Technology",
+  30: "Movies",
+  31: "Anime/Animation",
+  32: "Action/Adventure",
+  33: "Classics",
+  34: "Comedy",
+  35: "Documentary",
+  36: "Drama",
+  37: "Family",
+  38: "Foreign",
+  39: "Horror",
+  40: "Sci-Fi/Fantasy",
+  41: "Thriller",
+  42: "Shorts",
+  43: "Shows",
+  44: "Trailers",
+};
+
 const countries = ["Canada", "United States", "Mexico", "United Kingdom", "Russia"];
 
 function YoutubePage() {
   const theme = useTheme();
-  const [startDate, setStartDate] = useState(dayjs().subtract(7, "day"));
+  const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
-  const [selectedCategories, setSelectedCategories] = useState(categories);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
   const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
   const [selectedCountries, setSelectedCountries] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
   const marks = [
@@ -112,22 +151,23 @@ function YoutubePage() {
       endDate: endDate?.format("YYYY-MM-DD"),
     };
 
-    // console.log(filters);
-    // console.log(JSON.stringify(filters));
-
     try {
       const response = await fetch(`${apiUrl}/youtube_filter`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(filters),
       });
-      const filtered_data = await response.json();
-      console.log(filtered_data);
+      const data = await response.json();
+      setFilteredData(data.data);
     } catch (e) {
       console.error("Error fetching filtered data: ", e);
-      // alert("Error fetching filtered data: ", e);
     }
   };
+
+  // debugging to check filter output
+  useEffect(() => {
+    console.log("Updated filteredData:", filteredData);
+  }, [filteredData]);
 
   return (
     <Box display="flex">
@@ -152,7 +192,12 @@ function YoutubePage() {
         </Box>
         <Button onClick={() => submitFilters()}>Submit Filters</Button>
         <Box>
-          <Accordion defaultExpanded>
+          <Accordion
+            defaultExpanded
+            sx={{
+              bgcolor: theme.palette.youtubePage.background,
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={theme.typography.youtubePage_sidebar}>Date Range</Typography>
             </AccordionSummary>
@@ -161,16 +206,27 @@ function YoutubePage() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   value={startDate}
-                  maxDate={endDate}
+                  minDate={dayjs("2025-06-16")}
+                  maxDate={endDate ? dayjs(endDate).subtract(1, "day") : undefined}
                   onChange={(newStartDate) => setStartDate(newStartDate)}
                 />
                 <br />
                 <Typography>End Date</Typography>
-                <DatePicker value={endDate} minDate={startDate} onChange={(newEndDate) => setEndDate(newEndDate)} />
+                <DatePicker
+                  value={endDate}
+                  minDate={startDate ? dayjs(startDate).add(1, "day") : undefined}
+                  maxDate={dayjs()}
+                  onChange={(newEndDate) => setEndDate(newEndDate)}
+                />
               </LocalizationProvider>
             </AccordionDetails>
           </Accordion>
-          <Accordion defaultExpanded>
+          <Accordion
+            defaultExpanded
+            sx={{
+              bgcolor: theme.palette.youtubePage.background,
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={theme.typography.youtubePage_sidebar}>Video Category</Typography>
             </AccordionSummary>
@@ -189,7 +245,7 @@ function YoutubePage() {
                           onClick={() => updateState([setSelectedCategories, category])}
                           color={selectedCategories.includes(category) ? "primary" : "default"}
                           variant={selectedCategories.includes(category) ? "filled" : "outlined"}
-                          className="glow:shadow-lg glow:border glow:border-red-500 glow:bg-red-500 text-black rounded-full"
+                          className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
                         />
                       </Glow>
                     ))}
@@ -198,7 +254,12 @@ function YoutubePage() {
               </GlowCapture>
             </AccordionDetails>
           </Accordion>
-          <Accordion defaultExpanded>
+          <Accordion
+            defaultExpanded
+            sx={{
+              bgcolor: theme.palette.youtubePage.background,
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={theme.typography.youtubePage_sidebar}>Number of tags</Typography>
             </AccordionSummary>
@@ -216,23 +277,32 @@ function YoutubePage() {
               />
             </AccordionDetails>
           </Accordion>
-          <Accordion defaultExpanded>
+          <Accordion
+            defaultExpanded
+            sx={{
+              bgcolor: theme.palette.youtubePage.background,
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={theme.typography.youtubePage_sidebar}>Country</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Box display="flex" flexWrap="wrap" gap={1}>
-                {countries.map((country) => (
-                  <Chip
-                    key={country}
-                    label={country}
-                    clickable
-                    onClick={() => updateState([setSelectedCountries, country])}
-                    color={selectedCountries.includes(country) ? "primary" : "default"}
-                    variant={selectedCountries.includes(country) ? "filled" : "outlined"}
-                  />
-                ))}
-              </Box>
+              <GlowCapture>
+                <Box display="flex" flexWrap="wrap" gap={1}>
+                  {countries.map((country) => (
+                    <Glow key={country} color="red">
+                      <Chip
+                        label={country}
+                        clickable
+                        onClick={() => updateState([setSelectedCountries, country])}
+                        color={selectedCountries.includes(country) ? "primary" : "default"}
+                        variant={selectedCountries.includes(country) ? "filled" : "outlined"}
+                        className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
+                      />
+                    </Glow>
+                  ))}
+                </Box>
+              </GlowCapture>
             </AccordionDetails>
           </Accordion>
         </Box>
@@ -242,28 +312,49 @@ function YoutubePage() {
           width: 4 / 5,
         }}
       >
-        <Typography>
-          selected start date: {startDate.format("MMMM D, YYYY")}
-          <br />
-          selected end date: {endDate.format("MMMM D, YYYY")}
-          <br />
-          selected end date:{selectedCountries}
-          <br />
-          selected end date {selectedCategories}
-          <br />
-          selected end date:{selectedMaxTagCount}
-          <br />
-          selected end date:{selectedMinTagCount}
-          <br />
-        </Typography>
-        <Box sx={{ width: "100px" }}>
-          <GlowCapture>
-            <Glow color="cyan">
-              <div className="glow:bg-cyan-500 glow:shadow-cyan-500/50 glow:text-white bg-gray-900 p-6 rounded-md transition-all duration-300">
-                Hover to glow ✨
-              </div>
-            </Glow>
-          </GlowCapture>
+        <Box
+          sx={{
+            height: 1 / 2,
+            display: "flex",
+            flexDirection: "row",
+            bgcolor: "#f9f9f9",
+            borderRadius: 2,
+            p: 2,
+          }}
+        >
+          <Box
+            sx={{
+              width: 1 / 3,
+            }}
+          >
+            <ViewsOverTimeChart data={filteredData} />
+          </Box>
+          <Box
+            sx={{
+              width: 1 / 3,
+            }}
+          >
+            <TopViewsByCategoryChart data={filteredData} />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            height: 1 / 2,
+            display: "flex",
+            flexDirection: "row",
+            bgcolor: "#f9f9f9",
+            borderRadius: 2,
+            p: 2,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <ViewsPerRegionChart data={filteredData} />
+          </Box>{" "}
+          <Box sx={{ flex: 1, height: 1 }}>
+            <div style={{ height: "100%" }}>
+              <UploadTimesChart data={filteredData} />
+            </div>
+          </Box>{" "}
         </Box>
       </Box>
     </Box>

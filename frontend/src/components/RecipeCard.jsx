@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Box, Card, CardContent, CardMedia, Collapse, IconButton, List, ListItem, textFieldClasses, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Card, CardContent, CardMedia, Collapse, IconButton, List, ListItem, Typography } from "@mui/material";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { alpha } from "@mui/material/styles";
 
@@ -33,7 +33,7 @@ const RecipeCard = ({ recipe }) => {
           }}
         />
 
-        <CardContent sx={{color: 'text.card'}}>
+        <CardContent sx={{ color: "text.card" }}>
           <Box display="flex" alignItems="center">
             <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: "bold" }}>
               {recipe.name}

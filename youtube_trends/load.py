@@ -12,14 +12,17 @@ def load_to_db(df, db_url):
             text(
                 """
             CREATE TABLE IF NOT EXISTS videos (
+                trending_date TIMESTAMP,
+                country TEXT,
+                title TEXT,
                 video_id TEXT NOT NULL,
-                publish_date TIMESTAMP,
+                upload_date TIMESTAMP,
+                upload_time TIME,
                 tags TEXT[],
                 categoryid INTEGER,
                 duration INTEGER,
                 views INTEGER,
-                country TEXT,
-                PRIMARY KEY (video_id, publish_date, country)
+                PRIMARY KEY (video_id, upload_date, trending_date, country)
             );
         """
             )
@@ -30,23 +33,26 @@ def load_to_db(df, db_url):
                 text(
                     """
                     INSERT INTO videos (
-                        video_id, publish_date, tags, categoryid, duration, views, country
+                        trending_date, country, title, video_id, upload_date, upload_time, tags, categoryid, duration, views
                     )
                     VALUES (
-                        :video_id, :publish_date, :tags, :categoryid, :duration, :views, :country
+                        :trending_date, :country, :title, :video_id, :upload_date, :upload_time, :tags, :categoryid, :duration, :views
                     )
-                    ON CONFLICT (video_id, publish_date, country) DO NOTHING
+                    ON CONFLICT (video_id, upload_date, trending_date, country) DO NOTHING
                     RETURNING video_id;
                 """
                 ),
                 {
+                    "trending_date": row["trending_date"],
+                    "country": row["country"],
+                    "title": row["title"],
                     "video_id": row["video_id"],
-                    "publish_date": row["publish_date"],
+                    "upload_date": row["upload_date"],
+                    "upload_time": row["upload_time"],
                     "tags": row["tags"],
                     "categoryid": row["categoryid"],
                     "duration": row["duration"],
                     "views": row["views"],
-                    "country": row["country"],
                 },
             )
 

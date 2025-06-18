@@ -3,14 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import YoutubePage from "./pages/YoutubePage";
 import RecipePage from "./pages/RecipePage";
-import { useTheme } from "@mui/material/styles";
+// import { useTheme } from "@mui/material/styles";
 
 function App({ mode, setMode }) {
-  const theme = useTheme();
+  // const theme = useTheme();
 
-  const toggleTheme = () => {
-    setMode((prev) => (prev === "light" ? "dark" : "light"));
-  };
+  // const toggleTheme = () => {
+  //   setMode((prev) => (prev === "light" ? "dark" : "light"));
+  // };
 
   return (
     <Router>

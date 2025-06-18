@@ -32,15 +32,14 @@ def fetch_trending_videos(region):
                 "categoryid": item["snippet"]["categoryId"],
                 "duration": item["contentDetails"]["duration"],
                 "views": int(item["statistics"]["viewCount"]),
+                "title": item["snippet"]["title"],
                 "country": region,
             }
         )
 
     df = pd.DataFrame(rows)
     # df.to_csv("extract.csv", index=False)
-
     # status_checker(response) # get request error checking
-
     return df
 
 
@@ -50,4 +49,4 @@ def status_checker(r):
         print(r.text)
 
 
-# fetch_trending_videos("US")
+# print(fetch_trending_videos("US"))

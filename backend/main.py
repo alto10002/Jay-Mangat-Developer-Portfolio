@@ -36,6 +36,9 @@ class FilterPayload(BaseModel):
 @app.post("/youtube_filter")
 def process_and_filter(filters: FilterPayload):
     data = process_filters(filters)
+    for row in data:
+        row["upload_date"] = row["upload_date"].strftime("%Y-%m-%d")
+        row["trending_date"] = row["trending_date"].strftime("%Y-%m-%d")
     return {"data": data}
 
 
