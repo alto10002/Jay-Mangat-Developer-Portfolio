@@ -29,23 +29,25 @@ const UploadTimesChart = ({ data }) => {
     datasets: [
       {
         type: "bar",
-        label: "Number of Uploads",
+        label: "Uploads",
         data: hourCounts,
         backgroundColor: "#ffa500",
         yAxisID: "y",
       },
       {
         type: "line",
-        label: "",
+        label: "Daylight Hours",
         data: lightLevels,
         borderColor: "#ccc",
-        backgroundColor: "rgba(255, 255, 0, 0.8)", // Yellow with 80% opacity
+        backgroundColor: "rgba(255, 255, 0, 0.3)",
         fill: true,
         tension: 0.4,
         pointRadius: 0,
         borderWidth: 2,
         yAxisID: "y1",
-        tooltip: { enabled: false },
+        tooltip: {
+          enabled: false,
+        },
       },
     ],
   };
@@ -55,28 +57,27 @@ const UploadTimesChart = ({ data }) => {
     plugins: {
       legend: {
         display: true,
-        labels: {
-          filter: (legendItem) => legendItem.text !== "",
-        },
       },
       tooltip: {
         mode: "index",
         intersect: false,
-        filter: (tooltipItem) => tooltipItem.dataset.label !== "",
+        filter: (tooltipItem) => tooltipItem.dataset.label !== "Daylight Hours",
       },
-      title: { display: true, text: "Uploads by Time of Day" },
-    },
-    layout: {
-      backgroundColor: "rgba(128, 128, 128, 0.8)", // Chart background: grey
+      title: {
+        display: true,
+        text: "Video Uploads by Time of Day",
+      },
     },
     scales: {
       x: {
         title: { display: true, text: "Hour" },
+        grid: { display: false },
       },
       y: {
         beginAtZero: true,
-        title: { display: true, text: "Uploads" },
+        title: { display: true, text: "Number of Uploads" },
         position: "left",
+        grid: { display: false },
       },
       y1: {
         beginAtZero: true,
