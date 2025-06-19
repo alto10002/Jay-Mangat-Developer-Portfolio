@@ -6,8 +6,18 @@ import pandas as pd
 
 
 def fetch_trending_videos(region):
-    load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / "backend" / ".env")
+    # Load local .env if it exists (for local dev)
+    dotenv_path = Path(__file__).resolve().parents[1] / "backend" / ".env"
+    if dotenv_path.exists():
+        load_dotenv(dotenv_path=dotenv_path)
+
+    # Read API key from env
     API_KEY = os.getenv("YOUTUBE_API")
+    if not API_KEY:
+        raise ValueError(
+            "Missing YOUTUBE_API. Set it as a GitHub Secret or in your .env file."
+        )
+
     URL = "https://www.googleapis.com/youtube/v3/videos"
 
     params = {
