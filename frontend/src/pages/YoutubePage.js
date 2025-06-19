@@ -102,44 +102,6 @@ function YoutubePage() {
   const [filteredData, setFilteredData] = useState([]);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
-  const marks = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 1,
-    },
-    {
-      value: 2,
-    },
-    {
-      value: 3,
-    },
-    {
-      value: 4,
-    },
-    {
-      value: 5,
-    },
-    {
-      value: 6,
-    },
-    {
-      value: 7,
-    },
-    {
-      value: 8,
-    },
-    {
-      value: 9,
-    },
-    {
-      value: 10,
-      label: "10",
-    },
-  ];
-
   const updateState = ([setState, item]) => {
     setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x !== item) : [...oldState, item]));
   };
@@ -188,10 +150,23 @@ function YoutubePage() {
           sx={{
             height: "50px",
             bgcolor: theme.palette.youtubePage.youtubeRed,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 2,
+            gap: 1, // spacing between icon and text
           }}
         >
-          <FaYoutube />
-          Trend Analyzer
+          <FaYoutube size={28} color="white" />
+          <Typography
+            variant="h1"
+            sx={{
+              fontWeight: "bold",
+              color: "white",
+              fontSize: "1.5rem", // manually override if needed
+            }}
+          >
+            Youtube Trend Analyzer
+          </Typography>
         </Box>
         <Button onClick={() => submitFilters()}>Submit Filters</Button>
         <Box>
