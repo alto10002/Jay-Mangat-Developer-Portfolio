@@ -327,55 +327,50 @@ function YoutubePage() {
           width: 4 / 5,
         }}
       >
-        <Box sx={{ display: "flex", height: "40vh" }}>
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <AverageViewcountCard data={filteredData} />
-            <AverageVideoLengthCard data={filteredData} />
+        <Box
+          sx={{
+            height: 1 / 2,
+            display: "flex",
+            flexDirection: "row",
+            bgcolor: "#f9f9f9",
+            borderRadius: 2,
+            p: 2,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <ViewsOverTimeChart data={filteredData} />
           </Box>
-          <Box
-            sx={{
-              flex: 3,
-              paddingLeft: 2,
-            }}
-          >
+          <Box sx={{ flex: 1 }}>
             <TopViewsByCategoryChart data={filteredData} />
           </Box>
-        </Box>
-        <Box sx={{ display: "flex", height: "60vh" }}>
-          <Box
-            sx={{
-              flex: 2,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <UploadTimesChart data={filteredData} />
-            </Box>
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <ViewsOverTimeChart data={filteredData} />
-            </Box>
-          </Box>{" "}
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box sx={{ display: "flex", height: 1 / 4 }}>
-              <AverageTagsCard data={filteredData} />
-            </Box>
-            <Box sx={{ display: "flex", height: 3 / 4 }}>
-              <ViewsPerRegionChart data={filteredData} />
-            </Box>
+          <Box sx={{ flex: 1 }}>
+            <AverageTagsCard data={filteredData} />
           </Box>
+          <Box sx={{ flex: 1 }}>
+            <AverageViewcountCard data={filteredData} />
+          </Box>{" "}
+          <Box sx={{ flex: 1 }}>
+            <AverageVideoLengthCard data={filteredData} />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            height: 1 / 2,
+            display: "flex",
+            flexDirection: "row",
+            bgcolor: "#f9f9f9",
+            borderRadius: 2,
+            p: 2,
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <ViewsPerRegionChart data={filteredData} />
+          </Box>{" "}
+          <Box sx={{ flex: 1, height: 1 }}>
+            <div style={{ height: "100%" }}>
+              <UploadTimesChart data={filteredData} />
+            </div>
+          </Box>{" "}
         </Box>
       </Box>
     </Box>
