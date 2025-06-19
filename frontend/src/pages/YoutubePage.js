@@ -243,8 +243,14 @@ function YoutubePage() {
                           label={category}
                           clickable
                           onClick={() => updateState([setSelectedCategories, category])}
-                          color={selectedCategories.includes(category) ? "primary" : "default"}
                           variant={selectedCategories.includes(category) ? "filled" : "outlined"}
+                          sx={{
+                            bgcolor: selectedCategories.includes(category)
+                              ? theme.palette.youtubePage.youtubeRed
+                              : undefined,
+                            color: selectedCategories.includes(category) ? "black" : "white",
+                            fontWeight: "bold",
+                          }}
                           className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
                         />
                       </Glow>
@@ -295,8 +301,14 @@ function YoutubePage() {
                         label={country}
                         clickable
                         onClick={() => updateState([setSelectedCountries, country])}
-                        color={selectedCountries.includes(country) ? "primary" : "default"}
                         variant={selectedCountries.includes(country) ? "filled" : "outlined"}
+                        sx={{
+                          bgcolor: selectedCountries.includes(country)
+                            ? theme.palette.youtubePage.youtubeRed
+                            : undefined,
+                          color: selectedCountries.includes(country) ? "black" : "white",
+                          fontWeight: "bold",
+                        }}
                         className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
                       />
                     </Glow>
@@ -322,18 +334,10 @@ function YoutubePage() {
             p: 2,
           }}
         >
-          <Box
-            sx={{
-              width: 1 / 3,
-            }}
-          >
+          <Box sx={{ flex: 1 }}>
             <ViewsOverTimeChart data={filteredData} />
           </Box>
-          <Box
-            sx={{
-              width: 1 / 3,
-            }}
-          >
+          <Box sx={{ flex: 1 }}>
             <TopViewsByCategoryChart data={filteredData} />
           </Box>
         </Box>

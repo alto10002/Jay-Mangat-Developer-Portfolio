@@ -3,8 +3,6 @@ import { Bar } from "react-chartjs-2";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend, Title);
 const TopViewsByCategoryChart = ({ data }) => {
-  // Group by category and sum views
-  // Category ID to name mapping
   const categoryMap = {
     1: "Film & Animation",
     2: "Autos & Vehicles",
@@ -39,21 +37,39 @@ const TopViewsByCategoryChart = ({ data }) => {
     44: "Trailers",
   };
 
-  const categoryViews = data.reduce((acc, item) => {
-    const categoryName = categoryMap[item.categoryid] || "Unknown";
-    acc[categoryName] = (acc[categoryName] || 0) + item.views;
-    return acc;
-  }, {});
+  const categoryViews = {};
+  const categoryCounts = {};
 
-  const sortedCategories = Object.entries(categoryViews).sort((a, b) => b[1] - a[1]);
+  data.forEach((item) => {
+    const categoryName = categoryMap[item.categoryid] || "Unknown";
+    categoryViews[categoryName] = (categoryViews[categoryName] || 0) + item.views;
+    categoryCounts[categoryName] = (categoryCounts[categoryName] || 0) + 1;
+  });
+
+  const sortedCategories = Object.entries(categoryViews)
+    .sort((a, b) => b[1] - a[1])
+    .map(([category]) => category); // preserve order
 
   const chartData = {
-    labels: sortedCategories.map(([category]) => category),
+    labels: sortedCategories,
     datasets: [
       {
-        label: "Total Views",
-        data: sortedCategories.map(([, views]) => views / 1_000_000),
+        label: "Total Views (M)",
+        data: sortedCategories.map((category) => categoryViews[category] / 1_000_000),
         backgroundColor: "#36A2EB",
+        yAxisID: "y",
+        barThickness: 20,
+        categoryPercentage: 0.6,
+        barPercentage: 0.8,
+      },
+      {
+        label: "Video Count",
+        data: sortedCategories.map((category) => categoryCounts[category]),
+        backgroundColor: "#FFA500",
+        yAxisID: "y1",
+        barThickness: 8,
+        categoryPercentage: 0.6,
+        barPercentage: 0.8,
       },
     ],
   };
@@ -61,21 +77,29 @@ const TopViewsByCategoryChart = ({ data }) => {
   const options = {
     responsive: true,
     plugins: {
-      legend: { display: false },
-      title: { display: true, text: "Total Views by Category (millions)" },
+      legend: { display: true },
+      title: { display: true, text: "Total Views and Video Count by Category" },
       tooltip: { mode: "index", intersect: false },
     },
     scales: {
       x: {
         title: { display: true, text: "Category" },
         ticks: { display: false },
+        stacked: false,
       },
       y: {
         beginAtZero: true,
-        title: { display: true, text: "Views" },
+        title: { display: true, text: "Views (M)" },
         ticks: {
-          callback: (value) => (value === 0 ? "" : `${value}`), // ← hides 0
+          callback: (value) => (value === 0 ? "" : `${value}`),
         },
+        position: "left",
+      },
+      y1: {
+        beginAtZero: true,
+        title: { display: true, text: "Number of Videos" },
+        position: "right",
+        grid: { drawOnChartArea: false },
       },
     },
   };

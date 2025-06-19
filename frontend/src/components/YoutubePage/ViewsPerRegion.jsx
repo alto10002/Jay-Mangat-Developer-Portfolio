@@ -21,9 +21,7 @@ const ViewsPerRegionChart = ({ data }) => {
     RU: "#59a14f",
   };
 
-  const backgroundColors = countries.map(
-    (c) => countryColors[c] || "#999" // Fallback to gray if not in map
-  );
+  const backgroundColors = countries.map((c) => countryColors[c] || "#999");
 
   const chartData = {
     labels: countries,

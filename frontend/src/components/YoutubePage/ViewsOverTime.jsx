@@ -42,7 +42,7 @@ const ViewsOverTimeChart = ({ data }) => {
     datasets: Object.entries(countryViews).map(([country, viewsMap]) => ({
       label: country,
       data: sortedDates.map((d) => viewsMap[d] || 0),
-      borderColor: countryColors[country] || "#999", // fallback gray
+      borderColor: countryColors[country] || "#999",
       backgroundColor: countryColors[country] || "#999",
       fill: false,
       tension: 0.3,
@@ -54,7 +54,7 @@ const ViewsOverTimeChart = ({ data }) => {
     responsive: true,
     plugins: {
       legend: { display: true, position: "top" },
-      title: { display: true, text: "Views by Country Over Time (millions)" },
+      title: { display: true, text: "Views by Country (millions)" },
       tooltip: { mode: "index", intersect: false },
     },
     scales: {
