@@ -92,6 +92,9 @@ const categoryIds = {
 const countries = ["Canada", "United States", "Mexico", "United Kingdom", "Russia"];
 
 function YoutubePage() {
+  useEffect(() => {
+    document.title = "JM | Youtube Trend Analyzer";
+  }, []);
   const theme = useTheme();
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
@@ -153,7 +156,7 @@ function YoutubePage() {
             display: "flex",
             alignItems: "center",
             paddingLeft: 2,
-            gap: 1, // spacing between icon and text
+            gap: 1,
           }}
         >
           <FaYoutube size={28} color="white" />
@@ -162,7 +165,7 @@ function YoutubePage() {
             sx={{
               fontWeight: "bold",
               color: "white",
-              fontSize: "1.5rem", // manually override if needed
+              fontSize: "1.5rem",
             }}
           >
             Youtube Trend Analyzer

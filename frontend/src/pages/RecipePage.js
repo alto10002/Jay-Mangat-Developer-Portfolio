@@ -15,6 +15,9 @@ import FoodItems from "../components/FoodItems";
 import WelcomeModal from "../components/WelcomeModal";
 
 function RecipePage({ mode, setMode }) {
+  useEffect(() => {
+    document.title = "JM | What's in your pantry?";
+  }, []);
   //javascript logic
   const [selected, setSelectedOptions] = useState([]);
   const [ingredient_dropdown, setIngreDropdown] = useState([]);
