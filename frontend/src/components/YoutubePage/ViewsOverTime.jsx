@@ -52,6 +52,7 @@ const ViewsOverTimeChart = ({ data }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: true, position: "top" },
       title: { display: true, text: "Views by Country (millions)" },

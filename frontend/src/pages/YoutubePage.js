@@ -362,7 +362,9 @@ function YoutubePage() {
       </Box>
       <Box
         sx={{
+          bgcolor: theme.palette.youtubePage.mainAreaBackground,
           width: 4 / 5,
+          pl: 2,
         }}
       >
         <Box sx={{ display: "flex", height: "40vh" }}>
@@ -382,7 +384,9 @@ function YoutubePage() {
               paddingLeft: 2,
             }}
           >
-            <TopViewsByCategoryChart data={filteredData} />
+            <div style={{ width: "100%", height: "100%" }}>
+              <TopViewsByCategoryChart data={filteredData} />
+            </div>
           </Box>
         </Box>
         <Box sx={{ display: "flex", height: "60vh" }}>
@@ -397,7 +401,9 @@ function YoutubePage() {
               <UploadTimesChart data={filteredData} />
             </Box>
             <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <ViewsOverTimeChart data={filteredData} />
+              <div style={{ width: "100%", height: "100%" }}>
+                <ViewsOverTimeChart data={filteredData} />
+              </div>
             </Box>
           </Box>{" "}
           <Box
