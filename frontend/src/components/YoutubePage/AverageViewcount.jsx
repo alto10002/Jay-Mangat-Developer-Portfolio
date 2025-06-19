@@ -37,6 +37,7 @@ const categoryMap = {
 const AverageViewcountCard = ({ data = [] }) => {
   const categoryStats = {};
 
+  // Aggregate views by category
   data.forEach((item) => {
     const cat = item.categoryid;
     if (!categoryStats[cat]) {
@@ -46,6 +47,7 @@ const AverageViewcountCard = ({ data = [] }) => {
     categoryStats[cat].count += 1;
   });
 
+  // Find category with highest average views
   let topCategoryId = null;
   let maxAvg = -1;
 

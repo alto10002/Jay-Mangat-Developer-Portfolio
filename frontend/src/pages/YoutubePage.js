@@ -176,7 +176,7 @@ function YoutubePage() {
     <Box display="flex">
       <Box
         sx={{
-          bgcolor: theme.palette.youtubePage.background,
+          bgcolor: theme.palette.youtubePage.sidebarBackground,
           width: 1 / 5,
           minWidth: "400px",
           height: "100vh",
@@ -198,28 +198,66 @@ function YoutubePage() {
           <Accordion
             defaultExpanded
             sx={{
-              bgcolor: theme.palette.youtubePage.background,
+              bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={theme.typography.youtubePage_sidebar}>Date Range</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>Start Date</Typography>
+              <Typography sx={theme.typography.youtubePage_sidebar}>Start Date</Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   value={startDate}
                   minDate={dayjs("2025-06-16")}
                   maxDate={endDate ? dayjs(endDate).subtract(1, "day") : undefined}
                   onChange={(newStartDate) => setStartDate(newStartDate)}
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10],
+                          },
+                        },
+                      ],
+                      sx: {
+                        zIndex: 1300,
+                        "& .MuiPaper-root": {
+                          backgroundColor: "grey",
+                          color: "white",
+                        },
+                      },
+                    },
+                  }}
                 />
                 <br />
-                <Typography>End Date</Typography>
+                <Typography sx={theme.typography.youtubePage_sidebar}>End Date</Typography>
                 <DatePicker
                   value={endDate}
                   minDate={startDate ? dayjs(startDate).add(1, "day") : undefined}
                   maxDate={dayjs()}
                   onChange={(newEndDate) => setEndDate(newEndDate)}
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10],
+                          },
+                        },
+                      ],
+                      sx: {
+                        zIndex: 1300,
+                        "& .MuiPaper-root": {
+                          backgroundColor: "grey",
+                          color: "white",
+                        },
+                      },
+                    },
+                  }}
                 />
               </LocalizationProvider>
             </AccordionDetails>
@@ -227,7 +265,7 @@ function YoutubePage() {
           <Accordion
             defaultExpanded
             sx={{
-              bgcolor: theme.palette.youtubePage.background,
+              bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -263,7 +301,7 @@ function YoutubePage() {
               </GlowCapture>
             </AccordionDetails>
           </Accordion>
-          <Accordion
+          {/* <Accordion
             defaultExpanded
             sx={{
               bgcolor: theme.palette.youtubePage.background,
@@ -285,11 +323,11 @@ function YoutubePage() {
                 marks={marks}
               />
             </AccordionDetails>
-          </Accordion>
+          </Accordion> */}
           <Accordion
             defaultExpanded
             sx={{
-              bgcolor: theme.palette.youtubePage.background,
+              bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>

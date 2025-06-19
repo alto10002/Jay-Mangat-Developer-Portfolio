@@ -19,8 +19,8 @@ const AverageVideoLengthCard = ({ data = [] }) => {
     );
   }
 
-  const duration_low = Math.ceil(durations[Math.floor(0.25 * durations.length)] / 60);
-  const duration_high = Math.floor(durations[Math.ceil(0.75 * durations.length) - 1] / 60);
+  const duration_low = Math.floor(durations[Math.floor(0.25 * durations.length)] / 60);
+  const duration_high = Math.ceil(durations[Math.ceil(0.75 * durations.length) - 1] / 60);
 
   return (
     <Card sx={{ minWidth: 250, boxShadow: 3, borderRadius: 3 }}>
