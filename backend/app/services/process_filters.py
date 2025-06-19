@@ -42,8 +42,16 @@ CATEGORY_MAP = {
     "Travel & Events": 19,
     "Videoblogging": 47,
 }
-load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
-sql_db_url = os.getenv("sql_db_url")
+
+# Only load .env in development
+env_path = Path(__file__).resolve().parents[2] / ".env"
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+
+# Use uppercase key with lowercase fallback (if needed)
+sql_db_url = os.getenv("SQL_DB_URL")
+if not sql_db_url:
+    raise ValueError("❌ Missing SQL_DB_URL environment variable.")
 
 
 def process_filters(filters):
