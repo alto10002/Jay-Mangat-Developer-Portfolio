@@ -18,6 +18,9 @@ import ViewsOverTimeChart from "../components/YoutubePage/ViewsOverTime";
 import TopViewsByCategoryChart from "../components/YoutubePage/ViewsPerCategory";
 import UploadTimesChart from "../components/YoutubePage/UploadTimes";
 import ViewsPerRegionChart from "../components/YoutubePage/ViewsPerRegion";
+import AverageTagsCard from "../components/YoutubePage/AverageTags";
+import AverageViewcountCard from "../components/YoutubePage/AverageViewcount";
+import AverageVideoLengthCard from "../components/YoutubePage/AverageVideoLength";
 
 const categories = [
   "Action/Adventure",
@@ -339,6 +342,15 @@ function YoutubePage() {
           </Box>
           <Box sx={{ flex: 1 }}>
             <TopViewsByCategoryChart data={filteredData} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <AverageTagsCard data={filteredData} />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <AverageViewcountCard data={filteredData} />
+          </Box>{" "}
+          <Box sx={{ flex: 1 }}>
+            <AverageVideoLengthCard data={filteredData} />
           </Box>
         </Box>
         <Box
