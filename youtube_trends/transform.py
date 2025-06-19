@@ -38,18 +38,32 @@ def transform(dataframe):
         "43": "Shows",
         "44": "Trailers",
     }
-    dataframe["publish_date"] = pd.to_datetime(
+    dataframe["upload_time"] = pd.to_datetime(
         dataframe["publish_date"], errors="coerce"
-    )
+    ).dt.time
+    dataframe["upload_date"] = pd.to_datetime(
+        dataframe["publish_date"], errors="coerce"
+    ).dt.date
+    dataframe["trending_date"] = pd.to_datetime("today").date()
+    dataframe["title"] = dataframe["title"].apply(clean_title)
     dataframe["duration"] = dataframe["duration"].apply(isodate.parse_duration)
     dataframe["duration"] = dataframe["duration"] / np.timedelta64(1, "s")
     dataframe["tags"] = dataframe["tags"].apply(
         lambda s: list(ast.literal_eval(s)) if isinstance(s, str) else s
     )
     dataframe["tag_count"] = dataframe["tags"].apply(len)
-    dataframe["categoryID"] = dataframe["categoryID"].apply(str)
-    dataframe["category_name"] = dataframe["categoryID"].map(category_ids)
+    dataframe["categoryid"] = dataframe["categoryid"].apply(str)
+    dataframe["category_name"] = dataframe["categoryid"].map(category_ids)
     return dataframe
+
+
+def clean_title(title):
+    if not isinstance(title, str):
+        return None
+    title = title.strip()
+    title = title.replace("\x00", "")
+    title = title.replace("\n", " ").replace("\r", " ")
+    return title
 
 
 # extract_df = pd.read_csv("extract.csv")

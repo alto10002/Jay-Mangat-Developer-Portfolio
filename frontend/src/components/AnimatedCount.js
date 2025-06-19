@@ -1,6 +1,6 @@
 import { motion, animate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Grid, Typography, Button, Box, Fade } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 function AnimatedCount({ count }) {
@@ -31,7 +31,7 @@ function AnimatedCount({ count }) {
       controls.stop();
       clearTimeout(timeout);
     };
-  }, [count]);
+  }, [count, theme.palette.text.primary]);
 
   useEffect(() => {
     setColor(theme.palette.text.primary);

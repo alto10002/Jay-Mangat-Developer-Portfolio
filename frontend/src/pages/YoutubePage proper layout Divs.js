@@ -1,5 +1,5 @@
 import "../components/sheets/sidebar.css";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Container, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FaYoutube } from "react-icons/fa";
 import Accordion from "@mui/material/Accordion";
@@ -173,17 +173,8 @@ function YoutubePage() {
   }, [filteredData]);
 
   return (
-    <Box display="flex">
-      <Box
-        sx={{
-          bgcolor: theme.palette.youtubePage.background,
-          width: 1 / 5,
-          minWidth: "400px",
-          height: "100vh",
-          color: theme.palette.youtubePage.sidebarText,
-          overflowY: "auto",
-        }}
-      >
+    <Grid container spacing={2} sx={{ height: "100vh" }}>
+      <Grid size={3}>
         <Box
           sx={{
             height: "50px",
@@ -321,64 +312,33 @@ function YoutubePage() {
             </AccordionDetails>
           </Accordion>
         </Box>
-      </Box>
-      <Box
-        sx={{
-          width: 4 / 5,
-        }}
-      >
-        <Box sx={{ display: "flex", height: "40vh" }}>
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <AverageViewcountCard data={filteredData} />
-            <AverageVideoLengthCard data={filteredData} />
-          </Box>
-          <Box
-            sx={{
-              flex: 3,
-              paddingLeft: 2,
-            }}
-          >
+      </Grid>
+      <Grid size={9}>
+        <Grid container>
+          <Grid container direction="column" size={2}>
+            <Grid>
+              <AverageViewcountCard data={filteredData} />
+            </Grid>
+            <Grid>
+              <AverageVideoLengthCard data={filteredData} />
+            </Grid>
+          </Grid>
+          <Grid size={10}>
             <TopViewsByCategoryChart data={filteredData} />
-          </Box>
-        </Box>
-        <Box sx={{ display: "flex", height: "60vh" }}>
-          <Box
-            sx={{
-              flex: 2,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <UploadTimesChart data={filteredData} />
-            </Box>
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <ViewsOverTimeChart data={filteredData} />
-            </Box>
-          </Box>{" "}
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box sx={{ display: "flex", height: 1 / 4 }}>
-              <AverageTagsCard data={filteredData} />
-            </Box>
-            <Box sx={{ display: "flex", height: 3 / 4 }}>
-              <ViewsPerRegionChart data={filteredData} />
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid container direction="column">
+            <ViewsOverTimeChart data={filteredData} />
+            <UploadTimesChart data={filteredData} />
+          </Grid>
+          <Grid container direction="column">
+            <AverageTagsCard data={filteredData} />
+            <ViewsPerRegionChart data={filteredData} />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
