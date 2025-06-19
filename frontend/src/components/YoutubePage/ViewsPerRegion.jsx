@@ -12,8 +12,18 @@ const ViewsPerRegionChart = ({ data }) => {
 
   const countries = Object.keys(countryViews);
   const views = Object.values(countryViews);
-  const predefinedColors = ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"];
-  const colors = countries.map((_, i) => predefinedColors[i % predefinedColors.length]);
+
+  const countryColors = {
+    US: "#4e79a7",
+    CA: "#f28e2b",
+    GB: "#e15759",
+    MX: "#76b7b2",
+    RU: "#59a14f",
+  };
+
+  const backgroundColors = countries.map(
+    (c) => countryColors[c] || "#999" // Fallback to gray if not in map
+  );
 
   const chartData = {
     labels: countries,
@@ -21,7 +31,7 @@ const ViewsPerRegionChart = ({ data }) => {
       {
         label: "Views",
         data: views,
-        backgroundColor: colors,
+        backgroundColor: backgroundColors,
         borderWidth: 1,
       },
     ],
@@ -31,10 +41,12 @@ const ViewsPerRegionChart = ({ data }) => {
     responsive: true,
     plugins: {
       legend: {
-        position: "right",
+        position: "top",
       },
-      title: { display: true, text: "Relative Views Per Region" },
-
+      title: {
+        display: true,
+        text: "Relative Views Per Region",
+      },
       tooltip: {
         callbacks: {
           label: (context) => {

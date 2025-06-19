@@ -11,38 +11,50 @@ import {
 import { Line } from "react-chartjs-2";
 import dayjs from "dayjs";
 
-// Register components
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
-const ViewsOverTimeChart = ({ data }) => {
-  const groupedViews = data.reduce((acc, item) => {
-    const date = dayjs(item.trending_date).format("YYYY-MM-DD");
-    acc[date] = (acc[date] || 0) + item.views / 1000000;
-    return acc;
-  }, {});
+const countryColors = {
+  US: "#4e79a7",
+  CA: "#f28e2b",
+  GB: "#e15759",
+  MX: "#76b7b2",
+  RU: "#59a14f",
+};
 
-  const sortedDates = Object.keys(groupedViews).sort();
+const ViewsOverTimeChart = ({ data }) => {
+  const countryViews = {};
+  const allDates = new Set();
+
+  data.forEach((item) => {
+    const date = dayjs(item.trending_date).format("YYYY-MM-DD");
+    const country = item.country || "Unknown";
+
+    if (!countryViews[country]) countryViews[country] = {};
+    countryViews[country][date] = (countryViews[country][date] || 0) + item.views / 1_000_000;
+
+    allDates.add(date);
+  });
+
+  const sortedDates = [...allDates].sort();
 
   const chartData = {
     labels: sortedDates.map((d) => dayjs(d).format("MMM D")),
-    datasets: [
-      {
-        label: "Total Views",
-        data: sortedDates.map((d) => groupedViews[d]),
-        fill: false,
-        borderColor: "#8884d8",
-        tension: 0.3,
-        pointRadius: 3,
-        pointBackgroundColor: "#8884d8",
-      },
-    ],
+    datasets: Object.entries(countryViews).map(([country, viewsMap]) => ({
+      label: country,
+      data: sortedDates.map((d) => viewsMap[d] || 0),
+      borderColor: countryColors[country] || "#999", // fallback gray
+      backgroundColor: countryColors[country] || "#999",
+      fill: false,
+      tension: 0.3,
+      pointRadius: 2,
+    })),
   };
 
   const options = {
     responsive: true,
     plugins: {
-      legend: { display: false },
-      title: { display: true, text: "Total Views Over Date Range (millions)" },
+      legend: { display: true, position: "top" },
+      title: { display: true, text: "Views by Country Over Time (millions)" },
       tooltip: { mode: "index", intersect: false },
     },
     scales: {
@@ -54,7 +66,7 @@ const ViewsOverTimeChart = ({ data }) => {
         beginAtZero: true,
         title: { display: true, text: "Views" },
         ticks: {
-          callback: (value) => (value === 0 ? "" : `${value}`), // ← hides 0
+          callback: (value) => (value === 0 ? "" : `${value}`),
         },
       },
     },
