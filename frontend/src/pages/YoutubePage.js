@@ -148,6 +148,8 @@ function YoutubePage() {
     console.log("Updated filteredData:", filteredData);
   }, [filteredData]);
 
+  console.log("YoutubePage rendered");
+
   const measureRequestTime = async () => {
     const start = performance.now();
     try {
@@ -155,7 +157,7 @@ function YoutubePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          categories: categories,
+          categories: selectedCategories,
           countries: ["CA"],
           minTags: 0,
           maxTags: 10,
