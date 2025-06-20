@@ -185,7 +185,7 @@ function YoutubePage() {
         <Button onClick={() => submitFilters()}>Submit Filters</Button>
         <Box>
           <Accordion
-            defaultExpanded
+            // defaultExpanded
             sx={{
               bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
@@ -314,7 +314,7 @@ function YoutubePage() {
             </AccordionDetails>
           </Accordion> */}
           <Accordion
-            defaultExpanded
+            // defaultExpanded
             sx={{
               bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
