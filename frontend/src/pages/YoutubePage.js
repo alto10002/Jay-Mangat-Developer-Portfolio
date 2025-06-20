@@ -97,12 +97,22 @@ function YoutubePage() {
     submitFilters();
   }, []);
   const theme = useTheme();
-  const [startDate, setStartDate] = useState(dayjs().subtract(3, "day"));
+  const [startDate, setStartDate] = useState(dayjs().subtract(7, "day"));
   const [endDate, setEndDate] = useState(dayjs());
-  const [selectedCategories, setSelectedCategories] = useState(categories);
+  const [selectedCategories, setSelectedCategories] = useState([
+    "Action/Adventure",
+    "Comedy",
+    "Entertainment",
+    "Film & Animation",
+    "Gaming",
+    "Horror",
+    "Movies",
+    "News & Politics",
+    "Sports",
+  ]);
   const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
   const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
-  const [selectedCountries, setSelectedCountries] = useState(countries);
+  const [selectedCountries, setSelectedCountries] = useState(["United States", "Canada"]);
   const [filteredData, setFilteredData] = useState([]);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
