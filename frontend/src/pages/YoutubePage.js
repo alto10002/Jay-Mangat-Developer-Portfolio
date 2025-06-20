@@ -148,6 +148,34 @@ function YoutubePage() {
     console.log("Updated filteredData:", filteredData);
   }, [filteredData]);
 
+  // console.log("YoutubePage rendered");
+
+  // const measureRequestTime = async () => {
+  //   const start = performance.now();
+  //   try {
+  //     await fetch("https://react-recipes-u4yt.onrender.com/youtube_filter", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         categories: selectedCategories,
+  //         countries: ["CA"],
+  //         minTags: 0,
+  //         maxTags: 10,
+  //         startDate: "2025-06-16",
+  //         endDate: "2025-06-19",
+  //       }),
+  //     });
+  //   } catch (e) {
+  //     console.error("Request failed:", e);
+  //   }
+  //   const duration = performance.now() - start;
+  //   console.log(`Initial request took ${duration.toFixed(0)} ms`);
+  // };
+
+  // useEffect(() => {
+  //   measureRequestTime();
+  // }, []);
+
   return (
     <Box display="flex">
       <Box

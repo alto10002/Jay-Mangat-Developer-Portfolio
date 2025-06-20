@@ -37,6 +37,13 @@ const FadeInSection = ({ children, delay = 0 }) => {
 
 function HomePage() {
   useEffect(() => {
+    // Trigger warmup ping
+    fetch("https://react-recipes-u4yt.onrender.com/ping")
+      .then((res) => console.log("Ping successful:", res.status))
+      .catch((err) => console.warn("Ping failed:", err));
+  }, []);
+
+  useEffect(() => {
     document.title = "JM | Portfolio";
   }, []);
   const theme = useTheme();
