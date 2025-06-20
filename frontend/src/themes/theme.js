@@ -25,10 +25,12 @@ export const getDesignTokens = (mode) => ({
       button2: "#0213ad",
     },
     youtubePage: {
-      youtubeRed: "#cc181e",
-      background: "#2e2e2e",
-      sidebar: "#666666",
-      sidebarText: mode === "light" ? "#000000" : "#f0f0f0",
+      youtubeRed: "#800000",
+      sidebarBackground: "#222831",
+      sidebarAccordian: "#393E46",
+      mainAreaBackground: "#222831",
+      mainAreaCard: "#393E46",
+      mainAreaText: "#F2E8C6",
     },
   },
   typography: {
@@ -40,7 +42,7 @@ export const getDesignTokens = (mode) => ({
     h5: { fontFamily: "'Rubik', sans-serif" },
     h6: { fontFamily: "'Rubik', sans-serif" },
     youtubePage_sidebar: {
-      color: "#f0f0f0",
+      color: "#FFFFFF",
       fontSize: "1.5rem",
       fontWeight: 1000,
       fontFamily: "'Rubik', sans-serif",

@@ -1,4 +1,5 @@
 import { Card, CardContent, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 const categoryMap = {
   1: "Film & Animation",
@@ -35,8 +36,10 @@ const categoryMap = {
 };
 
 const AverageViewcountCard = ({ data = [] }) => {
+  const theme = useTheme();
   const categoryStats = {};
 
+  // Aggregate views by category
   data.forEach((item) => {
     const cat = item.categoryid;
     if (!categoryStats[cat]) {
@@ -46,6 +49,7 @@ const AverageViewcountCard = ({ data = [] }) => {
     categoryStats[cat].count += 1;
   });
 
+  // Find category with highest average views
   let topCategoryId = null;
   let maxAvg = -1;
 
@@ -60,7 +64,7 @@ const AverageViewcountCard = ({ data = [] }) => {
   const topCategoryName = categoryMap[topCategoryId] || "Unknown";
 
   return (
-    <Card sx={{ minWidth: 250, boxShadow: 3, borderRadius: 3 }}>
+    <Card sx={{ minWidth: 250, boxShadow: 3, borderRadius: 3, bgcolor: theme.palette.youtubePage.mainAreaCard }}>
       <CardContent>
         <Typography variant="h6" gutterBottom>
           Top Avg Views by Category
@@ -68,7 +72,7 @@ const AverageViewcountCard = ({ data = [] }) => {
         <Typography variant="h4" color="primary" fontWeight="bold">
           {topCategoryName}
         </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography variant="subtitle2" color="white">
           {Math.round(maxAvg).toLocaleString()} views/video
         </Typography>
       </CardContent>

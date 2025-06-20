@@ -36,6 +36,9 @@ const FadeInSection = ({ children, delay = 0 }) => {
 };
 
 function HomePage() {
+  useEffect(() => {
+    document.title = "JM | Portfolio";
+  }, []);
   const theme = useTheme();
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);

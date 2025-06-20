@@ -7,7 +7,7 @@ const AverageTagsCard = ({ data = [] }) => {
   const avgTags = data.length ? (totalTags / data.length).toFixed(2) : 0;
 
   return (
-    <Card sx={{ minWidth: 200, boxShadow: 3, borderRadius: 3, bgcolor: theme.palette.youtubePage.sidebar }}>
+    <Card sx={{ minWidth: 200, boxShadow: 3, borderRadius: 3, bgcolor: theme.palette.youtubePage.mainAreaCard }}>
       <CardContent>
         <Typography variant="h6" gutterBottom sx={theme.typography.youtubePage_sidebar}>
           Average Number of Video Tags

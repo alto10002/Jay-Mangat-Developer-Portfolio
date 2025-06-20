@@ -92,53 +92,29 @@ const categoryIds = {
 const countries = ["Canada", "United States", "Mexico", "United Kingdom", "Russia"];
 
 function YoutubePage() {
+  useEffect(() => {
+    document.title = "JM | Youtube Trend Analyzer";
+    submitFilters();
+  }, []);
   const theme = useTheme();
-  const [startDate, setStartDate] = useState(dayjs());
+  const [startDate, setStartDate] = useState(dayjs().subtract(7, "day"));
   const [endDate, setEndDate] = useState(dayjs());
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([
+    "Action/Adventure",
+    "Comedy",
+    "Entertainment",
+    "Film & Animation",
+    "Gaming",
+    "Horror",
+    "Movies",
+    "News & Politics",
+    "Sports",
+  ]);
   const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
   const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
-  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState(["United States", "Canada"]);
   const [filteredData, setFilteredData] = useState([]);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
-
-  const marks = [
-    {
-      value: 0,
-      label: "0",
-    },
-    {
-      value: 1,
-    },
-    {
-      value: 2,
-    },
-    {
-      value: 3,
-    },
-    {
-      value: 4,
-    },
-    {
-      value: 5,
-    },
-    {
-      value: 6,
-    },
-    {
-      value: 7,
-    },
-    {
-      value: 8,
-    },
-    {
-      value: 9,
-    },
-    {
-      value: 10,
-      label: "10",
-    },
-  ];
 
   const updateState = ([setState, item]) => {
     setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x !== item) : [...oldState, item]));
@@ -176,7 +152,7 @@ function YoutubePage() {
     <Box display="flex">
       <Box
         sx={{
-          bgcolor: theme.palette.youtubePage.background,
+          bgcolor: theme.palette.youtubePage.sidebarBackground,
           width: 1 / 5,
           minWidth: "400px",
           height: "100vh",
@@ -188,38 +164,89 @@ function YoutubePage() {
           sx={{
             height: "50px",
             bgcolor: theme.palette.youtubePage.youtubeRed,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 2,
+            gap: 1,
           }}
         >
-          <FaYoutube />
-          Trend Analyzer
+          <FaYoutube size={28} color="white" />
+          <Typography
+            variant="h1"
+            sx={{
+              fontWeight: "bold",
+              color: "white",
+              fontSize: "1.5rem",
+            }}
+          >
+            Youtube Trend Analyzer
+          </Typography>
         </Box>
         <Button onClick={() => submitFilters()}>Submit Filters</Button>
         <Box>
           <Accordion
-            defaultExpanded
+            // defaultExpanded
             sx={{
-              bgcolor: theme.palette.youtubePage.background,
+              bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography sx={theme.typography.youtubePage_sidebar}>Date Range</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>Start Date</Typography>
+              <Typography sx={theme.typography.youtubePage_sidebar}>Start Date</Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   value={startDate}
                   minDate={dayjs("2025-06-16")}
                   maxDate={endDate ? dayjs(endDate).subtract(1, "day") : undefined}
                   onChange={(newStartDate) => setStartDate(newStartDate)}
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10],
+                          },
+                        },
+                      ],
+                      sx: {
+                        zIndex: 1300,
+                        "& .MuiPaper-root": {
+                          backgroundColor: "grey",
+                          color: "white",
+                        },
+                      },
+                    },
+                  }}
                 />
                 <br />
-                <Typography>End Date</Typography>
+                <Typography sx={theme.typography.youtubePage_sidebar}>End Date</Typography>
                 <DatePicker
                   value={endDate}
                   minDate={startDate ? dayjs(startDate).add(1, "day") : undefined}
                   maxDate={dayjs()}
                   onChange={(newEndDate) => setEndDate(newEndDate)}
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 10],
+                          },
+                        },
+                      ],
+                      sx: {
+                        zIndex: 1300,
+                        "& .MuiPaper-root": {
+                          backgroundColor: "grey",
+                          color: "white",
+                        },
+                      },
+                    },
+                  }}
                 />
               </LocalizationProvider>
             </AccordionDetails>
@@ -227,7 +254,7 @@ function YoutubePage() {
           <Accordion
             defaultExpanded
             sx={{
-              bgcolor: theme.palette.youtubePage.background,
+              bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -263,7 +290,7 @@ function YoutubePage() {
               </GlowCapture>
             </AccordionDetails>
           </Accordion>
-          <Accordion
+          {/* <Accordion
             defaultExpanded
             sx={{
               bgcolor: theme.palette.youtubePage.background,
@@ -285,11 +312,11 @@ function YoutubePage() {
                 marks={marks}
               />
             </AccordionDetails>
-          </Accordion>
+          </Accordion> */}
           <Accordion
-            defaultExpanded
+            // defaultExpanded
             sx={{
-              bgcolor: theme.palette.youtubePage.background,
+              bgcolor: theme.palette.youtubePage.sidebarAccordian,
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -324,7 +351,9 @@ function YoutubePage() {
       </Box>
       <Box
         sx={{
+          bgcolor: theme.palette.youtubePage.mainAreaBackground,
           width: 4 / 5,
+          pl: 2,
         }}
       >
         <Box sx={{ display: "flex", height: "40vh" }}>
@@ -344,7 +373,9 @@ function YoutubePage() {
               paddingLeft: 2,
             }}
           >
-            <TopViewsByCategoryChart data={filteredData} />
+            <div style={{ width: "100%", height: "100%" }}>
+              <TopViewsByCategoryChart data={filteredData} />
+            </div>
           </Box>
         </Box>
         <Box sx={{ display: "flex", height: "60vh" }}>
@@ -359,7 +390,9 @@ function YoutubePage() {
               <UploadTimesChart data={filteredData} />
             </Box>
             <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <ViewsOverTimeChart data={filteredData} />
+              <div style={{ width: "100%", height: "100%" }}>
+                <ViewsOverTimeChart data={filteredData} />
+              </div>
             </Box>
           </Box>{" "}
           <Box

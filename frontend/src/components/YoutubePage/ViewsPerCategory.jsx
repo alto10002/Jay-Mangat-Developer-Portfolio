@@ -76,6 +76,7 @@ const TopViewsByCategoryChart = ({ data }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: true },
       title: { display: true, text: "Total Views and Video Count by Category" },
