@@ -94,14 +94,15 @@ const countries = ["Canada", "United States", "Mexico", "United Kingdom", "Russi
 function YoutubePage() {
   useEffect(() => {
     document.title = "JM | Youtube Trend Analyzer";
+    submitFilters();
   }, []);
   const theme = useTheme();
-  const [startDate, setStartDate] = useState(dayjs());
+  const [startDate, setStartDate] = useState(dayjs().subtract(3, "day"));
   const [endDate, setEndDate] = useState(dayjs());
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(categories);
   const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
   const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
-  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState(countries);
   const [filteredData, setFilteredData] = useState([]);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
