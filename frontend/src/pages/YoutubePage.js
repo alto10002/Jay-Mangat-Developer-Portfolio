@@ -408,16 +408,16 @@ function YoutubePage() {
       <Box
         sx={{
           bgcolor: theme.palette.youtubePage.mainAreaBackground,
-          flexGrow: 1, // Take up all remaining space
+          flexGrow: 1,
           transition: "margin 0.3s ease",
           minWidth: 0,
           pl: 2,
         }}
       >
         <Box sx={{ display: "flex", height: "40vh" }}>
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            <AverageViewcountCard data={filteredData} />
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}>
             <AverageVideoLengthCard data={filteredData} />
+            <AverageTagsCard data={filteredData} />
           </Box>
           <Box sx={{ flex: 3, paddingLeft: 2 }}>
             <TopViewsByCategoryChart data={filteredData} />
@@ -434,7 +434,7 @@ function YoutubePage() {
           </Box>
           <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex", height: 1 / 4 }}>
-              <AverageTagsCard data={filteredData} />
+              <AverageViewcountCard data={filteredData} />
             </Box>
             <Box sx={{ display: "flex", height: 3 / 4 }}>
               <ViewsPerRegionChart data={filteredData} />

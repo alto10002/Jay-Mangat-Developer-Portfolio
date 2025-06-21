@@ -14,8 +14,8 @@ import dayjs from "dayjs";
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
 const countryColors = {
-  US: "#4e79a7",
-  CA: "#f28e2b",
+  US: "#971616",
+  CA: "#52009b",
   GB: "#e15759",
   MX: "#76b7b2",
   RU: "#59a14f",

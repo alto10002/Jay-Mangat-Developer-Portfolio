@@ -1,5 +1,6 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { Glow, GlowCapture } from "@codaworks/react-glow";
 
 const categoryMap = {
   1: "Film & Animation",
@@ -69,9 +70,25 @@ const AverageViewcountCard = ({ data = [] }) => {
         <Typography variant="h6" gutterBottom>
           Top Avg Views by Category
         </Typography>
-        <Typography variant="h4" color="primary" fontWeight="bold">
-          {topCategoryName}
-        </Typography>
+
+        <GlowCapture>
+          <Box textAlign="center">
+            <Glow color="red">
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                sx={{
+                  color: "white",
+                  transition: "color 0.3s ease",
+                }}
+                className="glow:text-glow"
+              >
+                {topCategoryName}
+              </Typography>
+            </Glow>
+          </Box>
+        </GlowCapture>
+
         <Typography variant="subtitle2" color="white">
           {Math.round(maxAvg).toLocaleString()} views/video
         </Typography>
