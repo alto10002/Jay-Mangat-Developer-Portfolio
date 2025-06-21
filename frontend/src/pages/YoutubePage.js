@@ -121,6 +121,7 @@ function YoutubePage() {
     country: false,
   });
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const updateState = ([setState, item]) => {
     setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x !== item) : [...oldState, item]));
@@ -175,15 +176,29 @@ function YoutubePage() {
       country: newValue,
     });
   };
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
-    <Box display="flex">
+    <Box
+      display="flex"
+      height="100vh"
+      sx={{
+        overflowX: "hidden", // prevent horizontal scroll
+        width: "100vw", // ensure it spans full screen width
+      }}
+    >
       {/* Sidebar */}
       <Box
+        onClick={() => !sidebarOpen && setSidebarOpen(true)}
+        style={{ cursor: sidebarOpen ? "default" : "pointer" }}
         sx={{
           bgcolor: theme.palette.youtubePage.sidebarBackground,
-          width: 1 / 5,
-          minWidth: "400px",
+          width: sidebarOpen ? "400px" : "60px",
+          flexShrink: 0,
+          transition: "width 0.5s",
+          overflowX: "hidden",
           height: "100vh",
           color: theme.palette.youtubePage.sidebarText,
           overflowY: "auto",
@@ -200,27 +215,38 @@ function YoutubePage() {
           }}
         >
           <FaYoutube size={28} color="white" />
-          <Typography variant="h1" sx={{ fontWeight: "bold", color: "white", fontSize: "1.5rem" }}>
-            Youtube Trend Analyzer
-          </Typography>
+          {sidebarOpen && (
+            <Typography variant="h1" sx={{ fontWeight: "bold", color: "white", fontSize: "1.5rem" }}>
+              Youtube Trend Analyzer
+            </Typography>
+          )}
         </Box>
 
-        <Box display="flex" alignItems="center" gap={1} px={2} py={1}>
-          <Tooltip title={allExpanded ? "Collapse all filters" : "Expand all filters"}>
-            {allExpanded ? (
-              <MdKeyboardDoubleArrowUp size={32} style={{ cursor: "pointer" }} onClick={toggleAll} />
+        <Box display="flex" justifyContent="center" gap={4} py={1}>
+          {sidebarOpen && (
+            <>
+              <Tooltip title={allExpanded ? "Collapse all filters" : "Expand all filters"}>
+                {allExpanded ? (
+                  <MdKeyboardDoubleArrowUp size={32} style={{ cursor: "pointer" }} onClick={toggleAll} />
+                ) : (
+                  <MdKeyboardDoubleArrowDown size={32} style={{ cursor: "pointer" }} onClick={toggleAll} />
+                )}
+              </Tooltip>
+              <Tooltip title="Download filtered data">
+                <IoMdDownload size={32} style={{ cursor: "pointer" }} onClick={() => downloadJSON(filteredData)} />
+              </Tooltip>
+              <Tooltip title="Submit filtered data">
+                <FaRegCircleCheck size={32} style={{ cursor: "pointer" }} onClick={submitFilters} />
+              </Tooltip>
+            </>
+          )}
+          <Tooltip title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}>
+            {sidebarOpen ? (
+              <BsArrowsCollapseVertical size={32} style={{ cursor: "pointer" }} onClick={toggleSidebar} />
             ) : (
-              <MdKeyboardDoubleArrowDown size={32} style={{ cursor: "pointer" }} onClick={toggleAll} />
+              <BsArrowsExpandVertical size={32} style={{ cursor: "pointer" }} onClick={toggleSidebar} />
             )}
           </Tooltip>
-          <Tooltip title="Download filtered data">
-            <IoMdDownload size={32} style={{ cursor: "pointer" }} onClick={() => downloadJSON(filteredData)} />
-          </Tooltip>
-          <Tooltip title="Submit filtered data">
-            <FaRegCircleCheck size={32} style={{ cursor: "pointer" }} onClick={submitFilters} />
-          </Tooltip>
-          <BsArrowsCollapseVertical />
-          <BsArrowsExpandVertical />
         </Box>
 
         <Box>
@@ -230,10 +256,10 @@ function YoutubePage() {
             onChange={() => setExpandedAccordions((prev) => ({ ...prev, dateRange: !prev.dateRange }))}
             sx={{ bgcolor: theme.palette.youtubePage.sidebarAccordian }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
               <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
                 {" "}
-                <FaCalendarAlt style={{ marginTop: "4px", marginRight: "8px" }} /> Date Range
+                <FaCalendarAlt style={{ marginTop: "4px", marginRight: "8px" }} /> {sidebarOpen && "Date Range"}{" "}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -299,10 +325,10 @@ function YoutubePage() {
             onChange={() => setExpandedAccordions((prev) => ({ ...prev, videoCategory: !prev.videoCategory }))}
             sx={{ bgcolor: theme.palette.youtubePage.sidebarAccordian }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
               <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
                 {" "}
-                <FaGlobeAmericas style={{ marginTop: "4px", marginRight: "8px" }} /> Video Category
+                <FaGlobeAmericas style={{ marginTop: "4px", marginRight: "8px" }} /> {sidebarOpen && "Video Category"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -338,17 +364,16 @@ function YoutubePage() {
               </GlowCapture>
             </AccordionDetails>
           </Accordion>
-
           {/* Country */}
           <Accordion
             expanded={expandedAccordions.country}
             onChange={() => setExpandedAccordions((prev) => ({ ...prev, country: !prev.country }))}
             sx={{ bgcolor: theme.palette.youtubePage.sidebarAccordian }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
               <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
                 {" "}
-                <IoIosListBox style={{ marginTop: "4px", marginRight: "8px" }} /> Country
+                <IoIosListBox style={{ marginTop: "4px", marginRight: "8px" }} /> {sidebarOpen && "Country"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -383,7 +408,9 @@ function YoutubePage() {
       <Box
         sx={{
           bgcolor: theme.palette.youtubePage.mainAreaBackground,
-          width: 4 / 5,
+          flexGrow: 1, // Take up all remaining space
+          transition: "margin 0.3s ease",
+          minWidth: 0,
           pl: 2,
         }}
       >
