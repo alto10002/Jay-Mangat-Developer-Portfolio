@@ -14,8 +14,8 @@ const ViewsPerRegionChart = ({ data }) => {
   const views = Object.values(countryViews);
 
   const countryColors = {
-    US: "#4e79a7",
-    CA: "#f28e2b",
+    US: "#971616",
+    CA: "#52009b",
     GB: "#e15759",
     MX: "#76b7b2",
     RU: "#59a14f",
@@ -40,12 +40,19 @@ const ViewsPerRegionChart = ({ data }) => {
     plugins: {
       legend: {
         position: "top",
+        labels: {
+          color: "white",
+        },
       },
       title: {
         display: true,
         text: "Relative Views Per Region",
+        color: "white",
       },
       tooltip: {
+        backgroundColor: "#333",
+        titleColor: "white",
+        bodyColor: "white",
         callbacks: {
           label: (context) => {
             const val = context.raw.toLocaleString();

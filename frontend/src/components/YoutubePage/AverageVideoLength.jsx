@@ -1,5 +1,6 @@
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { Glow, GlowCapture } from "@codaworks/react-glow";
 
 const AverageVideoLengthCard = ({ data = [] }) => {
   const theme = useTheme();
@@ -17,12 +18,26 @@ const AverageVideoLengthCard = ({ data = [] }) => {
         <Typography variant="h6" gutterBottom sx={theme.typography.youtubePage_sidebar}>
           Most trending videos are between
         </Typography>
-        <Typography variant="h4" color="primary" fontWeight="bold">
-          {duration_low} - {duration_high}
-        </Typography>
-        <Typography variant="subtitle2" color="white">
-          minutes
-        </Typography>
+        <GlowCapture>
+          <Box textAlign="center">
+            <Glow color="red">
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                sx={{
+                  color: "white",
+                  transition: "color 0.3s ease",
+                }}
+                className="glow:text-glow"
+              >
+                {duration_low} - {duration_high}
+              </Typography>
+              <Typography variant="subtitle2" color="white">
+                minutes
+              </Typography>
+            </Glow>
+          </Box>
+        </GlowCapture>
       </CardContent>
     </Card>
   );

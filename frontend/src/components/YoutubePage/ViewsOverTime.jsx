@@ -14,8 +14,8 @@ import dayjs from "dayjs";
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
 
 const countryColors = {
-  US: "#4e79a7",
-  CA: "#f28e2b",
+  US: "#971616",
+  CA: "#52009b",
   GB: "#e15759",
   MX: "#76b7b2",
   RU: "#59a14f",
@@ -54,20 +54,55 @@ const ViewsOverTimeChart = ({ data }) => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: true, position: "top" },
-      title: { display: true, text: "Views by Country (millions)" },
-      tooltip: { mode: "index", intersect: false },
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          color: "white",
+        },
+      },
+      title: {
+        display: true,
+        text: "Views by Country",
+        color: "white",
+      },
+      tooltip: {
+        mode: "index",
+        intersect: false,
+        bodyColor: "white",
+        titleColor: "white",
+        backgroundColor: "#333",
+      },
     },
     scales: {
       x: {
-        title: { display: true, text: "Date" },
-        ticks: { display: false },
+        title: {
+          display: true,
+          text: "Date",
+          color: "white",
+        },
+        ticks: {
+          display: true,
+          color: "white",
+        },
+        grid: {
+          color: "rgba(255, 255, 255, 0.5)", // Change this to desired grid line color
+        },
       },
       y: {
         beginAtZero: true,
-        title: { display: true, text: "Views" },
+        title: {
+          display: true,
+          text: "Views (M)",
+          color: "white",
+        },
         ticks: {
+          color: "white",
           callback: (value) => (value === 0 ? "" : `${value}`),
+        },
+        grid: {
+          display: true,
+          color: (ctx) => (ctx.tick.value === 0 ? "rgba(255, 255, 255, 0.5)" : "transparent"),
         },
       },
     },

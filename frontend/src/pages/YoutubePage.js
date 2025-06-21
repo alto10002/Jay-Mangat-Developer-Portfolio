@@ -1,5 +1,5 @@
 import "../components/sheets/sidebar.css";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Tooltip } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FaYoutube } from "react-icons/fa";
 import Accordion from "@mui/material/Accordion";
@@ -12,7 +12,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Chip from "@mui/material/Chip";
-import Slider from "@mui/material/Slider";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
 import ViewsOverTimeChart from "../components/YoutubePage/ViewsOverTime";
 import TopViewsByCategoryChart from "../components/YoutubePage/ViewsPerCategory";
@@ -21,6 +20,15 @@ import ViewsPerRegionChart from "../components/YoutubePage/ViewsPerRegion";
 import AverageTagsCard from "../components/YoutubePage/AverageTags";
 import AverageViewcountCard from "../components/YoutubePage/AverageViewcount";
 import AverageVideoLengthCard from "../components/YoutubePage/AverageVideoLength";
+import { IoMdDownload } from "react-icons/io";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { MdKeyboardDoubleArrowDown } from "react-icons/md";
+import { MdKeyboardDoubleArrowUp } from "react-icons/md";
+import { BsArrowsCollapseVertical } from "react-icons/bs";
+import { BsArrowsExpandVertical } from "react-icons/bs";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaGlobeAmericas } from "react-icons/fa";
+import { IoIosListBox } from "react-icons/io";
 
 const categories = [
   "Action/Adventure",
@@ -96,28 +104,38 @@ function YoutubePage() {
     document.title = "JM | Youtube Trend Analyzer";
     submitFilters();
   }, []);
+
   const theme = useTheme();
   const [startDate, setStartDate] = useState(dayjs().subtract(7, "day"));
   const [endDate, setEndDate] = useState(dayjs());
-  const [selectedCategories, setSelectedCategories] = useState([
-    "Action/Adventure",
-    "Comedy",
-    "Entertainment",
-    "Film & Animation",
-    "Gaming",
-    "Horror",
-    "Movies",
-    "News & Politics",
-    "Sports",
-  ]);
+  const [selectedCategories, setSelectedCategories] = useState(categories);
   const [selectedMinTagCount, setSelectedMinTagCount] = useState(0);
   const [selectedMaxTagCount, setSelectedMaxTagCount] = useState(10);
   const [selectedCountries, setSelectedCountries] = useState(["United States", "Canada"]);
   const [filteredData, setFilteredData] = useState([]);
+  const [expandedAccordions, setExpandedAccordions] = useState({
+    dateRange: false,
+    videoCategory: false,
+    country: false,
+  });
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const updateState = ([setState, item]) => {
     setState((oldState) => (oldState.includes(item) ? oldState.filter((x) => x !== item) : [...oldState, item]));
+  };
+
+  const downloadJSON = (data) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "filtered_data.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const submitFilters = async () => {
@@ -143,46 +161,35 @@ function YoutubePage() {
     }
   };
 
-  // debugging to check filter output
   useEffect(() => {
     console.log("Updated filteredData:", filteredData);
   }, [filteredData]);
 
-  // console.log("YoutubePage rendered");
-
-  // const measureRequestTime = async () => {
-  //   const start = performance.now();
-  //   try {
-  //     await fetch("https://react-recipes-u4yt.onrender.com/youtube_filter", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         categories: selectedCategories,
-  //         countries: ["CA"],
-  //         minTags: 0,
-  //         maxTags: 10,
-  //         startDate: "2025-06-16",
-  //         endDate: "2025-06-19",
-  //       }),
-  //     });
-  //   } catch (e) {
-  //     console.error("Request failed:", e);
-  //   }
-  //   const duration = performance.now() - start;
-  //   console.log(`Initial request took ${duration.toFixed(0)} ms`);
-  // };
-
-  // useEffect(() => {
-  //   measureRequestTime();
-  // }, []);
+  const allExpanded = Object.values(expandedAccordions).every(Boolean);
+  const toggleAll = () => {
+    const newValue = !allExpanded;
+    setExpandedAccordions({
+      dateRange: newValue,
+      videoCategory: newValue,
+      country: newValue,
+    });
+  };
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
-    <Box display="flex">
+    <Box display="flex" width="100vw" height="100vh" overflow="auto">
+      {/* Sidebar */}
       <Box
+        onClick={() => !sidebarOpen && setSidebarOpen(true)}
+        style={{ cursor: sidebarOpen ? "default" : "pointer" }}
         sx={{
           bgcolor: theme.palette.youtubePage.sidebarBackground,
-          width: 1 / 5,
-          minWidth: "400px",
+          width: sidebarOpen ? "400px" : "60px",
+          flexShrink: 0,
+          transition: "width 0.5s",
+          overflowX: "hidden",
           height: "100vh",
           color: theme.palette.youtubePage.sidebarText,
           overflowY: "auto",
@@ -199,27 +206,78 @@ function YoutubePage() {
           }}
         >
           <FaYoutube size={28} color="white" />
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: "bold",
-              color: "white",
-              fontSize: "1.5rem",
-            }}
-          >
-            Youtube Trend Analyzer
-          </Typography>
+          {sidebarOpen && (
+            <Typography variant="h1" sx={{ fontWeight: "bold", color: "white", fontSize: "1.5rem" }}>
+              Youtube Trend Analyzer
+            </Typography>
+          )}
         </Box>
-        <Button onClick={() => submitFilters()}>Submit Filters</Button>
+
+        <Box display="flex" justifyContent="center" gap={4} py={1}>
+          {sidebarOpen && (
+            <>
+              <Tooltip title={allExpanded ? "Collapse all filters" : "Expand all filters"}>
+                {allExpanded ? (
+                  <MdKeyboardDoubleArrowUp size={32} style={{ cursor: "pointer" }} onClick={toggleAll} />
+                ) : (
+                  <MdKeyboardDoubleArrowDown size={32} style={{ cursor: "pointer" }} onClick={toggleAll} />
+                )}
+              </Tooltip>
+              <Tooltip title="Download filtered data">
+                <IoMdDownload size={32} style={{ cursor: "pointer" }} onClick={() => downloadJSON(filteredData)} />
+              </Tooltip>
+              <Tooltip title="Submit filtered data">
+                <FaRegCircleCheck
+                  size={32}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    submitFilters();
+                    toggleSidebar();
+                    setExpandedAccordions({
+                      dateRange: false,
+                      videoCategory: false,
+                      country: false,
+                    });
+                  }}
+                />
+              </Tooltip>
+            </>
+          )}
+          <Tooltip title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}>
+            {sidebarOpen ? (
+              <BsArrowsCollapseVertical
+                size={32}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  toggleSidebar();
+                  setExpandedAccordions({
+                    dateRange: false,
+                    videoCategory: false,
+                    country: false,
+                  });
+                }}
+              />
+            ) : (
+              <BsArrowsExpandVertical size={32} style={{ cursor: "pointer" }} onClick={toggleSidebar} />
+            )}
+          </Tooltip>
+        </Box>
+
         <Box>
+          {/* Date Range */}
           <Accordion
-            // defaultExpanded
-            sx={{
-              bgcolor: theme.palette.youtubePage.sidebarAccordian,
-            }}
+            expanded={expandedAccordions.dateRange}
+            onChange={() => setExpandedAccordions((prev) => ({ ...prev, dateRange: !prev.dateRange }))}
+            sx={{ bgcolor: theme.palette.youtubePage.sidebarAccordian }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={theme.typography.youtubePage_sidebar}>Date Range</Typography>
+            <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
+              <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
+                {" "}
+                <FaCalendarAlt
+                  style={{ marginTop: "4px", marginRight: "8px", marginLeft: sidebarOpen ? "3px" : "8px" }}
+                />{" "}
+                {sidebarOpen && "Date Range"}{" "}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography sx={theme.typography.youtubePage_sidebar}>Start Date</Typography>
@@ -229,22 +287,22 @@ function YoutubePage() {
                   minDate={dayjs("2025-06-16")}
                   maxDate={endDate ? dayjs(endDate).subtract(1, "day") : undefined}
                   onChange={(newStartDate) => setStartDate(newStartDate)}
+                  sx={[
+                    {
+                      "&:hover": {
+                        backgroundColor: "#800000",
+                      },
+                    },
+                  ]}
                   slotProps={{
-                    popper: {
-                      modifiers: [
-                        {
-                          name: "offset",
-                          options: {
-                            offset: [0, 10],
-                          },
-                        },
-                      ],
+                    layout: {
                       sx: {
-                        zIndex: 1300,
-                        "& .MuiPaper-root": {
-                          backgroundColor: "grey",
-                          color: "white",
-                        },
+                        color: "#800000",
+                        borderRadius: "2px",
+                        borderWidth: "1px",
+                        borderColor: "#800000",
+                        backgroundColor: "#222831",
+                        fontSize: "10px",
                       },
                     },
                   }}
@@ -256,22 +314,21 @@ function YoutubePage() {
                   minDate={startDate ? dayjs(startDate).add(1, "day") : undefined}
                   maxDate={dayjs()}
                   onChange={(newEndDate) => setEndDate(newEndDate)}
+                  sx={[
+                    {
+                      "&:hover": {
+                        backgroundColor: "#800000",
+                      },
+                    },
+                  ]}
                   slotProps={{
-                    popper: {
-                      modifiers: [
-                        {
-                          name: "offset",
-                          options: {
-                            offset: [0, 10],
-                          },
-                        },
-                      ],
+                    layout: {
                       sx: {
-                        zIndex: 1300,
-                        "& .MuiPaper-root": {
-                          backgroundColor: "grey",
-                          color: "white",
-                        },
+                        color: "#800000",
+                        borderRadius: "2px",
+                        borderWidth: "1px",
+                        borderColor: "#800000",
+                        backgroundColor: "#222831",
                       },
                     },
                   }}
@@ -279,76 +336,68 @@ function YoutubePage() {
               </LocalizationProvider>
             </AccordionDetails>
           </Accordion>
+          {/* Video Category */}
           <Accordion
-            defaultExpanded
-            sx={{
-              bgcolor: theme.palette.youtubePage.sidebarAccordian,
-            }}
+            expanded={expandedAccordions.videoCategory}
+            onChange={() => setExpandedAccordions((prev) => ({ ...prev, videoCategory: !prev.videoCategory }))}
+            sx={{ bgcolor: theme.palette.youtubePage.sidebarAccordian }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={theme.typography.youtubePage_sidebar}>Video Category</Typography>
+            <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
+              <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
+                {" "}
+                <FaGlobeAmericas
+                  style={{ marginTop: "4px", marginRight: "8px", marginLeft: sidebarOpen ? "3px" : "8px" }}
+                />{" "}
+                {sidebarOpen && "Video Category"}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <GlowCapture>
+                <Box display="flex" justifyContent="center" gap={3} mb={2} mt={-2}>
+                  <Button sx={{ bgcolor: "#800000" }} onClick={() => setSelectedCategories(categories)}>
+                    Select All
+                  </Button>
+                  <Button sx={{ bgcolor: "#800000" }} onClick={() => setSelectedCategories([])}>
+                    Deselect All
+                  </Button>
+                </Box>
                 <Box display="flex" flexWrap="wrap" gap={1}>
-                  <div className="flex flex-wrap gap-2">
-                    <Button onClick={() => setSelectedCategories(categories)}>Select All</Button>
-                    <Button onClick={() => setSelectedCategories([])}>Deselect All</Button>
-                    <br />
-                    {categories.map((category) => (
-                      <Glow key={category} color="red">
-                        <Chip
-                          label={category}
-                          clickable
-                          onClick={() => updateState([setSelectedCategories, category])}
-                          variant={selectedCategories.includes(category) ? "filled" : "outlined"}
-                          sx={{
-                            bgcolor: selectedCategories.includes(category)
-                              ? theme.palette.youtubePage.youtubeRed
-                              : undefined,
-                            color: selectedCategories.includes(category) ? "black" : "white",
-                            fontWeight: "bold",
-                          }}
-                          className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
-                        />
-                      </Glow>
-                    ))}
-                  </div>
+                  {categories.map((category) => (
+                    <Glow key={category} color="red">
+                      <Chip
+                        label={category}
+                        clickable
+                        onClick={() => updateState([setSelectedCategories, category])}
+                        variant={selectedCategories.includes(category) ? "filled" : "outlined"}
+                        sx={{
+                          bgcolor: selectedCategories.includes(category)
+                            ? theme.palette.youtubePage.youtubeRed
+                            : undefined,
+                          color: selectedCategories.includes(category) ? "white" : "white",
+                          fontWeight: "bold",
+                        }}
+                        className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
+                      />
+                    </Glow>
+                  ))}
                 </Box>
               </GlowCapture>
             </AccordionDetails>
           </Accordion>
-          {/* <Accordion
-            defaultExpanded
-            sx={{
-              bgcolor: theme.palette.youtubePage.background,
-            }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={theme.typography.youtubePage_sidebar}>Number of tags</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Slider
-                value={[selectedMinTagCount, selectedMaxTagCount]}
-                onChange={(_, sliderValues) => {
-                  setSelectedMinTagCount(sliderValues[0]);
-                  setSelectedMaxTagCount(sliderValues[1]);
-                }}
-                valueLabelDisplay="auto"
-                min={0}
-                max={10}
-                marks={marks}
-              />
-            </AccordionDetails>
-          </Accordion> */}
+          {/* Country */}
           <Accordion
-            // defaultExpanded
-            sx={{
-              bgcolor: theme.palette.youtubePage.sidebarAccordian,
-            }}
+            expanded={expandedAccordions.country}
+            onChange={() => setExpandedAccordions((prev) => ({ ...prev, country: !prev.country }))}
+            sx={{ bgcolor: theme.palette.youtubePage.sidebarAccordian }}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography sx={theme.typography.youtubePage_sidebar}>Country</Typography>
+            <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
+              <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
+                {" "}
+                <IoIosListBox
+                  style={{ marginTop: "4px", marginRight: "8px", marginLeft: sidebarOpen ? "3px" : "8px" }}
+                />{" "}
+                {sidebarOpen && "Country"}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <GlowCapture>
@@ -364,7 +413,7 @@ function YoutubePage() {
                           bgcolor: selectedCountries.includes(country)
                             ? theme.palette.youtubePage.youtubeRed
                             : undefined,
-                          color: selectedCountries.includes(country) ? "black" : "white",
+                          color: selectedCountries.includes(country) ? "white" : "white",
                           fontWeight: "bold",
                         }}
                         className="glow:shadow-lg glow:border glow:border-red-500 text-black rounded-full"
@@ -377,63 +426,55 @@ function YoutubePage() {
           </Accordion>
         </Box>
       </Box>
+
+      {/* Main Content */}
       <Box
         sx={{
           bgcolor: theme.palette.youtubePage.mainAreaBackground,
-          width: 4 / 5,
+          flexGrow: 1,
+          transition: "margin 0.3s ease",
+          minWidth: 0,
           pl: 2,
         }}
       >
         <Box sx={{ display: "flex", height: "40vh" }}>
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <AverageViewcountCard data={filteredData} />
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}>
             <AverageVideoLengthCard data={filteredData} />
+            <AverageTagsCard data={filteredData} />
           </Box>
-          <Box
-            sx={{
-              flex: 3,
-              paddingLeft: 2,
-            }}
-          >
-            <div style={{ width: "100%", height: "100%" }}>
-              <TopViewsByCategoryChart data={filteredData} />
-            </div>
+          <Box sx={{ width: "100%", height: "100%", minWidth: 0 }}>
+            <TopViewsByCategoryChart data={filteredData} />
           </Box>
         </Box>
         <Box sx={{ display: "flex", height: "60vh" }}>
-          <Box
-            sx={{
-              flex: 2,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
+          <Box sx={{ flex: 2, display: "flex", flexDirection: "column", width: "100%", height: "100%", minWidth: 0 }}>
+            <Box sx={{ flex: 1, minHeight: 0 }}>
               <UploadTimesChart data={filteredData} />
             </Box>
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
-              <div style={{ width: "100%", height: "100%" }}>
-                <ViewsOverTimeChart data={filteredData} />
-              </div>
+            <Box sx={{ flex: 1, minHeight: 0 }}>
+              <ViewsOverTimeChart data={filteredData} />
             </Box>
-          </Box>{" "}
-          <Box
-            sx={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            <Box sx={{ display: "flex", height: 1 / 4 }}>
-              <AverageTagsCard data={filteredData} />
+          </Box>
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", height: "100%", minWidth: 0 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 1 / 4,
+              }}
+            >
+              <AverageViewcountCard data={filteredData} />
             </Box>
-            <Box sx={{ display: "flex", height: 3 / 4 }}>
+
+            <Box
+              sx={{
+                display: "flex",
+                height: 3 / 4,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ViewsPerRegionChart data={filteredData} />
             </Box>
           </Box>
