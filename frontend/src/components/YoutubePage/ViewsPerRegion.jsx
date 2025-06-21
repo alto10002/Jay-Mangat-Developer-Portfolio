@@ -40,12 +40,19 @@ const ViewsPerRegionChart = ({ data }) => {
     plugins: {
       legend: {
         position: "top",
+        labels: {
+          color: "white",
+        },
       },
       title: {
         display: true,
         text: "Relative Views Per Region",
+        color: "white",
       },
       tooltip: {
+        backgroundColor: "#333",
+        titleColor: "white",
+        bodyColor: "white",
         callbacks: {
           label: (context) => {
             const val = context.raw.toLocaleString();

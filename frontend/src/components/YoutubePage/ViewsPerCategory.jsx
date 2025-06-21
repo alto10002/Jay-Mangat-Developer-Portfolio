@@ -56,7 +56,7 @@ const TopViewsByCategoryChart = ({ data }) => {
       {
         label: "Total Views (M)",
         data: sortedCategories.map((category) => categoryViews[category] / 1_000_000),
-        backgroundColor: "#36A2EB",
+        backgroundColor: "#FEDF16",
         yAxisID: "y",
         barThickness: 20,
         categoryPercentage: 0.6,
@@ -65,7 +65,7 @@ const TopViewsByCategoryChart = ({ data }) => {
       {
         label: "Video Count",
         data: sortedCategories.map((category) => categoryCounts[category]),
-        backgroundColor: "#FFA500",
+        backgroundColor: "#008F05",
         yAxisID: "y1",
         barThickness: 8,
         categoryPercentage: 0.6,
@@ -78,29 +78,69 @@ const TopViewsByCategoryChart = ({ data }) => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: true },
-      title: { display: true, text: "Total Views and Video Count by Category" },
-      tooltip: { mode: "index", intersect: false },
+      legend: {
+        display: true,
+        labels: {
+          color: "white",
+        },
+      },
+      title: {
+        display: true,
+        text: "Total Views and Video Count by Category",
+        color: "white",
+      },
+      tooltip: {
+        mode: "index",
+        intersect: false,
+        bodyColor: "white",
+        titleColor: "white",
+        backgroundColor: "#333",
+      },
     },
     scales: {
       x: {
-        title: { display: true, text: "Category" },
-        ticks: { display: false },
+        title: {
+          display: true,
+          text: "Category",
+          color: "white",
+        },
+        ticks: {
+          display: false,
+          color: "white",
+        },
+        grid: { display: false },
         stacked: false,
       },
       y: {
         beginAtZero: true,
-        title: { display: true, text: "Views (M)" },
+        title: {
+          display: true,
+          text: "Views (M)",
+          color: "white",
+        },
         ticks: {
+          color: "white",
           callback: (value) => (value === 0 ? "" : `${value}`),
         },
         position: "left",
+        grid: {
+          color: "rgba(255, 255, 255, 0.5)", // Change this to desired grid line color
+        },
       },
       y1: {
         beginAtZero: true,
-        title: { display: true, text: "Number of Videos" },
+        title: {
+          display: true,
+          text: "Number of Videos",
+          color: "white",
+        },
         position: "right",
-        grid: { drawOnChartArea: false },
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          color: "white",
+        },
       },
     },
   };
