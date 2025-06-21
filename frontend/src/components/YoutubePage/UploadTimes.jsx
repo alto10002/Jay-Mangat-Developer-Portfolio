@@ -54,6 +54,7 @@ const UploadTimesChart = ({ data }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
@@ -88,7 +89,6 @@ const UploadTimesChart = ({ data }) => {
         grid: { drawOnChartArea: false },
       },
     },
-    maintainAspectRatio: false,
   };
 
   return <Bar data={chartData} options={options} />;

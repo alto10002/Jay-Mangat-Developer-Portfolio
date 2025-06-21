@@ -12,7 +12,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Chip from "@mui/material/Chip";
-import Slider from "@mui/material/Slider";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
 import ViewsOverTimeChart from "../components/YoutubePage/ViewsOverTime";
 import TopViewsByCategoryChart from "../components/YoutubePage/ViewsPerCategory";
@@ -21,7 +20,6 @@ import ViewsPerRegionChart from "../components/YoutubePage/ViewsPerRegion";
 import AverageTagsCard from "../components/YoutubePage/AverageTags";
 import AverageViewcountCard from "../components/YoutubePage/AverageViewcount";
 import AverageVideoLengthCard from "../components/YoutubePage/AverageVideoLength";
-import Drawer from "@mui/material/Drawer";
 import { IoMdDownload } from "react-icons/io";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { MdKeyboardDoubleArrowDown } from "react-icons/md";
@@ -181,14 +179,7 @@ function YoutubePage() {
   };
 
   return (
-    <Box
-      display="flex"
-      height="100vh"
-      sx={{
-        overflowX: "hidden", // prevent horizontal scroll
-        width: "100vw", // ensure it spans full screen width
-      }}
-    >
+    <Box display="flex" width="100vw" height="100vh" overflow="auto">
       {/* Sidebar */}
       <Box
         onClick={() => !sidebarOpen && setSidebarOpen(true)}
@@ -236,7 +227,19 @@ function YoutubePage() {
                 <IoMdDownload size={32} style={{ cursor: "pointer" }} onClick={() => downloadJSON(filteredData)} />
               </Tooltip>
               <Tooltip title="Submit filtered data">
-                <FaRegCircleCheck size={32} style={{ cursor: "pointer" }} onClick={submitFilters} />
+                <FaRegCircleCheck
+                  size={32}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    submitFilters();
+                    toggleSidebar();
+                    setExpandedAccordions({
+                      dateRange: false,
+                      videoCategory: false,
+                      country: false,
+                    });
+                  }}
+                />
               </Tooltip>
             </>
           )}
@@ -419,24 +422,39 @@ function YoutubePage() {
             <AverageVideoLengthCard data={filteredData} />
             <AverageTagsCard data={filteredData} />
           </Box>
-          <Box sx={{ flex: 3, paddingLeft: 2 }}>
+          <Box sx={{ width: "100%", height: "100%", minWidth: 0 }}>
             <TopViewsByCategoryChart data={filteredData} />
           </Box>
         </Box>
         <Box sx={{ display: "flex", height: "60vh" }}>
-          <Box sx={{ flex: 2, display: "flex", flexDirection: "column" }}>
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
+          <Box sx={{ flex: 2, display: "flex", flexDirection: "column", width: "100%", height: "100%", minWidth: 0 }}>
+            <Box sx={{ flex: 1, minHeight: 0 }}>
               <UploadTimesChart data={filteredData} />
             </Box>
-            <Box sx={{ display: "flex", height: 1 / 2 }}>
+            <Box sx={{ flex: 1, minHeight: 0 }}>
               <ViewsOverTimeChart data={filteredData} />
             </Box>
           </Box>
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            <Box sx={{ display: "flex", height: 1 / 4 }}>
+          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", width: "100%", height: "100%", minWidth: 0 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 1 / 4,
+              }}
+            >
               <AverageViewcountCard data={filteredData} />
             </Box>
-            <Box sx={{ display: "flex", height: 3 / 4 }}>
+
+            <Box
+              sx={{
+                display: "flex",
+                height: 3 / 4,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ViewsPerRegionChart data={filteredData} />
             </Box>
           </Box>
