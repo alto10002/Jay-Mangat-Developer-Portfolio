@@ -68,7 +68,7 @@ const AverageViewcountCard = ({ data = [] }) => {
     <Card sx={{ minWidth: 250, boxShadow: 3, borderRadius: 3, bgcolor: theme.palette.youtubePage.mainAreaCard }}>
       <CardContent>
         <Typography variant="h6" gutterBottom>
-          Top Avg Views by Category
+          Category with highest views/video
         </Typography>
 
         <GlowCapture>
@@ -85,13 +85,12 @@ const AverageViewcountCard = ({ data = [] }) => {
               >
                 {topCategoryName}
               </Typography>
+              <Typography variant="subtitle2" color="white">
+                {Math.round(maxAvg).toLocaleString()} views/video
+              </Typography>
             </Glow>
           </Box>
         </GlowCapture>
-
-        <Typography variant="subtitle2" color="white">
-          {Math.round(maxAvg).toLocaleString()} views/video
-        </Typography>
       </CardContent>
     </Card>
   );

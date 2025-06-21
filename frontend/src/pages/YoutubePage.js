@@ -245,7 +245,18 @@ function YoutubePage() {
           )}
           <Tooltip title={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}>
             {sidebarOpen ? (
-              <BsArrowsCollapseVertical size={32} style={{ cursor: "pointer" }} onClick={toggleSidebar} />
+              <BsArrowsCollapseVertical
+                size={32}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  toggleSidebar();
+                  setExpandedAccordions({
+                    dateRange: false,
+                    videoCategory: false,
+                    country: false,
+                  });
+                }}
+              />
             ) : (
               <BsArrowsExpandVertical size={32} style={{ cursor: "pointer" }} onClick={toggleSidebar} />
             )}
@@ -262,7 +273,10 @@ function YoutubePage() {
             <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
               <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
                 {" "}
-                <FaCalendarAlt style={{ marginTop: "4px", marginRight: "8px" }} /> {sidebarOpen && "Date Range"}{" "}
+                <FaCalendarAlt
+                  style={{ marginTop: "4px", marginRight: "8px", marginLeft: sidebarOpen ? "3px" : "8px" }}
+                />{" "}
+                {sidebarOpen && "Date Range"}{" "}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -331,7 +345,10 @@ function YoutubePage() {
             <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
               <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
                 {" "}
-                <FaGlobeAmericas style={{ marginTop: "4px", marginRight: "8px" }} /> {sidebarOpen && "Video Category"}
+                <FaGlobeAmericas
+                  style={{ marginTop: "4px", marginRight: "8px", marginLeft: sidebarOpen ? "3px" : "8px" }}
+                />{" "}
+                {sidebarOpen && "Video Category"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -376,7 +393,10 @@ function YoutubePage() {
             <AccordionSummary expandIcon={sidebarOpen ? <ExpandMoreIcon /> : null}>
               <Typography sx={{ display: "flex", ...theme.typography.youtubePage_sidebar }}>
                 {" "}
-                <IoIosListBox style={{ marginTop: "4px", marginRight: "8px" }} /> {sidebarOpen && "Country"}
+                <IoIosListBox
+                  style={{ marginTop: "4px", marginRight: "8px", marginLeft: sidebarOpen ? "3px" : "8px" }}
+                />{" "}
+                {sidebarOpen && "Country"}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>

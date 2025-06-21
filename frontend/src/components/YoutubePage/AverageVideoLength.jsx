@@ -30,7 +30,10 @@ const AverageVideoLengthCard = ({ data = [] }) => {
                 }}
                 className="glow:text-glow"
               >
-                {duration_low} - {duration_high} minutes
+                {duration_low} - {duration_high}
+              </Typography>
+              <Typography variant="subtitle2" color="white">
+                minutes
               </Typography>
             </Glow>
           </Box>
