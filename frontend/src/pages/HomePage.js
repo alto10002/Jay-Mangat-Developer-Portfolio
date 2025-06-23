@@ -342,6 +342,9 @@ function HomePage() {
               </a>
             </Box>
           </FadeInSection>
+          <FadeInSection delay={6}>
+            <Box>Add reports here</Box>
+          </FadeInSection>
         </div>
       </Box>
     </>
