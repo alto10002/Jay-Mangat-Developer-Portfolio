@@ -11,6 +11,7 @@ import { IoLogoVercel, IoLogoJavascript } from "react-icons/io5";
 import { Glow, GlowCapture } from "@codaworks/react-glow";
 import HomePageButton from "../components/HomePageButton";
 import VideoModal from "../components/VideoModal";
+import canvasDots from "../components/heroCanvas";
 
 const FadeInSection = ({ children, delay = 0 }) => {
   const controls = useAnimation();
@@ -45,6 +46,7 @@ function HomePage() {
 
   useEffect(() => {
     document.title = "JM | Portfolio";
+    canvasDots();
   }, []);
   const theme = useTheme();
   const [openModal1, setOpenModal1] = useState(false);
@@ -53,24 +55,22 @@ function HomePage() {
 
   return (
     <>
-      <Box
-        sx={{
+      <canvas
+        id="dotsCanvas"
+        style={{
           position: "fixed",
           top: 0,
           left: 0,
           width: "100vw",
           height: "100vh",
-          backgroundImage: `url('homepage_background.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
           zIndex: -1,
+          pointerEvents: "none",
         }}
       />
       <Box
         sx={{
           position: "relative",
-          zIndex: 1,
+          zIndex: 0,
           minHeight: "100vh",
           display: "flex",
           justifyContent: "center",

@@ -2,8 +2,10 @@ export const getDesignTokens = (mode) => ({
   palette: {
     mode,
     background: {
-      default: mode === "light" ? "#1b404b" : "#06080b",
-      paper: mode === "light" ? "#ffffff" : "#0e0e0e",
+      // default: mode === "light" ? "#1b404b" : "#06080b",
+      // paper: mode === "light" ? "#ffffff" : "#0e0e0e",
+      default: mode === "light" ? "#06080b" : "#1b404b",
+      paper: mode === "light" ? "#0e0e0e" : "#ffffff",
     },
     primary: {
       main: mode === "light" ? "#d1e4e8" : "#929292",
@@ -19,6 +21,7 @@ export const getDesignTokens = (mode) => ({
       card: mode === "light" ? "#000000" : "#f0f0f0",
     },
     homepage: {
+      background: "#0a0a0a",
       card: "#2a2f31",
       text: "#f0f0f0",
       button: "#c9264a",
