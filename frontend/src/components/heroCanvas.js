@@ -2,13 +2,13 @@ const canvasDots = function () {
   const canvas = document.getElementById("dotsCanvas");
   const ctx = canvas.getContext("2d");
   const colorDot = [
-    "rgb(81, 162, 233)",
-    "rgb(81, 162, 233)",
-    "rgb(81, 162, 233)",
-    "rgb(81, 162, 233)",
-    "rgb(255, 77, 90)",
-  ]; // 80% of dots are blue. 20% pink
-  const color = "rgb(81, 162, 233)";
+    "rgb(48, 158, 255)",
+    "rgb(48, 158, 255)",
+    "rgb(48, 158, 255)",
+    "rgb(48, 158, 255)",
+    "rgb(255, 36, 51)",
+  ];
+  const color = "rgb(48, 158, 255)";
 
   canvas.width = document.body.scrollWidth;
   canvas.height = window.innerHeight;

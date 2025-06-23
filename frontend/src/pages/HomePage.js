@@ -80,7 +80,7 @@ function HomePage() {
         <div style={{ padding: "2rem" }}>
           <Typography variant="h1" color="homepage.text">
             <TypeAnimation
-              sequence={["Hi. ", 2000, "Hi. I'm Jay and here's where I showcase some of my projects."]}
+              sequence={["Hi. ", 2000, "Hi. I'm Jay and here's an up-to-date look on what I'm working on."]}
               wrapper="span"
               speed={50}
               cursor={false}
