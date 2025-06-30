@@ -1,37 +1,13 @@
 import ChipBadge from "../components/ChipBadge";
 import { Box, Card, CardMedia, CardContent, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
-import { TypeAnimation } from "react-type-animation";
-import { FaAws, FaReact, FaHtml5, FaPython } from "react-icons/fa";
+import { FaAws, FaReact, FaHtml5, FaPython, FaCog, FaGithub } from "react-icons/fa";
 import { SiRender, SiPlotly } from "react-icons/si";
+import { DiPostgresql } from "react-icons/di";
 import { IoLogoVercel, IoLogoJavascript } from "react-icons/io5";
 import canvasDots from "../components/heroCanvas";
-
-const FadeInSection = ({ children, delay = 0 }) => {
-  const controls = useAnimation();
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
-
-  useEffect(() => {
-    if (inView) controls.start("visible");
-  }, [controls, inView]);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={{
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay } },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+import { TbSql } from "react-icons/tb";
 
 function ProjectsPage() {
   useEffect(() => {
@@ -68,31 +44,94 @@ function ProjectsPage() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        <div style={{ padding: "2rem" }}>
-          <FadeInSection delay={0}>
-            <Typography variant="h1" color="black">
-              Projects
-            </Typography>
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 10, gap: 4 }}>
-              {/* Recipes Card */}
+        <Box sx={{ padding: "2rem", width: "100%", maxWidth: "1400px" }}>
+          <Typography variant="h1" color="black" textAlign="center">
+            Projects
+          </Typography>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: 4,
+              mt: 10,
+            }}
+          >
+            {[
+              {
+                title: "Youtube Trend Analyzer",
+                href: "https://jay-mangat.vercel.app/youtube_trends",
+                thumbnail: "/youtube_trends_thumbnail.png",
+                video: "/youtube_trends_video.mp4",
+                hovered: hoveredTrends,
+                setHovered: setHoveredTrends,
+                tech: [
+                  { label: "SQL", icon: TbSql, bg: "#0790a2", fg: "#000" },
+                  { label: "ETL", icon: FaCog, bg: "#d3a84a", fg: "#000" },
+                  { label: "CI/CD", icon: FaGithub, bg: "#FFF", fg: "#000" },
+                  { label: "Postgres", icon: DiPostgresql, bg: "#0064a5", fg: "#000" },
+                  { label: "React", icon: FaReact, bg: "#0081A3", fg: "#000" },
+                  { label: "Python", icon: FaPython, bg: "#3d98ff", fg: "#000" },
+                ],
+                description:
+                  "End-to-end ETL pipeline that begins with daily calls to Youtube's API to collect data on trending videos, cleans and uploads this data to a postgres database, then SQL query's into the database using user provided filters, and provides the results in an interactive dashboard.",
+              },
+              {
+                title: "What's in your pantry?",
+                href: "https://jay-mangat.vercel.app/recipes",
+                thumbnail: "/recipes-thumbnail.png",
+                video: "/recipe_page_video.mp4",
+                hovered: hoveredRecipes,
+                setHovered: setHoveredRecipes,
+                tech: [
+                  { label: "Python", icon: FaPython, bg: "#3d98ff", fg: "#000" },
+                  { label: "React", icon: FaReact, bg: "#0081A3", fg: "#000" },
+                  { label: "S3", icon: FaAws, bg: "#FF9900", fg: "#000" },
+                  { label: "Render", icon: SiRender, bg: "#a600ff", fg: "#000" },
+                  { label: "Vercel", icon: IoLogoVercel, bg: "#000", fg: "#fff" },
+                  { label: "JavaScript", icon: IoLogoJavascript, bg: "#fff200", fg: "#000" },
+                  { label: "HTML", icon: FaHtml5, bg: "#ffb53d", fg: "#000" },
+                ],
+                description:
+                  "Searches a dataset of over 200,000 recipes to find one that fits all your selected ingredients. Based on these recipes you will be able to see the cooking time, number of total ingredients required, and cooking instructions for each recipe.",
+              },
+              {
+                title: "Air Quality Index Dashboard",
+                href: "https://dsci-532-2025-23-aqi-dashboard.onrender.com/",
+                thumbnail: "/aqi_dashboard_thumbnail.png",
+                video: "/aqi_dashboard_video.mp4",
+                hovered: hoveredAQI,
+                setHovered: setHoveredAQI,
+                tech: [
+                  { label: "Dash", icon: SiPlotly, bg: "#FF2C6D", fg: "#000" },
+                  { label: "Python", icon: FaPython, bg: "#3d98ff", fg: "#000" },
+                  { label: "Render", icon: SiRender, bg: "#a600ff", fg: "#000" },
+                ],
+                description:
+                  "Displays the air quality index for Indian cities using Dash. Interactive map and sidebar allow users to explore gas levels and AQI data.",
+              },
+            ].map((card, i) => (
               <a
-                href="https://jay-mangat.vercel.app/recipes"
+                key={i}
+                href={card.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
+                style={{ textDecoration: "none", flex: "1 1 350px", maxWidth: "400px" }}
               >
                 <Card
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    minHeight: 200,
+                    height: "100%",
                     backgroundColor: theme.palette.homepage.card,
                     borderRadius: 4,
                   }}
-                  onMouseEnter={() => setHoveredRecipes(true)}
-                  onMouseLeave={() => setHoveredRecipes(false)}
+                  onMouseEnter={() => card.setHovered(true)}
+                  onMouseLeave={() => card.setHovered(false)}
                 >
                   <Box
                     sx={{
@@ -102,11 +141,11 @@ function ProjectsPage() {
                       paddingTop: "56.25%",
                     }}
                   >
-                    {!hoveredRecipes ? (
+                    {!card.hovered ? (
                       <CardMedia
                         component="img"
-                        image="/recipes-thumbnail.png"
-                        alt="Recipe Project"
+                        image={card.thumbnail}
+                        alt={card.title}
                         sx={{
                           position: "absolute",
                           top: 0,
@@ -118,7 +157,7 @@ function ProjectsPage() {
                       />
                     ) : (
                       <video
-                        src="/recipe_page_video.mp4"
+                        src={card.video}
                         autoPlay
                         muted
                         loop
@@ -135,195 +174,33 @@ function ProjectsPage() {
                       />
                     )}
                   </Box>
+
                   <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
                     <CardContent>
                       <Typography variant="h4" color="homepage.text">
-                        What's in your pantry?
+                        {card.title}
                       </Typography>
-                      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                        <ChipBadge label="Python" icon={FaPython} bgColor="#3d98ff" textAndIconColor="#000000" />
-                        <ChipBadge label="React" icon={FaReact} bgColor="#0081A3" textAndIconColor="#000000" />
-                        <ChipBadge label="S3" icon={FaAws} bgColor="#FF9900" textAndIconColor="#000000" />
-                        <ChipBadge label="Render" icon={SiRender} bgColor="#a600ff" textAndIconColor="#000000" />
-                        <ChipBadge label="Vercel" icon={IoLogoVercel} bgColor="#000000" textAndIconColor="#ffffff" />
-                        <ChipBadge
-                          label="JavaScript"
-                          icon={IoLogoJavascript}
-                          bgColor="#fff200"
-                          textAndIconColor="#000000"
-                        />
-                        <ChipBadge label="HTML" icon={FaHtml5} bgColor="#ffb53d" textAndIconColor="#000000" />
+                      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 1 }}>
+                        {card.tech.map((chip, idx) => (
+                          <ChipBadge
+                            key={idx}
+                            label={chip.label}
+                            icon={chip.icon}
+                            bgColor={chip.bg}
+                            textAndIconColor={chip.fg}
+                          />
+                        ))}
                       </Box>
-                      <Typography variant="body1" color="homepage.text">
-                        Searches a dataset of over 200,000 recipes to find one that fits all your selected ingredients.
-                        Based on these recipes you will be able to see the cooking time, number of total ingredients
-                        required, and cooking instructions for each recipe. The generator also procedurally retrieves an
-                        image for each recipe and links to a site hosting the recipe.
+                      <Typography variant="body1" color="homepage.text" mt={1}>
+                        {card.description}
                       </Typography>
                     </CardContent>
                   </Box>
                 </Card>
               </a>
-              {/* AQI Card */}
-              <a
-                href="https://dsci-532-2025-23-aqi-dashboard.onrender.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
-              >
-                <Card
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    minHeight: 200,
-                    backgroundColor: theme.palette.homepage.card,
-                    borderRadius: 4,
-                  }}
-                  onMouseEnter={() => setHoveredAQI(true)}
-                  onMouseLeave={() => setHoveredAQI(false)}
-                >
-                  <Box
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      height: 0,
-                      paddingTop: "56.25%" /* 16:9 aspect ratio */,
-                    }}
-                  >
-                    {!hoveredAQI ? (
-                      <CardMedia
-                        component="img"
-                        image="/aqi_dashboard_thumbnail.png"
-                        alt="Recipe Project"
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <video
-                        src="/aqi_dashboard_video.mp4"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          pointerEvents: "none",
-                        }}
-                      />
-                    )}
-                  </Box>
-
-                  <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color: "homepage.card" }}>
-                    <CardContent>
-                      <Typography variant="h4" color="homepage.text">
-                        Air Quality Index Dashboard
-                      </Typography>
-                      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                        <ChipBadge label="Dash" icon={SiPlotly} bgColor="#FF2C6D" textAndIconColor="#000000" />
-                        <ChipBadge label="Python" icon={FaPython} bgColor="#3d98ff" textAndIconColor="#000000" />
-                        <ChipBadge label="Render" icon={SiRender} bgColor="#a600ff" textAndIconColor="#000000" />
-                      </Box>
-                      <Typography variant="body1" color="homepage.text">
-                        A dashboard that displays the air quality index for various Indian cities. Built using python
-                        and dash, it shows the AQI levels for 5 Indian cities and presents various other gas levels for
-                        those cities. All plotting elements are connected to the sidebar and cities can be selected via
-                        clicking on them in the sidebar map.
-                      </Typography>
-                    </CardContent>
-                  </Box>
-                </Card>
-              </a>
-              {/* Youtube Trends Card */}
-              <a
-                href="https://jay-mangat.vercel.app/youtube_trends"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none" }}
-              >
-                <Card
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    minHeight: 200,
-                    backgroundColor: theme.palette.homepage.card,
-                    borderRadius: 4,
-                  }}
-                  onMouseEnter={() => setHoveredTrends(true)}
-                  onMouseLeave={() => setHoveredTrends(false)}
-                >
-                  <Box
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      height: 0,
-                      paddingTop: "56.25%" /* 16:9 aspect ratio */,
-                    }}
-                  >
-                    {!hoveredTrends ? (
-                      <CardMedia
-                        component="img"
-                        image="/aqi_dashboard_thumbnail.png"
-                        alt="Recipe Project"
-                        sx={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <video
-                        src="/aqi_dashboard_video.mp4"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          pointerEvents: "none",
-                        }}
-                      />
-                    )}
-                  </Box>
-
-                  <Box sx={{ display: "flex", flexDirection: "column", flex: 1, color: "homepage.card" }}>
-                    <CardContent>
-                      <Typography variant="h4" color="homepage.text">
-                        Youtube Trend Analyzer
-                      </Typography>
-                      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                        {/* <ChipBadge label="Dash" icon={SiPlotly} bgColor="#FF2C6D" textAndIconColor="#000000" />
-                          <ChipBadge label="Python" icon={FaPython} bgColor="#3d98ff" textAndIconColor="#000000" />
-                          <ChipBadge label="Render" icon={SiRender} bgColor="#a600ff" textAndIconColor="#000000" /> */}
-                      </Box>
-                      <Typography variant="body1" color="homepage.text">
-                        App that shows some stuff about trending videos on youtube
-                      </Typography>
-                    </CardContent>
-                  </Box>
-                </Card>
-              </a>
-            </Box>
-          </FadeInSection>
-        </div>
+            ))}
+          </Box>
+        </Box>
       </Box>
     </>
   );

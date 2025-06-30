@@ -35,7 +35,7 @@ function ReportsPage() {
         }}
       >
         <div style={{ padding: "6rem" }}>
-          <Typography variant="h1" color="black">
+          <Typography variant="h1" color="black" textAlign="center">
             Reports
           </Typography>
           {/* Reports box */}
@@ -238,7 +238,7 @@ function ReportsPage() {
 
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                    Season Ticket Analysis
+                    Using NHL Data To Predict Prospective Player's Shooting Hand
                   </Typography>
                   <Typography sx={{ fontStyle: "italic", mb: 2 }}>Jay Mangat, Michael Gelfand, Dominic Lam</Typography>
                   <Typography variant="body2">
@@ -322,7 +322,7 @@ function ReportsPage() {
                 {/* Right: Content */}
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                    Season Ticket Analysis
+                    End-To-End Regression Project for Airbnb Data In NYC
                   </Typography>
                   <Typography sx={{ fontStyle: "italic", mb: 2 }}>
                     Jay Mangat, Farhan Faisal, Daria Khon, Brian Chang
