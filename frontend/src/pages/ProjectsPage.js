@@ -47,7 +47,7 @@ function ProjectsPage() {
           flexDirection: "column",
         }}
       >
-        <Box sx={{ padding: "2rem", width: "100%", maxWidth: "1400px" }}>
+        <Box sx={{ padding: "2rem", width: "100%", }}>
           <Typography variant="h1" color="black" textAlign="center">
             Projects
           </Typography>
@@ -120,7 +120,7 @@ function ProjectsPage() {
                 href={card.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: "none", flex: "1 1 350px", maxWidth: "400px" }}
+                style={{ textDecoration: "none", flex: "1 1 calc(50% - 2rem)", minWidth: "280px" }}
               >
                 <Card
                   sx={{
