@@ -8,6 +8,31 @@ import { DiPostgresql } from "react-icons/di";
 import { IoLogoVercel, IoLogoJavascript } from "react-icons/io5";
 import canvasDots from "../components/heroCanvas";
 import { TbSql } from "react-icons/tb";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+const FadeInSection = ({ children, delay = 0 }) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  useEffect(() => {
+    if (inView) controls.start("visible");
+  }, [controls, inView]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay } },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function ProjectsPage() {
   useEffect(() => {
@@ -47,6 +72,7 @@ function ProjectsPage() {
           flexDirection: "column",
         }}
       >
+        <FadeInSection delay={2}>
         <Box sx={{ padding: "2rem", width: "100%", }}>
           <Typography variant="h1" color="black" textAlign="center">
             Projects
@@ -201,6 +227,7 @@ function ProjectsPage() {
             ))}
           </Box>
         </Box>
+        </FadeInSection>
       </Box>
     </>
   );

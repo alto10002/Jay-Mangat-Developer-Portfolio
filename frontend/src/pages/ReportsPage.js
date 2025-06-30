@@ -1,6 +1,31 @@
 import { Box, Typography, Button, Divider } from "@mui/material";
 import { useEffect } from "react";
 import canvasDots from "../components/heroCanvas";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+const FadeInSection = ({ children, delay = 0 }) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  useEffect(() => {
+    if (inView) controls.start("visible");
+  }, [controls, inView]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay } },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function ReportsPage() {
   useEffect(() => {
@@ -34,6 +59,7 @@ function ReportsPage() {
           alignItems: "center",
         }}
       >
+      <FadeInSection delay={1}>
         <div style={{ padding: "6rem" }}>
           <Typography variant="h1" color="black" textAlign="center">
             Reports
@@ -336,6 +362,7 @@ function ReportsPage() {
             </Box>
           </Box>
         </div>
+      </FadeInSection>
       </Box>
     </>
   );
