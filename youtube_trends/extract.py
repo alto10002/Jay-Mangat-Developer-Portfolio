@@ -34,6 +34,7 @@ def fetch_trending_videos(region):
 
     rows = []
     for item in data["items"]:
+        stats = item.get("statistics", {})
         rows.append(
             {
                 "video_id": item["id"],
@@ -41,7 +42,7 @@ def fetch_trending_videos(region):
                 "tags": item["snippet"].get("tags", []),
                 "categoryid": item["snippet"]["categoryId"],
                 "duration": item["contentDetails"]["duration"],
-                "views": int(item["statistics"]["viewCount"]),
+                "views": int(stats.get("viewCount", 0)),
                 "title": item["snippet"]["title"],
                 "country": region,
             }
