@@ -1,6 +1,31 @@
 import { Box, Typography, Button, Divider } from "@mui/material";
 import { useEffect } from "react";
 import canvasDots from "../components/heroCanvas";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+const FadeInSection = ({ children, delay = 0 }) => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  useEffect(() => {
+    if (inView) controls.start("visible");
+  }, [controls, inView]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay } },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function ReportsPage() {
   useEffect(() => {
@@ -34,13 +59,14 @@ function ReportsPage() {
           alignItems: "center",
         }}
       >
+      <FadeInSection delay={1}>
         <div style={{ padding: "6rem" }}>
           <Typography variant="h1" color="black" textAlign="center">
             Reports
           </Typography>
           {/* Reports box */}
           <Box>
-            <Box sx={{ width: "100%", minWidth: 800, mx: "auto", my: 4 }}>
+            <Box sx={{ width: "100%", minWidth: 800, maxWidth: 1800, mx: "auto", my: 4 }}>
               <Box
                 className="glass-card"
                 sx={{
@@ -78,23 +104,14 @@ function ReportsPage() {
                   </Typography>
                   <Typography variant="body2">
                     This project presents a robust machine learning pipeline developed to predict season ticket
-                    membership conversions for a professional sports team. Using transactional Ticketmaster data across
-                    three seasons (2022/23 to 2024/25), the team implemented a multiclass Random Forest classifier to
-                    segment customers into four meaningful categories: converted, churned, stayed member, and stayed
-                    non-member. The work included extensive data cleaning, domain-driven feature engineering, and the
-                    use of K-Nearest Neighbors-based collaborative filtering to enhance customer profiles. Key features
-                    like seat preferences, attendance patterns, and behavioral similarity to peer accounts were
-                    engineered to optimize predictive power, achieving a high recall of 0.88 for identifying potential
-                    converters — a critical metric for the business.
+                    membership conversions for Canucks Sports and Entertainment (CSE). We used CSE's ticket sales data obtained from Ticketmaster and implemented various supervised and unsupervised models
+                    including kmeans, GMMs, logisitic regression, and a multiclass Random Forest classifier. This final model had four categories: converted, churned, stayed member, and stayed
+                    non-member and provided us with the best results. As part of our final deliverable the pipeline also includes extensive data cleaning, domain-driven feature engineering, and the
+                    use of KNN-based collaborative filtering to create customer profiles. Based on CSE's parameters we aimed for high recall within our models and achieved a high recall of 0.88 with our Random Forest Classifier. 
                     <br />
                     <br />
-                    To support model transparency and usability, the pipeline includes interpretable outputs through
-                    feature importance scoring and is designed for easy re-use across seasons. The team navigated
-                    challenges like class imbalance, recall-precision tradeoffs, and constrained historical data,
-                    pivoting from a binary to a multiclass classification strategy to improve performance. Their
-                    emphasis on business-aligned metrics and a scalable data product demonstrates both technical and
-                    stakeholder-oriented thinking, making this a compelling example of applied machine learning in a
-                    real-world enterprise context.
+                    The pipeline can be easily cloned and used via <i>make all</i> as all required functions are taken care of within our make file. Its also built to be used for future years assuming the future input
+                    matches the input we used when creating the model. Some challenges included class imbalance between members and non-members as well as constrained historical data only going back to 2022.
                   </Typography>
                   <Button
                     href="/reports/canucksReport.pdf"
@@ -122,10 +139,10 @@ function ReportsPage() {
               sx={{
                 my: 4,
                 borderBottomWidth: 4,
-                borderColor: "rgba(255, 255, 255, 0.2)", // match glass aesthetic
+                borderColor: "rgba(255, 255, 255, 0.2)", 
               }}
             />
-            <Box sx={{ width: "100%", minWidth: 800, mx: "auto", my: 4 }}>
+            <Box sx={{ width: "100%", minWidth: 800, maxWidth: 1800, mx: "auto", my: 4 }}>
               <Box
                 className="glass-card"
                 sx={{
@@ -161,22 +178,15 @@ function ReportsPage() {
                   <Typography sx={{ fontStyle: "italic", mb: 2 }}>Jay Mangat</Typography>
                   <Typography variant="body2">
                     This project presents a clear, hands-on walkthrough of building and interpreting a linear regression
-                    model in R to predict IMDb ratings of movies based on features such as gross revenue, budget, and
-                    director. The report demonstrates effective end-to-end data science workflow — from importing and
-                    cleaning raw movie data, to feature engineering (including creating new variables like combined
-                    gross and converting categorical variables), and finally building and interpreting a linear model
-                    using lm() and broom::tidy(). It emphasizes statistical rigor by filtering for statistically
-                    significant variables, showcasing a data-driven approach to uncovering predictors of movie quality.
+                    model in R  and using that model to predict IMDb ratings of movies based on features such as gross revenue, budget, and
+                    director. The report employs a beginner data science workflow as a way to lower the barrier of entry for people who are new to the subject.
+                    The includes from importing and cleaning raw movie data, feature engineering by combining some variables, and interpreting a model's output
+                    using lm() and broom::tidy(). This interpretation also includes explanations for common statistical tools such as significant variables.
                     <br />
                     <br />
-                    Beyond the technical modeling, the report highlights the author’s growing statistical intuition and
-                    communication ability — explaining the real-world implications of coefficients, interpreting
-                    continuous and categorical variables, and identifying modeling limitations like sparse categorical
-                    levels and small sample bias. The inclusion of visual output interpretation and reflection on model
-                    refinement demonstrates a strong understanding of best practices in exploratory data analysis,
-                    reproducibility, and statistical learning. This combination of hands-on implementation and critical
-                    thinking makes the report a strong demonstration of foundational data science and communication
-                    skills.
+                    This report was a challenge to myself as I wanted to see if I could effectively explain complex topics to an audience with no, or 
+                    very little, domain knowledge while retaining the purpose of the report. I didn't shy away from this challenge by removing tough concepts
+                    altogether and instead included them while doing my best to simplify their explanations (i.e. coefficients, continuous/categorical variables, small sample bias).
                   </Typography>
                   <Button
                     href="/reports/regressionReport.pdf"
@@ -207,7 +217,7 @@ function ReportsPage() {
                 borderColor: "rgba(255, 255, 255, 0.2)",
               }}
             />
-            <Box sx={{ width: "100%", minWidth: 800, mx: "auto", my: 4 }}>
+            <Box sx={{ width: "100%", minWidth: 800, maxWidth: 1800, mx: "auto", my: 4 }}>
               <Box
                 className="glass-card"
                 sx={{
@@ -243,22 +253,12 @@ function ReportsPage() {
                   <Typography sx={{ fontStyle: "italic", mb: 2 }}>Jay Mangat, Michael Gelfand, Dominic Lam</Typography>
                   <Typography variant="body2">
                     This project applies a logistic regression classifier to explore whether an NHL player’s shooting
-                    hand (left or right) can be predicted using only physical attributes—height and weight—across a
-                    comprehensive dataset spanning over a century (1917–2023). The team demonstrated sound machine
-                    learning practices, including dataset preprocessing, class imbalance handling with
-                    class_weight="balanced", and proper train-test splitting. While the resulting model achieved only a
-                    marginal improvement over random guessing (52% accuracy), the authors provided a candid and
-                    insightful analysis of the model’s limitations, reflecting a strong understanding of when and why
-                    simpler models fail in real-world scenarios.
-                    <br />
-                    <br />
-                    The team also showcased a disciplined approach to project scoping, using standard libraries like
-                    scikit-learn, Pandas, and Altair to perform EDA and visual diagnostics. Despite the modest
-                    predictive results, the report stood out for its critical evaluation of model performance,
-                    transparent discussion of domain assumptions, and thoughtful suggestions for future improvement—such
-                    as hyperparameter optimization, inclusion of behavioral variables like handedness, and exploration
-                    of deeper models. This level of self-assessment and technical articulation is a valuable signal of
-                    practical, production-aware data science skills.
+                    hand (left or right) can be predicted using only physical attributes across a
+                    comprehensive dataset spanning over a century (1917–2023). We adhered to all recommended machine
+                    learning practices such as train-test splitting, dataset preprocessing, and class imbalance handling but
+                    the resulting model achieved only a marginal improvement over random guessing (52% accuracy). This was an interesting
+                    project for myself and my team as it was made clear to us that possessing sufficient domain expertise may be just as, if not more
+                    important, than following standard machine learing practices.
                   </Typography>
                   <Button
                     href="/reports/nhlReport.pdf"
@@ -289,7 +289,7 @@ function ReportsPage() {
                 borderColor: "rgba(255, 255, 255, 0.2)",
               }}
             />
-            <Box sx={{ width: "100%", minWidth: 800, mx: "auto", my: 4 }}>
+            <Box sx={{ width: "100%", minWidth: 800, maxWidth: 1800, mx: "auto", my: 4 }}>
               <Box
                 className="glass-card"
                 sx={{
@@ -305,7 +305,6 @@ function ReportsPage() {
                   color: "white",
                 }}
               >
-                {/* Left: Responsive Image */}
                 <Box
                   component="img"
                   src="/reports/airbnbReportThumbnail.jpg"
@@ -318,8 +317,6 @@ function ReportsPage() {
                     flexShrink: 0,
                   }}
                 />
-
-                {/* Right: Content */}
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                     End-To-End Regression Project for Airbnb Data In NYC
@@ -328,21 +325,18 @@ function ReportsPage() {
                     Jay Mangat, Farhan Faisal, Daria Khon, Brian Chang
                   </Typography>
                   <Typography variant="body2">
-                    This project applies an end-to-end regression pipeline to predict the popularity of Airbnb listings
-                    in NYC, using number of reviews per month as a proxy for demand. The team engineered insightful
-                    features—such as sentiment scores from listing titles and the month of last review—and evaluated a
+                    This project creates a regression pipeline to predict the popularity of Airbnb listings
+                    in NYC using number of reviews per month as a proxy for demand. We engineered 
+                    features, such as sentiment scores from listing titles and the month of last review, and evaluated a
                     range of models including Ridge, Elastic Net, Random Forest, and LightGBM. With proper preprocessing
-                    (e.g., imputation, one-hot encoding, scaling) and rigorous evaluation via cross-validation, the
+                    (e.g., imputation, one-hot encoding, scaling) and evaluation via cross-validation, the
                     final optimized LightGBM model achieved an R² of 0.693 on the test set, showing strong
                     generalization and low overfitting.
                     <br />
                     <br />
                     Beyond performance, the project demonstrates maturity in handling real-world data issues, such as
-                    skewed distributions, missing values, and feature redundancy. The team leveraged SHAP values and
-                    permutation importance to interpret model behavior and inform future improvements. Their disciplined
-                    approach—from baseline modeling and hyperparameter tuning to clear communication of
-                    trade-offs—highlights their readiness for applied machine learning roles with production-grade
-                    responsibilities.
+                    skewed distributions, missing values, and feature redundancy. We also leveraged SHAP values and
+                    permutation importance to interpret model behavior and inform future improvements.
                   </Typography>
                   <Button
                     href="/reports/airbnbReport.pdf"
@@ -368,6 +362,7 @@ function ReportsPage() {
             </Box>
           </Box>
         </div>
+      </FadeInSection>
       </Box>
     </>
   );
