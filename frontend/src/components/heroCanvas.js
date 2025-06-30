@@ -1,28 +1,48 @@
-const canvasDots = function () {
+let animationInterval = null;
+let resizeListener = null;
+
+const canvasDots = (dotsColors, lineColor) => {
+  console.log("heroCanvas.js loaded");
   const canvas = document.getElementById("dotsCanvas");
+  if (!canvas) {
+    console.warn("Canvas element not found");
+    return;
+  }
+
   const ctx = canvas.getContext("2d");
-  const colorDot = [
-    "rgb(48, 158, 255)",
-    "rgb(48, 158, 255)",
-    "rgb(48, 158, 255)",
-    "rgb(48, 158, 255)",
-    "rgb(255, 36, 51)",
-  ];
-  const color = "rgb(48, 158, 255)";
+  if (!ctx) {
+    console.warn("Canvas context not available");
+    return;
+  }
+
+  if (animationInterval) clearInterval(animationInterval);
+  if (resizeListener) window.removeEventListener("resize", resizeListener);
 
   canvas.width = document.body.scrollWidth;
   canvas.height = window.innerHeight;
   canvas.style.display = "block";
+
   ctx.lineWidth = 0.3;
+
+  // const colorDot = [
+  //   "rgb(48, 158, 255)",
+  //   "rgb(48, 158, 255)",
+  //   "rgb(48, 158, 255)",
+  //   "rgb(48, 158, 255)",
+  //   "rgb(255, 36, 51)",
+  // ];
+  // const color = "rgb(48, 158, 255)";
+  const colorDot = dotsColors;
+  const color = lineColor;
   ctx.strokeStyle = color;
 
   let mousePosition = {
-    x: (30 * canvas.width) / 100,
-    y: (30 * canvas.height) / 100,
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
   };
 
   const windowSize = window.innerWidth;
-  let dots;
+  let dots = { nb: 100, distance: 0, d_radius: 0, array: [] };
 
   if (windowSize > 1600) {
     dots = { nb: 600, distance: 70, d_radius: 300, array: [] };
@@ -34,8 +54,6 @@ const canvasDots = function () {
     dots = { nb: 300, distance: 0, d_radius: 0, array: [] };
   } else if (windowSize > 600) {
     dots = { nb: 200, distance: 0, d_radius: 0, array: [] };
-  } else {
-    dots = { nb: 100, distance: 0, d_radius: 0, array: [] };
   }
 
   function Dot() {
@@ -51,10 +69,8 @@ const canvasDots = function () {
     create: function () {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-
       const dotDistance = ((this.x - mousePosition.x) ** 2 + (this.y - mousePosition.y) ** 2) ** 0.5;
       const distanceRatio = dotDistance / (windowSize / 1.7);
-
       ctx.fillStyle = this.colour.slice(0, -1) + `,${1 - distanceRatio})`;
       ctx.fill();
     },
@@ -75,24 +91,18 @@ const canvasDots = function () {
           const i_dot = dots.array[i];
           const j_dot = dots.array[j];
           if (
-            i_dot.x - j_dot.x < dots.distance &&
-            i_dot.y - j_dot.y < dots.distance &&
-            i_dot.x - j_dot.x > -dots.distance &&
-            i_dot.y - j_dot.y > -dots.distance &&
-            i_dot.x - mousePosition.x < dots.d_radius &&
-            i_dot.y - mousePosition.y < dots.d_radius &&
-            i_dot.x - mousePosition.x > -dots.d_radius &&
-            i_dot.y - mousePosition.y > -dots.d_radius
+            Math.abs(i_dot.x - j_dot.x) < dots.distance &&
+            Math.abs(i_dot.y - j_dot.y) < dots.distance &&
+            Math.abs(i_dot.x - mousePosition.x) < dots.d_radius &&
+            Math.abs(i_dot.y - mousePosition.y) < dots.d_radius
           ) {
             ctx.beginPath();
             ctx.moveTo(i_dot.x, i_dot.y);
             ctx.lineTo(j_dot.x, j_dot.y);
-
             const dotDistance = ((i_dot.x - mousePosition.x) ** 2 + (i_dot.y - mousePosition.y) ** 2) ** 0.5;
             let distanceRatio = dotDistance / dots.d_radius;
             distanceRatio = Math.max(distanceRatio - 0.3, 0);
-
-            ctx.strokeStyle = `rgb(81, 162, 233, ${1 - distanceRatio})`;
+            ctx.strokeStyle = color.replace("rgb", "rgba").replace(")", `, ${1 - distanceRatio})`);
             ctx.stroke();
             ctx.closePath();
           }
@@ -104,35 +114,34 @@ const canvasDots = function () {
   function createDots() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < dots.nb; i++) {
-      dots.array.push(new Dot());
+      if (!dots.array[i]) dots.array.push(new Dot());
       dots.array[i].create();
     }
 
-    dots.array[0].radius = 1.5;
-    dots.array[0].colour = "#51a2e9";
-
-    dots.array[0].line();
-    dots.array[0].animate();
+    if (dots.array[0]) {
+      dots.array[0].radius = 1.5;
+      dots.array[0].colour = "#51a2e9";
+      dots.array[0].line();
+      dots.array[0].animate();
+    }
   }
 
-  window.onmousemove = function (e) {
+  window.addEventListener("mousemove", (e) => {
     mousePosition.x = e.clientX;
     mousePosition.y = e.clientY;
-    try {
+    if (dots.array[0]) {
       dots.array[0].x = e.clientX;
       dots.array[0].y = e.clientY;
-    } catch {}
+    }
+  });
+
+  animationInterval = setInterval(createDots, 1000 / 30);
+
+  resizeListener = () => {
+    clearInterval(animationInterval);
+    canvasDots(dotsColors, lineColor); // re-run everything with updated sizes
   };
-
-  mousePosition.x = window.innerWidth / 2;
-  mousePosition.y = window.innerHeight / 2;
-
-  const draw = setInterval(createDots, 1000 / 30);
-
-  window.onresize = function () {
-    clearInterval(draw);
-    canvasDots(); // Restart animation with new dimensions
-  };
+  window.addEventListener("resize", resizeListener);
 };
 
 export default canvasDots;

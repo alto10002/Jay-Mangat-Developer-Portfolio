@@ -53,3 +53,34 @@
 .navbar a:hover {
   text-decoration: underline;
 }
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(90deg) scale(0.5);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.25);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(270deg) scale(0.75);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+  }
+}
+
+@keyframes expandCircle {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 300vh;
+    height: 300vh;
+    opacity: 1;
+  }
+}
