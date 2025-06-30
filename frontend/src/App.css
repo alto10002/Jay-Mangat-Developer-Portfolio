@@ -84,3 +84,18 @@
     opacity: 1;
   }
 }
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1); /* semi-transparent */
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* for Safari */
+  color: white;
+  transition: transform 0.3s ease;
+}
+.glass-card:hover {
+  transform: scale(1.1);
+}
