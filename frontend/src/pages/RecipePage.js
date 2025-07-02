@@ -13,14 +13,17 @@ import { Link as RouterLink } from "react-router-dom";
 import LiquidBackground from "../components/LiquidBackground";
 import FoodItems from "../components/FoodItems";
 import WelcomeModal from "../components/WelcomeModal";
+import ingredients from "../assets/ingredients.json";
+
+const ingredient_dropdown = ingredients.map((i) => ({
+  value: i,
+  label: i,
+}));
 
 function RecipePage({ mode, setMode }) {
-  useEffect(() => {
-    document.title = "JM | What's in your pantry?";
-  }, []);
   //javascript logic
   const [selected, setSelectedOptions] = useState([]);
-  const [ingredient_dropdown, setIngreDropdown] = useState([]);
+  // const [ingredient_dropdown, setIngreDropdown] = useState([]);
   // const [foundRecipes, setFoundRecipes] = useState([]);
   const [smallRecipeCount, setSmallRecipeCount] = useState(231637);
   const [firstRecipe, setFirstRecipe] = useState([]);
@@ -35,13 +38,19 @@ function RecipePage({ mode, setMode }) {
   // const [fadeIn, setFadeIn] = useState(false);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
-  // Get list of ingredients from csv data file
   useEffect(() => {
-    fetch(`${apiUrl}/ingredients`)
-      .then((res) => res.json())
-      .then((data) => setIngreDropdown(data))
-      .catch((err) => console.error("Error fetching ingredients:", err));
-  }, [apiUrl]);
+    document.title = "JM | What's in your pantry?";
+  }, []);
+
+  // console.log("ingredient_dropdown", ingredient_dropdown);
+
+  // // Get list of ingredients from csv data file
+  // useEffect(() => {
+  //   fetch(`${apiUrl}/ingredients`)
+  //     .then((res) => res.json())
+  //     .then((data) => setIngreDropdown(data))
+  //     .catch((err) => console.error("Error fetching ingredients:", err));
+  // }, [apiUrl]);
 
   const searchSmallDataset = async (selected) => {
     setSelectedOptions(selected);
