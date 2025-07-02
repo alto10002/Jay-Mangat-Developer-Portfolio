@@ -145,7 +145,11 @@ function RecipePage({ mode, setMode }) {
         }}
       >
         <Tooltip title="Home">
-          <IconButton component={RouterLink} to="/" sx={{ color: theme.palette.accent.main }}>
+          <IconButton
+            component={RouterLink}
+            to="/"
+            sx={{ color: theme.palette.accent.main }}
+          >
             <FaHome size={24} />
           </IconButton>
         </Tooltip>
@@ -162,7 +166,9 @@ function RecipePage({ mode, setMode }) {
       >
         <Tooltip title="Dark Mode">
           <IconButton
-            onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))}
+            onClick={() =>
+              setMode((prev) => (prev === "light" ? "dark" : "light"))
+            }
             sx={{ color: theme.palette.accent.main }}
           >
             {mode === "light" ? <Brightness4 /> : <Brightness7 />}
@@ -171,12 +177,17 @@ function RecipePage({ mode, setMode }) {
       </Box>
       <Grid container direction="column">
         <Grid>
-          <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
+          <Typography
+            variant="h2"
+            align="center"
+            sx={{ fontSize: "3rem", mt: 0, mb: 0 }}
+          >
             What's in your pantry?
           </Typography>
 
           <Typography variant="h6" align="center" sx={{ mt: 0 }}>
-            Turn your pantry into a plate by creating a custom recipe from your own ingredients.
+            Turn your pantry into a plate by creating a custom recipe from your
+            own ingredients.
           </Typography>
         </Grid>
 

@@ -18,7 +18,7 @@ export const getDesignTokens = (mode) => ({
     },
     text: {
       primary: mode === "light" ? "#f0f0f0" : "#f0f0f0",
-      card: mode === "light" ? "#000000" : "#f0f0f0",
+      card: mode === "light" ? "#f0f0f0" : "#000000",
     },
     homepage: {
       background: "#0a0a0a",
