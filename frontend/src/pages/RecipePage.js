@@ -196,6 +196,7 @@ function RecipePage({ mode, setMode }) {
             <Box
               sx={{
                 borderRadius: 1,
+                minWidth: "200px",
                 "&:hover": {
                   boxShadow: (theme) => `0 0 15px ${theme.palette.accent.main}`,
                 },
@@ -210,6 +211,7 @@ function RecipePage({ mode, setMode }) {
                 className="basic-multi-select"
                 classNamePrefix="select"
                 styles={customStyles}
+                placeholder="Choose ingredients by pressing Enter..."
               />
             </Box>
           </Grid>
@@ -219,6 +221,7 @@ function RecipePage({ mode, setMode }) {
               variant="contained"
               onClick={submitIngredients}
               sx={{
+                color: "black",
                 "&:hover": {
                   boxShadow: (theme) => `0 0 15px ${theme.palette.accent.main}`,
                 },
