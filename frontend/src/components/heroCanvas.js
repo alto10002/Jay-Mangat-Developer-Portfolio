@@ -2,7 +2,7 @@ let animationInterval = null;
 let resizeListener = null;
 
 const canvasDots = (dotsColors, lineColor) => {
-  console.log("heroCanvas.js loaded");
+  // console.log("heroCanvas.js loaded");
   const canvas = document.getElementById("dotsCanvas");
   if (!canvas) {
     console.warn("Canvas element not found");

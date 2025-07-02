@@ -30,22 +30,8 @@ const FadeInSection = ({ children, delay = 0 }) => {
 };
 
 function HomePage() {
-  const hasAnimatedRef = useRef(false); // stays persistent across rerenders
-  const [shouldAnimate, setShouldAnimate] = useState(false);
-
-  useEffect(() => {
-    if (!hasAnimatedRef.current) {
-      setShouldAnimate(true);
-      hasAnimatedRef.current = true;
-    }
-  }, []);
-
-  useEffect(() => {
-    // Trigger warmup ping
-    fetch("https://react-recipes-u4yt.onrender.com/ping")
-      .then((res) => console.log("Ping successful:", res.status))
-      .catch((err) => console.warn("Ping failed:", err));
-  }, []);
+  // const hasAnimatedRef = useRef(false); // stays persistent across rerenders
+  // const [shouldAnimate, setShouldAnimate] = useState(false);
 
   useEffect(() => {
     document.title = "JM | Portfolio";
@@ -53,6 +39,18 @@ function HomePage() {
       ["rgb(48, 158, 255)", "rgb(48, 158, 255)", "rgb(48, 158, 255)", "rgb(48, 158, 255)", "rgb(255, 36, 51)"],
       "rgb(48, 158, 255)"
     );
+
+    // if (!hasAnimatedRef.current) {
+    //   setShouldAnimate(true);
+    //   hasAnimatedRef.current = true;
+    // }
+
+    // Trigger warmup ping
+    console.log("Ping sent from home page")
+    fetch("https://react-recipes-u4yt.onrender.com/ping")
+      .then((res) => console.log("Homepage ping successful:", res.status))
+      .catch((err) => console.warn("Homepage ping failed:", err));
+
   }, []);
 
   return (

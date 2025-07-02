@@ -61,7 +61,7 @@ function ReportsPage() {
       >
       <FadeInSection delay={1}>
         <div style={{ padding: "6rem" }}>
-          <Typography variant="h1" color="black" textAlign="center">
+          <Typography variant="h1" color="white" textAlign="center">
             Reports
           </Typography>
           {/* Reports box */}
