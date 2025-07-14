@@ -74,7 +74,7 @@ function ProjectsPage() {
       >
         <FadeInSection delay={2}>
         <Box sx={{ padding: "2rem", width: "100%", }}>
-          <Typography variant="h1" color="black" textAlign="center">
+          <Typography variant="h1" color="white" textAlign="center">
             Projects
           </Typography>
 

@@ -13,14 +13,17 @@ import { Link as RouterLink } from "react-router-dom";
 import LiquidBackground from "../components/LiquidBackground";
 import FoodItems from "../components/FoodItems";
 import WelcomeModal from "../components/WelcomeModal";
+import ingredients from "../assets/ingredients.json";
+
+const ingredient_dropdown = ingredients.map((i) => ({
+  value: i,
+  label: i,
+}));
 
 function RecipePage({ mode, setMode }) {
-  useEffect(() => {
-    document.title = "JM | What's in your pantry?";
-  }, []);
   //javascript logic
   const [selected, setSelectedOptions] = useState([]);
-  const [ingredient_dropdown, setIngreDropdown] = useState([]);
+  // const [ingredient_dropdown, setIngreDropdown] = useState([]);
   // const [foundRecipes, setFoundRecipes] = useState([]);
   const [smallRecipeCount, setSmallRecipeCount] = useState(231637);
   const [firstRecipe, setFirstRecipe] = useState([]);
@@ -35,13 +38,19 @@ function RecipePage({ mode, setMode }) {
   // const [fadeIn, setFadeIn] = useState(false);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
-  // Get list of ingredients from csv data file
   useEffect(() => {
-    fetch(`${apiUrl}/ingredients`)
-      .then((res) => res.json())
-      .then((data) => setIngreDropdown(data))
-      .catch((err) => console.error("Error fetching ingredients:", err));
-  }, [apiUrl]);
+    document.title = "JM | What's in your pantry?";
+  }, []);
+
+  // console.log("ingredient_dropdown", ingredient_dropdown);
+
+  // // Get list of ingredients from csv data file
+  // useEffect(() => {
+  //   fetch(`${apiUrl}/ingredients`)
+  //     .then((res) => res.json())
+  //     .then((data) => setIngreDropdown(data))
+  //     .catch((err) => console.error("Error fetching ingredients:", err));
+  // }, [apiUrl]);
 
   const searchSmallDataset = async (selected) => {
     setSelectedOptions(selected);
@@ -145,7 +154,11 @@ function RecipePage({ mode, setMode }) {
         }}
       >
         <Tooltip title="Home">
-          <IconButton component={RouterLink} to="/" sx={{ color: theme.palette.accent.main }}>
+          <IconButton
+            component={RouterLink}
+            to="/"
+            sx={{ color: theme.palette.accent.main }}
+          >
             <FaHome size={24} />
           </IconButton>
         </Tooltip>
@@ -162,7 +175,9 @@ function RecipePage({ mode, setMode }) {
       >
         <Tooltip title="Dark Mode">
           <IconButton
-            onClick={() => setMode((prev) => (prev === "light" ? "dark" : "light"))}
+            onClick={() =>
+              setMode((prev) => (prev === "light" ? "dark" : "light"))
+            }
             sx={{ color: theme.palette.accent.main }}
           >
             {mode === "light" ? <Brightness4 /> : <Brightness7 />}
@@ -171,12 +186,17 @@ function RecipePage({ mode, setMode }) {
       </Box>
       <Grid container direction="column">
         <Grid>
-          <Typography variant="h2" align="center" sx={{ fontSize: "3rem", mt: 0, mb: 0 }}>
+          <Typography
+            variant="h2"
+            align="center"
+            sx={{ fontSize: "3rem", mt: 0, mb: 0 }}
+          >
             What's in your pantry?
           </Typography>
 
           <Typography variant="h6" align="center" sx={{ mt: 0 }}>
-            Turn your pantry into a plate by creating a custom recipe from your own ingredients.
+            Turn your pantry into a plate by creating a custom recipe from your
+            own ingredients.
           </Typography>
         </Grid>
 
@@ -185,6 +205,7 @@ function RecipePage({ mode, setMode }) {
             <Box
               sx={{
                 borderRadius: 1,
+                minWidth: "200px",
                 "&:hover": {
                   boxShadow: (theme) => `0 0 15px ${theme.palette.accent.main}`,
                 },
@@ -199,6 +220,7 @@ function RecipePage({ mode, setMode }) {
                 className="basic-multi-select"
                 classNamePrefix="select"
                 styles={customStyles}
+                placeholder="Choose ingredients by pressing Enter..."
               />
             </Box>
           </Grid>
@@ -208,6 +230,7 @@ function RecipePage({ mode, setMode }) {
               variant="contained"
               onClick={submitIngredients}
               sx={{
+                color: "black",
                 "&:hover": {
                   boxShadow: (theme) => `0 0 15px ${theme.palette.accent.main}`,
                 },

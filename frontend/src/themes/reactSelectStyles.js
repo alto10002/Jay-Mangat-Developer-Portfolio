@@ -1,7 +1,7 @@
 export const getReactSelectStyles = (theme) => ({
   container: (provided) => ({
     ...provided,
-    width: "100%", // ✅ make container take full width of Grid
+    width: "100%",
   }),
   control: (provided) => ({
     ...provided,
@@ -11,7 +11,7 @@ export const getReactSelectStyles = (theme) => ({
   menu: (provided) => ({
     ...provided,
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.text.card, // 🔥 updated to use text.card
+    color: "black",
   }),
   option: (provided, { isFocused, isSelected }) => ({
     ...provided,
@@ -20,9 +20,7 @@ export const getReactSelectStyles = (theme) => ({
       : isFocused
       ? theme.palette.action.hover
       : undefined,
-    color: isSelected
-      ? theme.palette.primary.contrastText
-      : theme.palette.text.card, // 🔥 updated to use text.card
+    color: "black",
   }),
   multiValue: (provided) => ({
     ...provided,
@@ -30,6 +28,10 @@ export const getReactSelectStyles = (theme) => ({
   }),
   multiValueLabel: (provided) => ({
     ...provided,
-    color: theme.palette.text.card, // 🔥 updated to use text.card
+    color: "black",
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: "black",
   }),
 });
