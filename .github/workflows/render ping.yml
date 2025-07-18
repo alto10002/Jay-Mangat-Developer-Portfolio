@@ -11,4 +11,4 @@ jobs:
 
     steps:
       - name: Curl ping to Render server
-        run: curl -sSf https://https://jay-mangat.vercel.app/ || echo "Ping failed"
+        run: curl -sSf https://jay-mangat.vercel.app/
