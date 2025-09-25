@@ -1,73 +1,47 @@
 import pandas as pd
 from pathlib import Path
-import numpy as np
 from dotenv import load_dotenv
 import requests
 import os
-import io
-import boto3
-from datetime import datetime
-from memory_profiler import profile
+import time
+
+t = time.perf_counter()
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
+FILE = Path(__file__).resolve().parents[2] / "data" / "zstd.parquet"
+df = pd.read_parquet(FILE, engine="pyarrow")
+t0 = time.perf_counter()
+# Make ingredients lowercase to assist matching with ingredient list
+df["ingredients"] = df["ingredients"].map(lambda ingr: set(map(str.lower, ingr)))
+# Force steps to list for ease with JSON
+df["steps"] = df["steps"].apply(lambda x: x.tolist() if hasattr(x, "tolist") else x)
+t1 = time.perf_counter()
+
 
 # @profile
-def generate(chosen_ingredients):
-    def get_data_source():
-        if os.getenv("USE_S3", "false").lower() == "true":
-            # print(f'Using S3 at \t {datetime.utcnow().isoformat()}')
-            s3_client = boto3.client(
-                "s3",
-                aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-                aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-                region_name=os.getenv("AWS_REGION"),
-            )
-            bucket_name = "react-recipes-data"
-            file_key = "new_cleaned_recipes.csv"
-            response = s3_client.get_object(Bucket=bucket_name, Key=file_key)
-            return io.BytesIO(response["Body"].read())  # Unified return
-        else:
-            # print(f'Using local data at \t {datetime.utcnow().isoformat()}')
-            return (
-                Path(__file__).resolve().parents[2] / "data" / "new_cleaned_recipes.csv"
-            )
-
-    data_source = get_data_source()
-    df = pd.read_csv(data_source, usecols=["id", "ingredients"])
-    df = df.replace([np.inf, -np.inf, np.nan], None)
-    df1 = df[
-        df["ingredients"].apply(
-            lambda lst: all(ingredient in lst for ingredient in chosen_ingredients)
-        )
-    ]
-
-    chosen_recipes = df1.sample(3)
-    chosen_ids = chosen_recipes["id"].tolist()
-
-    # Rewind S3 BytesIO if necessary
-    if isinstance(data_source, io.BytesIO):
-        data_source.seek(0)  # Rewind for second read
-
-    filtered_df = pd.concat(
-        chunk[chunk["id"].isin(chosen_ids)]
-        for chunk in pd.read_csv(data_source, chunksize=10000)
+def generate(user_ingredients):
+    generated_recipes = df[df["ingredients"].map(user_ingredients.issubset)]
+    t2 = time.perf_counter()
+    recipes_sample = generated_recipes.sample(3)
+    t3 = time.perf_counter()
+    # Capitalization ingredients so it looks better on cards
+    recipes_sample["ingredients"] = recipes_sample["ingredients"].apply(
+        lambda s: [i.capitalize() for i in s]
     )
-
-    # Capitalization so it looks better on cards
-    filtered_df["ingredients"] = filtered_df["ingredients"].apply(
-        lambda s: [i.capitalize() for i in eval(s)]
-    )
-    filtered_df["steps"] = filtered_df["steps"].apply(
-        lambda s: [step.capitalize() for step in eval(s)]
-    )
+    t4 = time.perf_counter()
     # Adding image/page URLs to dictionary to pull them out in RecipeCard
-    filtered_df[["image_url", "page_url"]] = filtered_df["name"].apply(
+    recipes_sample[["image_url", "page_url"]] = recipes_sample["name"].apply(
         lambda name: pd.Series(google_searches(name))
     )
-    # print(f'Returning records at \t {datetime.utcnow().isoformat()}')
-    # convert to dicts
-    return filtered_df.to_dict(orient="records")
+    t5 = time.perf_counter()
+    # print(f"Read parquet: {t0 - t:.4f}s")
+    # print(f"Preprocess:   {t1 - t0:.4f}s")
+    # print(f"Filter:       {t2 - t1:.4f}s")
+    # print(f"Get 3 samples:       {t3 - t2:.4f}s")
+    # print(f"Capitalize:       {t4 - t3:.4f}s")
+    # print(f"Google links:       {t5 - t4:.4f}s")
+    return recipes_sample.to_dict(orient="records")
 
 
 def google_searches(recipe_name):
@@ -96,6 +70,5 @@ def google_searches(recipe_name):
     return image_url, page_url
 
 
-# # Test
-# recipes = generate(['chicken','butter'])
-# print(recipes)
+# Test
+# print(generate({"coconut", "kiwi"}))
