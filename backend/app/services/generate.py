@@ -5,46 +5,47 @@ import requests
 import os
 import time
 
-t = time.perf_counter()
-
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 FILE = Path(__file__).resolve().parents[2] / "data" / "zstd.parquet"
-df = pd.read_parquet(FILE, engine="pyarrow")
-t0 = time.perf_counter()
+all_recipes = pd.read_parquet(FILE, engine="pyarrow")
 # Make ingredients lowercase to assist matching with ingredient list
-df["ingredients"] = df["ingredients"].map(lambda ingr: set(map(str.lower, ingr)))
+all_recipes["ingredients"] = all_recipes["ingredients"].map(
+    lambda ingr: set(map(str.lower, ingr))
+)
 # Force steps to list for ease with JSON
-df["steps"] = df["steps"].apply(lambda x: x.tolist() if hasattr(x, "tolist") else x)
-t1 = time.perf_counter()
+all_recipes["steps"] = all_recipes["steps"].apply(
+    lambda x: x.tolist() if hasattr(x, "tolist") else x
+)
 
 
 # @profile
-def generate(user_ingredients):
-    generated_recipes = df[df["ingredients"].map(user_ingredients.issubset)]
-    t2 = time.perf_counter()
-    recipes_sample = generated_recipes.sample(3)
-    t3 = time.perf_counter()
+def generate_recipes(user_ingredients):
+    filtered_recipes = all_recipes[
+        all_recipes["ingredients"].map(
+            lambda ingr: ingredient_match(ingr, user_ingredients)
+        )
+    ]
+
+    recipe_count = len(filtered_recipes)
+    filtered_recipes_sample = filtered_recipes.sample(3)
     # Capitalization ingredients so it looks better on cards
-    recipes_sample["ingredients"] = recipes_sample["ingredients"].apply(
-        lambda s: [i.capitalize() for i in s]
-    )
-    t4 = time.perf_counter()
-    # Adding image/page URLs to dictionary to pull them out in RecipeCard
-    recipes_sample[["image_url", "page_url"]] = recipes_sample["name"].apply(
-        lambda name: pd.Series(google_searches(name))
-    )
-    t5 = time.perf_counter()
-    # print(f"Read parquet: {t0 - t:.4f}s")
-    # print(f"Preprocess:   {t1 - t0:.4f}s")
-    # print(f"Filter:       {t2 - t1:.4f}s")
-    # print(f"Get 3 samples:       {t3 - t2:.4f}s")
-    # print(f"Capitalize:       {t4 - t3:.4f}s")
-    # print(f"Google links:       {t5 - t4:.4f}s")
-    return recipes_sample.to_dict(orient="records")
+    filtered_recipes_sample["ingredients"] = filtered_recipes_sample[
+        "ingredients"
+    ].apply(lambda s: [i.capitalize() for i in s])
+    return [filtered_recipes_sample, recipe_count]
 
 
-def google_searches(recipe_name):
+# helper for fuzzy matching so tomato returns tomatos/cherry tomato/etc.
+def ingredient_match(recipe_ingredients, user_ingredients):
+    return all(
+        any(ui in ingr for ingr in recipe_ingredients) for ui in user_ingredients
+    )
+
+
+def add_google_links(recipe_name):
+    t6 = time.perf_counter()
+
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     GOOGLE_CX = os.getenv("GOOGLE_CX")
 
@@ -66,9 +67,21 @@ def google_searches(recipe_name):
 
     image_url = data["items"][0]["link"]
     page_url = data["items"][0]["image"]["contextLink"]
-
+    t7 = time.perf_counter()
+    print(f"Google links:       {t7 - t6:.4f}s")
     return image_url, page_url
 
 
-# Test
-# print(generate({"coconut", "kiwi"}))
+def google_links_wrapper(filtered_recipes_sample):
+    filtered_recipes_sample[["image_url", "page_url"]] = filtered_recipes_sample[
+        "name"
+    ].apply(lambda name: pd.Series(add_google_links(name)))
+    return filtered_recipes_sample.to_dict(orient="records")
+
+
+# Testing generate timings/different ingredient combinations
+# generated = generate_recipes({"tomato", "chicken", "garlic", "cheese", "pasta"})
+# print(generated[0])
+# print(generated[1])
+# links = google_links_wrapper(generated[0])
+# print(links)
