@@ -6,6 +6,22 @@ from backend.app.services.process_filters import process_filters
 from pydantic import BaseModel
 from typing import List
 
+import psutil, os, time, threading
+from fastapi import FastAPI
+
+
+def log_memory():
+    process = psutil.Process(os.getpid())
+    while True:
+        mem = process.memory_info().rss / (1024 * 1024)  # MB
+        print(f"[MEMORY] {mem:.2f} MB")
+        time.sleep(5)  # adjust interval if needed
+
+
+# start memory logger thread
+threading.Thread(target=log_memory, daemon=True).start()
+
+
 app = FastAPI()
 
 origins = [

@@ -4,24 +4,23 @@ from dotenv import load_dotenv
 import requests
 import os
 import time
+import duckdb
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 FILE = Path(__file__).resolve().parents[2] / "data" / "zstd.parquet"
-all_recipes = pd.read_parquet(FILE, engine="pyarrow")
+all_recipes = pd.read_parquet(FILE, engine="pyarrow", columns=["id", "ingredients"])
 recipe_ids = None
 
 
-# @profile
 def generate_recipes(user_ingredients):
-    print(user_ingredients)
     global recipe_ids
     filtered_recipes = all_recipes[
         all_recipes["ingredients"].map(
             lambda ingr: ingredient_match(ingr, user_ingredients)
         )
     ]
-    recipe_ids = filtered_recipes["id"].astype(int).to_numpy()
+    recipe_ids = filtered_recipes["id"]
     return len(recipe_ids)
 
 
@@ -62,9 +61,15 @@ def add_google_links(recipe_name):
 
 
 def google_links_wrapper():
-    global recipe_ids
-    filtered_recipes = all_recipes[all_recipes["id"].isin(recipe_ids)]
-    filtered_recipes_sample = filtered_recipes.sample(3)
+    sampled_ids = recipe_ids.sample(3)
+
+    con = duckdb.connect()
+    query = f"""
+        SELECT *
+        FROM '{FILE}'
+        WHERE id IN ({','.join(map(str, sampled_ids))})
+    """
+    filtered_recipes_sample = con.execute(query).fetchdf()
 
     filtered_recipes_sample["ingredients"] = filtered_recipes_sample[
         "ingredients"
@@ -91,39 +96,6 @@ def google_links_wrapper():
     return result
 
 
-# Testing generate timings/different ingredient combinations
-# t1 = time.perf_counter()
-# generated = generate_recipes({"tomato"})
-# t2 = time.perf_counter()
-# print(f"{len(generated)} {t2-t1}")
-
-# t1 = time.perf_counter()
-# generated = generate_recipes({"chicken"})
-# t2 = time.perf_counter()
-# print(f"{len(generated)} {t2-t1}")
-
-# t1 = time.perf_counter()
-# generated = generate_recipes({"garlic"})
-# t2 = time.perf_counter()
-# print(f"{len(generated)} {t2-t1}")
-
-# t1 = time.perf_counter()
-# generated = generate_recipes({"cheese"})
-# t2 = time.perf_counter()
-# print(f"{len(generated)} {t2-t1}")
-
-# t1 = time.perf_counter()
-# generated = generate_recipes({"rice"})
-# t2 = time.perf_counter()
-# print(f"{len(generated)} {t2-t1}")
-
-# t1 = time.perf_counter()
 # generated = generate_recipes({"tomato", "chicken", "garlic", "cheese"})
-# t2 = time.perf_counter()
-# print(f"{generated} {t2-t1}")
-# print(type(recipe_ids))
 # res = google_links_wrapper()
 # print(res)
-
-# links = google_links_wrapper(generated)
-# print(links)
