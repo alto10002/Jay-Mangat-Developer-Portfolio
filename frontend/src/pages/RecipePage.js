@@ -12,7 +12,6 @@ import { FaHome } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import LiquidBackground from "../components/LiquidBackground";
 import FoodItems from "../components/FoodItems";
-import WelcomeModal from "../components/WelcomeModal";
 
 function RecipePage({ mode, setMode }) {
   const [ingredient_dropdown, setIngreDropdown] = useState([]);
@@ -93,7 +92,6 @@ function RecipePage({ mode, setMode }) {
 
   return (
     <Box>
-      <WelcomeModal />
       <LiquidBackground />
       <FoodItems image="/pizza.png" altText="pizza" />
       <FoodItems image="/cake.png" altText="cake" />
