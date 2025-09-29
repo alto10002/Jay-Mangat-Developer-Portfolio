@@ -12,49 +12,34 @@ import { FaHome } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import LiquidBackground from "../components/LiquidBackground";
 import FoodItems from "../components/FoodItems";
-import WelcomeModal from "../components/WelcomeModal";
-import ingredients from "../assets/ingredients.json";
-
-const ingredient_dropdown = ingredients.map((i) => ({
-  value: i,
-  label: i,
-}));
 
 function RecipePage({ mode, setMode }) {
-  //javascript logic
-  const [selected, setSelectedOptions] = useState([]);
-  // const [ingredient_dropdown, setIngreDropdown] = useState([]);
-  // const [foundRecipes, setFoundRecipes] = useState([]);
-  const [smallRecipeCount, setSmallRecipeCount] = useState(231637);
+  const [ingredient_dropdown, setIngreDropdown] = useState([]);
+  const [recipeCounter, setRecipeCounter] = useState(231637);
   const [firstRecipe, setFirstRecipe] = useState([]);
   const [secondRecipe, setSecondRecipe] = useState([]);
   const [thirdRecipe, setThirdRecipe] = useState([]);
   const [hasGenerated, setHasGenerated] = useState(false);
-  // const [fadeTrigger, setFadeTrigger] = useState(false);
   const theme = useTheme();
   const customStyles = getReactSelectStyles(theme);
   const [recipeLoading, setRecipeLoading] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  // const [fadeIn, setFadeIn] = useState(false);
   const apiUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
   useEffect(() => {
+    const fetchIngredients = async () => {
+      const response = await fetch(`${apiUrl}/ingredients`);
+      const data = await response.json();
+      setIngreDropdown(data);
+    };
+    fetchIngredients();
+
     document.title = "JM | What's in your pantry?";
-  }, []);
+  }, [apiUrl]);
 
-  // console.log("ingredient_dropdown", ingredient_dropdown);
-
-  // // Get list of ingredients from csv data file
-  // useEffect(() => {
-  //   fetch(`${apiUrl}/ingredients`)
-  //     .then((res) => res.json())
-  //     .then((data) => setIngreDropdown(data))
-  //     .catch((err) => console.error("Error fetching ingredients:", err));
-  // }, [apiUrl]);
-
-  const searchSmallDataset = async (selected) => {
-    setSelectedOptions(selected);
-    const response = await fetch(`${apiUrl}/quick_ingredient_count_update`, {
+  const updateRecipeCounter = async (selected) => {
+    // console.log(selected);
+    const response = await fetch(`${apiUrl}/filter_recipes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -64,31 +49,27 @@ function RecipePage({ mode, setMode }) {
       }),
     });
 
-    const s = await response.json();
-    setSmallRecipeCount(s);
+    const filtered_recipe_count = await response.json();
+    setRecipeCounter(filtered_recipe_count);
   };
 
   const submitIngredients = async () => {
-    // console.log("Beginning submit ingredients at: " + new Date().toISOString());
-    if (smallRecipeCount < 3) {
+    if (recipeCounter < 3) {
       alert("Oops, no recipes found matching your ingredients.");
       return;
     }
 
     setRecipeLoading(true); // Show loading screen immediately
-    // setFadeIn(false); // Reset fadeIn to hide new recipes
     setFadeOut(false); // Reset fadeOut in case of previous runs
 
     try {
-      const response = await fetch(`${apiUrl}/generate_recipes`, {
+      const response = await fetch(`${apiUrl}/add_links`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_ingredients: selected.map((opt) => opt.value),
-        }),
       }).catch((err) => console.error("Error generating recipes:", err));
 
       const found_recipes = await response.json();
+      // console.log(found_recipes);
 
       // After fetching, hide loading screen and fade out old recipes
       setRecipeLoading(false);
@@ -100,7 +81,6 @@ function RecipePage({ mode, setMode }) {
         setSecondRecipe(found_recipes[1]);
         setThirdRecipe(found_recipes[2]);
         setFadeOut(false);
-        // setFadeIn(true); // Fade in new recipes
         setHasGenerated(true);
       }, 500); // Match the fade-out duration
     } catch (err) {
@@ -108,16 +88,10 @@ function RecipePage({ mode, setMode }) {
       setRecipeLoading(false);
       alert("An error occurred while generating recipes.");
     }
-    // console.log("Enging submit ingredients at: " + new Date().toISOString());
   };
-
-  // const toggleTheme = () => {
-  //   setMode((prev) => (prev === "light" ? "dark" : "light"));
-  // };
 
   return (
     <Box>
-      <WelcomeModal />
       <LiquidBackground />
       <FoodItems image="/pizza.png" altText="pizza" />
       <FoodItems image="/cake.png" altText="cake" />
@@ -216,7 +190,7 @@ function RecipePage({ mode, setMode }) {
                 isMulti
                 name="ingredients"
                 options={ingredient_dropdown}
-                onChange={(selected) => searchSmallDataset(selected)}
+                onChange={(selected) => updateRecipeCounter(selected)}
                 className="basic-multi-select"
                 classNamePrefix="select"
                 styles={customStyles}
@@ -242,7 +216,7 @@ function RecipePage({ mode, setMode }) {
         </Grid>
 
         <Grid>
-          <AnimatedCount count={smallRecipeCount} />
+          <AnimatedCount count={recipeCounter} />
         </Grid>
         <Fade in={!fadeOut && hasGenerated} timeout={500}>
           <Grid container spacing={2} justifyContent="center" sx={{ mt: 2 }}>
