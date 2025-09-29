@@ -9,17 +9,20 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env")
 
 FILE = Path(__file__).resolve().parents[2] / "data" / "zstd.parquet"
 all_recipes = pd.read_parquet(FILE, engine="pyarrow")
+recipe_ids = None
 
 
 # @profile
 def generate_recipes(user_ingredients):
+    print(user_ingredients)
+    global recipe_ids
     filtered_recipes = all_recipes[
         all_recipes["ingredients"].map(
             lambda ingr: ingredient_match(ingr, user_ingredients)
         )
     ]
-
-    return filtered_recipes
+    recipe_ids = filtered_recipes["id"].astype(int).to_numpy()
+    return len(recipe_ids)
 
 
 # Matches user's 'tomato' to recipe's 'diced tomato' resulting in more recipes
@@ -54,22 +57,41 @@ def add_google_links(recipe_name):
     image_url = data["items"][0]["link"]
     page_url = data["items"][0]["image"]["contextLink"]
     t7 = time.perf_counter()
-    print(f"Google links:       {t7 - t6:.4f}s")
+    # print(f"Google links:       {t7 - t6:.4f}s")
     return image_url, page_url
 
 
-def google_links_wrapper(filtered_recipes):
+def google_links_wrapper():
+    global recipe_ids
+    filtered_recipes = all_recipes[all_recipes["id"].isin(recipe_ids)]
     filtered_recipes_sample = filtered_recipes.sample(3)
+
     filtered_recipes_sample["ingredients"] = filtered_recipes_sample[
         "ingredients"
-    ].apply(lambda s: [i.capitalize() for i in s])
+    ].apply(lambda s: [str(i).capitalize() for i in s])
+
     filtered_recipes_sample[["image_url", "page_url"]] = filtered_recipes_sample[
         "name"
     ].apply(lambda name: pd.Series(add_google_links(name)))
-    return filtered_recipes_sample.to_dict(orient="records")
+
+    result = []
+    for _, row in filtered_recipes_sample.iterrows():
+        result.append(
+            {
+                "id": int(row["id"]),
+                "name": str(row["name"]),
+                "ingredients": row["ingredients"],
+                "image_url": row["image_url"],
+                "page_url": row["page_url"],
+                "minutes": int(row["minutes"]),
+                "steps": list(row["steps"]),
+                "n_ingredients": int(row["n_ingredients"]),
+            }
+        )
+    return result
 
 
-# # Testing generate timings/different ingredient combinations
+# Testing generate timings/different ingredient combinations
 # t1 = time.perf_counter()
 # generated = generate_recipes({"tomato"})
 # t2 = time.perf_counter()
@@ -98,7 +120,10 @@ def google_links_wrapper(filtered_recipes):
 # t1 = time.perf_counter()
 # generated = generate_recipes({"tomato", "chicken", "garlic", "cheese"})
 # t2 = time.perf_counter()
-# print(f"{len(generated)} {t2-t1}")
+# print(f"{generated} {t2-t1}")
+# print(type(recipe_ids))
+# res = google_links_wrapper()
+# print(res)
 
 # links = google_links_wrapper(generated)
 # print(links)

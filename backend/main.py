@@ -1,16 +1,17 @@
 from fastapi import FastAPI
-from fastapi import Body
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.services.get_ingredients import get_ingredients
-from backend.app.services.generate import generate
-from backend.app.services.quick_ingredient_count_update import ingredient_count
+from backend.app.services.generate import generate_recipes, google_links_wrapper
 from backend.app.services.process_filters import process_filters
 from pydantic import BaseModel
 from typing import List
 
 app = FastAPI()
 
-origins = ["https://jay-mangat.vercel.app", "http://localhost:3000"]
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +29,7 @@ async def ping():
 
 @app.get("/ingredients")
 def fetch_ingredients():
-    return get_ingredients("50")
+    return get_ingredients()
 
 
 class FilterPayload(BaseModel):
@@ -51,15 +52,15 @@ class IngredientsRequest(BaseModel):
     user_ingredients: List[str]
 
 
-@app.post("/generate_recipes")
-def fetch_recipes(data: IngredientsRequest):
-    try:
-        return generate(data.user_ingredients)
-    except Exception as e:
-        print(f"Error in /generate_recipes: {e}")
-        raise
+@app.post("/filter_recipes")
+def filter_recipes(data: IngredientsRequest):
+    return generate_recipes(data.user_ingredients)
 
 
-@app.post("/quick_ingredient_count_update")
-def fetch_recipes(data: IngredientsRequest):
-    return ingredient_count(data.user_ingredients)
+class IDRequest(BaseModel):
+    ids: List[int]
+
+
+@app.post("/add_links")
+def add_links():
+    return google_links_wrapper()
